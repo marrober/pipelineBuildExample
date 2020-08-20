@@ -1,0 +1,70 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-image-to-quay
+spec:
+  resources:
+    inputs:
+      - name: runtime-image
+        type: image
+  params:
+    - name: quay-io-account
+      description: The quay.io account that matches the credentials stored in the mounted secret.
+      type: string
+      default: ""
+    - name: quay-io-repository
+      description: The quay.io repository in which to store the image.
+      type: string
+      default: ""
+    - name: quay-io-image-tag-name
+      description: The tag to use to identify the image.
+      type: string
+      default: "latest"
+  steps:  
+    - name: buildah-tag-image
+      command:
+        - buildah
+        - tag
+        - $(resources.inputs.runtime-image.url)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: buildah-list-images-after-tagging
+      command:
+        - buildah
+        - images
+      image: registry.redhat.io/rhel8/buildah
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: push-image-to-quay
+      command:
+        - buildah
+        - push
+        - '--authfile'
+        - /etc/secret-volume/.dockerconfigjson
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+      image: registry.redhat.io/rhel8/buildah
+      securityContext:
+        privileged: true
+      volumeMounts:    
+        - name: quay-auth-secret
+          mountPath: /etc/secret-volume
+          readOnly: true 
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+      workingDir: /quay
+  volumes:
+    - name: quay-auth-secret
+      secret:
+        secretName: quay-auth-secret
+    - name: pipeline-cache
+      persistentVolumeClaim:
+        claimName: pipeline-task-cache-pvc

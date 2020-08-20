@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: liberty-rest-app-run-pr-
+spec:
+  pipelineRef:
+    name: liberty-rest-app
+  resources:
+    - name: app-source
+      resourceRef:
+        name: liberty-rest-app-source-code
+    - name: intermediate-image
+      resourceRef:
+        name: intermediate
+    - name: runtime-image
+      resourceRef:
+        name: liberty-rest-app
+  params:
+    - name: templateFileName
+      value: build/template/deploy-app-template.yaml
+    - name: appName
+      value: liberty-rest
+    - name: appGroup
+      value: Liberty
+    - name: quay-io-account
+      value: "marrober"
+    - name: quay-io-repository
+      value: "liberty-rest"
+    - name: quay-io-image-tag-name
+      value: "latest"

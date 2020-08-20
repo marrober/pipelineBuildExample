@@ -1,0 +1,117 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  creationTimestamp: "2020-06-26T14:11:45Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: liberty-rest-app
+    pipeline.openshift.io/type: kubernetes
+  name: liberty-rest-app
+  namespace: liberty-rest
+spec:
+  resources:
+  - name: app-source
+    type: git
+  - name: intermediate-image
+    type: image
+  - name: runtime-image
+    type: image
+  params:
+  - name: templateFileName
+    type: string
+    default: build/template/deploy-app-template.yaml
+  - name: appName
+    type: string
+    default: liberty-rest
+  - name: appGroup
+    type: string
+    default: Liberty
+  - name: quay-io-account
+    type: string
+    default: ""
+  - name: quay-io-repository
+    type: string
+    default: "liberty-rest"
+  - name: quay-io-image-tag-name
+    type: string
+    default: "latest"
+  tasks:
+  - name: build
+    resources:
+      inputs:
+      - name: source
+        resource: app-source
+      outputs:
+      - name: intermediate-image
+        resource: intermediate-image
+    taskRef:
+      kind: Task
+      name: build
+  - name: create-runtime-image
+    resources:
+      inputs:
+      - name: intermediate-image
+        resource: intermediate-image
+      outputs:
+      - name: runtime-image
+        resource: runtime-image
+    taskRef:
+      kind: Task
+      name: create-runtime-image
+    runAfter:
+      - build
+  - name: clear-resources
+    params:
+      - name: appName
+        value: $(params.appName)
+    taskRef:
+      kind: Task
+      name: clear-resources
+    runAfter:
+      - build
+  - name: deploy-application
+    resources:
+      inputs:
+      - name: source
+        resource: app-source
+      - name: runtime-image
+        resource: runtime-image
+    params:
+      - name: templateFileName
+        value: $(params.templateFileName)
+      - name: appName
+        value: $(params.appName)
+      - name: appGroup
+        value: $(params.appGroup)
+    taskRef:
+      kind: Task
+      name: oc-process-deployment-template
+    runAfter:
+      - create-runtime-image 
+      - clear-resources
+  - name: push-image-to-quay
+    params:
+      - name: quay-io-account
+        value: $(params.quay-io-account)
+      - name: quay-io-repository
+        value: $(params.quay-io-repository)
+      - name: quay-io-image-tag-name
+        value: $(params.quay-io-image-tag-name)
+    resources:
+      inputs:
+      - name: runtime-image
+        resource: runtime-image
+    taskRef:
+      kind: Task
+      name: push-image-to-quay
+    runAfter:
+      - create-runtime-image
+  - name: clear-buildah-repo
+    taskRef:
+      kind: Task
+      name: clear-buildah-repo
+    runAfter:
+      - push-image-to-quay 
+
+      
+      

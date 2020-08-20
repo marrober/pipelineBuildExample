@@ -1,0 +1,62 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: liberty-rest-trigger-pipeline-template
+spec:
+  params:
+  - name: gitrevision
+    description: The git revision
+    default: master
+  - name: gitrepositoryurl
+    description: The git repository url
+  - name: pull_request_title
+    description: The title of the pull request  
+  - name: pull_request_action
+    description: The action performed within the pull request 
+  - name: service-account
+    description: The ServiceAccount under which to run the Pipeline.    
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: liberty-rest-app-run-pr-tr-
+    spec:
+      serviceAccountName: $(params.service-account)
+      pipelineRef:
+        name: liberty-rest-app
+      resources:
+        - name: app-source
+          resourceSpec:
+            type: git
+            params:
+            - name: revision
+              value: $(params.gitrevision)
+            - name: url
+              value: $(params.gitrepositoryurl)
+        - name: intermediate-image
+          resourceRef:
+            name: intermediate
+        - name: runtime-image
+          resourceRef:
+            name: liberty-rest-app
+      params:
+        - name: templateFileName
+          value: build/template/deploy-app-template.yaml
+        - name: appName
+          value: liberty-rest
+        - name: appGroup
+          value: Liberty
+        - name: quay-io-account
+          value: "mrobertsredhat"
+        - name: quay-io-repository
+          value: "liberty-rest"
+        - name: quay-io-image-tag-name
+          value: "latest"
+        - name: title
+          value: $(params.pull_request_title)
+        - name: revision
+          value: $(params.gitrevision)
+        - name: url
+          value: $(params.gitrepositoryurl)
+        - name: action
+          value: $(params.pull_request_action)

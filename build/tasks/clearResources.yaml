@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: clear-resources
+spec:
+  params:
+    - name: appName
+      default: ""
+      Description: Name of the application to be removed
+      type: string
+  steps:
+    - name: clear-resources
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
+          echo "------------------------------------------------------------"
+          echo "echo $(params.appName)"
+          echo "oc get all -l app=$(params.appName)" > clear-cmd.sh
+          echo "oc delete all -l app=$(params.appName)" >> clear-cmd.sh
+          echo "oc get all -l app=$(params.appName)" >> clear-cmd.sh
+          echo "Generated script to clear resources ready for new deployment"
+          cat clear-cmd.sh
+          echo "------------------------------------------------------------"
+          chmod u+x clear-cmd.sh
+          ./clear-cmd.sh
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      volumeMounts:
+        - name: script
+          mountPath: /script
+      workingDir: /script
+  volumes:
+    - emptyDir: {}
+      name: script

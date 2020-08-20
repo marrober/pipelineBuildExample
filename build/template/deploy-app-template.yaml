@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Template
+parameters:
+  - name: APP_NAME
+    description: "Name of the application to be deployed"
+    value: 
+  - name: APP_GROUP
+    description: "Name of the group in which to place the application in the topology view"
+    value: 
+  - name: APP_IMAGE
+    description: "Identity of the imagestream to deploy"
+    value: 
+metadata:
+  name: app-template
+  annotations:
+    description: "Application Deployment template"
+objects:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}
+        app.kubernetes.io/part-of: ${APP_GROUP}
+      name: ${APP_NAME}
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: ${APP_NAME}
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}
+          annotations:
+        spec:
+          containers:
+          - env:
+            image: ${APP_IMAGE}
+            imagePullPolicy: Always
+            name: ${APP_NAME}
+            ports:
+            - containerPort: 9080
+              name: http
+              protocol: TCP 
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      labels:
+        app: ${APP_NAME}    
+    spec:
+      ports:
+      - name: http
+        port: 9080
+      selector:
+        app: ${APP_NAME}
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}
+      name: ${APP_NAME}-route
+    spec:
+      to:
+        kind: Service
+        name: ${APP_NAME}

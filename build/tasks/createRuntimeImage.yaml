@@ -1,0 +1,101 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: create-runtime-image
+spec:
+  params: 
+    - name: TLSVERIFY
+      description: Verify the TLS on the registry endpoint 
+      type: string
+      default: 'false' 
+  resources:
+    inputs:
+      - name: intermediate-image
+        type: image
+    outputs:
+      - name: runtime-image
+        type: image
+  steps :
+    - name: view-images
+      command:
+        - buildah
+        - images
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: gen-binary-extraction-dockerfile
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
+          echo "FROM $(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
+          echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml" >> ext-dockerfile.gen
+          echo "------------------------------"
+          cat ext-dockerfile.gen
+          echo "------------------------------"
+      image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+      volumeMounts:
+        - name: envparams
+          mountPath: /env-params
+      workingDir: /env-params
+    - name: extract-built-object
+      command:
+        - buildah
+        - bud
+        - '--tls-verify=$(params.TLSVERIFY)'
+        - '--layers'
+        - '-f'
+        - ext-dockerfile.gen
+        - '-t'
+        - $(resources.outputs.runtime-image.url)
+        - .
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+        - name: envparams
+          mountPath: /env-params
+      workingDir: /env-params
+    - name: view-mages
+      command:
+        - buildah
+        - images
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: push-image-to-openshift
+      command:
+        - buildah
+        - push
+        - '--tls-verify=$(params.TLSVERIFY)'
+        - $(resources.outputs.runtime-image.url)
+        - 'docker://$(resources.outputs.runtime-image.url)'
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+  volumes:
+    - emptyDir: {}
+      name: envparams
+    - emptyDir: {}
+      name: gen-source
+    - name: pipeline-cache
+      persistentVolumeClaim:
+        claimName: pipeline-task-cache-pvc

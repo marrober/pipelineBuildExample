@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: clear-buildah-repo
+spec:
+  steps :
+    - name: buildah-list-images
+      command:
+        - buildah
+        - images
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: buildah-remove-images
+      command:
+        - buildah
+        - rmi
+        - '-a'
+        - '-f'
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: buildah-validate-images
+      command:
+        - buildah
+        - images
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+  volumes:
+    - name: pipeline-cache
+      persistentVolumeClaim:
+        claimName: pipeline-task-cache-pvc
