@@ -15,15 +15,18 @@ spec:
     - name: MAVEN_MIRROR_URL
       description: The base URL of a mirror used for retrieving artifacts
       type: string
-      default: ''   
+      default: ''
     - name: MAVEN_CLEAR_REPO
       description: Remove the Maven repository after the artifact is built
       type: string
-      default: 'false'   
+      default: 'false'
     - name: TLSVERIFY
-      description: Verify the TLS on the registry endpoint 
+      description: Verify the TLS on the registry endpoint
       type: string
-      default: 'false' 
+      default: 'false'
+    - name: STORAGE_DRIVER
+      description: The Buildah storage STORAGE_DRIVER
+      type: string
   resources:
     inputs:
       - name: source
@@ -79,6 +82,7 @@ spec:
         - buildah
         - bud
         - '--tls-verify=$(params.TLSVERIFY)'
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--layers'
         - '-f'
         - /gen-source/Dockerfile.gen
@@ -99,6 +103,7 @@ spec:
       command:
         - buildah
         - images
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
       securityContext:

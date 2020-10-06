@@ -35,8 +35,15 @@ spec:
   - name: quay-io-image-tag-name
     type: string
     default: "latest"
+  - name: STORAGE_DRIVER
+    description: The Buildah storage STORAGE_DRIVER
+    type: string
+    default: 'overlay'
   tasks:
   - name: build
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
     resources:
       inputs:
       - name: source
@@ -48,6 +55,9 @@ spec:
       kind: Task
       name: build
   - name: create-runtime-image
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
     resources:
       inputs:
       - name: intermediate-image
@@ -87,7 +97,7 @@ spec:
       kind: Task
       name: oc-process-deployment-template
     runAfter:
-      - create-runtime-image 
+      - create-runtime-image
       - clear-resources
   - name: push-image-to-quay
     params:
@@ -97,6 +107,8 @@ spec:
         value: $(params.quay-io-repository)
       - name: quay-io-image-tag-name
         value: $(params.quay-io-image-tag-name)
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)      
     resources:
       inputs:
       - name: runtime-image
@@ -107,11 +119,11 @@ spec:
     runAfter:
       - create-runtime-image
   - name: clear-buildah-repo
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
     taskRef:
       kind: Task
       name: clear-buildah-repo
     runAfter:
-      - push-image-to-quay 
-
-      
-      
+      - push-image-to-quay

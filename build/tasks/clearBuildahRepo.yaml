@@ -3,11 +3,16 @@ kind: Task
 metadata:
   name: clear-buildah-repo
 spec:
+  params:
+    - name: STORAGE_DRIVER
+      description: The Buildah storage STORAGE_DRIVER
+      type: string
   steps :
     - name: buildah-list-images
       command:
         - buildah
         - images
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
       securityContext:
@@ -21,6 +26,7 @@ spec:
         - rmi
         - '-a'
         - '-f'
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
       securityContext:
@@ -32,6 +38,7 @@ spec:
       command:
         - buildah
         - images
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
       securityContext:
