@@ -36,9 +36,26 @@ spec:
     type: string
     default: "latest"
   - name: STORAGE_DRIVER
-    description: The Buildah storage STORAGE_DRIVER
     type: string
     default: 'overlay'
+  - name: url
+    type: string
+  - name: gitrepository_fullname
+    type: string
+  - name: revision
+    type: string
+  - name: commit_prior_revision
+    type: string
+  - name: commit_ref
+    type: string
+  - name: commit_id
+    type: string
+  - name: commit_date
+    type: string
+  - name: commit_message
+    type: string
+  - name: commit_author
+    type: string
   tasks:
   - name: build
     params:
@@ -58,6 +75,26 @@ spec:
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
+      - name: gitrepository_url
+        value: $(params.url)
+      - name: gitrepository_fullname
+        value: $(params.gitrepository_fullname)
+      - name: commit_prior_revision
+        value: $(params.commit_prior_revision)
+      - name: commit_ref
+        value: $(params.commit_ref)
+      - name: commit_id
+        value: $(params.commit_id)
+      - name: commit_date
+        value: $(params.commit_date)
+      - name: commit_message
+        value: $(params.commit_message)
+      - name: commit_author
+        value: $(params.commit_author)
+      - name: pipelineRunName
+        value: $(context.pipelineRun.name)
+      - name: pipelineName
+        value: $(context.pipeline.name)   
     resources:
       inputs:
       - name: intermediate-image
