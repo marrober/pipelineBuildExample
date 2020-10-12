@@ -5,12 +5,30 @@ metadata:
 spec:
   params:
     - name: TLSVERIFY
-      description: Verify the TLS on the registry endpoint
       type: string
       default: 'false'
     - name: STORAGE_DRIVER
-      description: The Buildah storage STORAGE_DRIVER
       type: string
+    - name: gitrepository_url
+      type: string
+    - name: gitrepository_fullname
+      type: string
+    - name: commit_prior_revision
+      type: string
+    - name: commit_ref
+      type: string
+    - name: commit_id
+      type: string
+    - name: commit_date
+      type: string
+    - name: commit_message
+      type: string
+    - name: commit_author
+      type: string  
+    - name: pipelineName
+      type: string
+    - name: pipelineRunName
+      type: string      
   resources:
     inputs:
       - name: intermediate-image
@@ -29,6 +47,15 @@ spec:
           echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml" >> ext-dockerfile.gen
+          echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
+          echo "github.repository.fullname=\"$(params.gitrepository_fullname)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.ref=\"$(params.commit_ref)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.id=\"$(params.commit_id)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.date=\"$(params.commit_date)\" \\" >> ext-dockerfile.gen
+          echo "github.commit_author=\"$(params.commit_author)\" \\" >> ext-dockerfile.gen
+          echo "pipeline.name=\"$(params.pipelineName)\" \\" >> ext-dockerfile.gen
+          echo "pipeline.run=\"$(params.pipelineRunName)\" \\" >> ext-dockerfile.gen
+          echo "pipeline.task.run.name=\"$(context.taskRun.name)\"" >> ext-dockerfile.gen
           echo "------------------------------"
           cat ext-dockerfile.gen
           echo "------------------------------"
