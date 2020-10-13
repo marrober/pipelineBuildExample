@@ -51,6 +51,7 @@ spec:
           echo "github.repository.fullname=\"$(params.gitrepository_fullname)\" \\" >> ext-dockerfile.gen
           echo "github.commit.ref=\"$(params.commit_ref)\" \\" >> ext-dockerfile.gen
           echo "github.commit.id=\"$(params.commit_id)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.message=\"$(params.commit_message)\" \\" >> ext-dockerfile.gen
           echo "github.commit.date=\"$(params.commit_date)\" \\" >> ext-dockerfile.gen
           echo "github.commit_author=\"$(params.commit_author)\" \\" >> ext-dockerfile.gen
           echo "pipeline.name=\"$(params.pipelineName)\" \\" >> ext-dockerfile.gen
