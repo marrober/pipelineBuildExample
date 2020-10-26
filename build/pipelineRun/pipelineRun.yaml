@@ -28,3 +28,21 @@ spec:
       value: "liberty-rest"
     - name: quay-io-image-tag-name
       value: "latest"
+    - name: url
+      value: ""
+    - name: gitrepository_fullname
+      value: ""
+    - name: revision
+      value: ""
+    - name: commit_prior_revision
+      value: ""
+    - name: commit_ref
+      value: ""
+    - name: commit_id
+      value: ""
+    - name: commit_date
+      value: ""
+    - name: commit_message
+      value: ""
+    - name: commit_author
+      value: ""      
