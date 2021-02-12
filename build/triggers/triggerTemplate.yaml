@@ -28,9 +28,9 @@ spec:
             type: git
             params:
             - name: revision
-              value: $(params.gitrevision)
+              value: $(tt.params.gitrevision)
             - name: url
-              value: $(params.gitrepository.url)
+              value: $(tt.params.gitrepository.url)
         - name: intermediate-image
           resourceRef:
             name: intermediate
@@ -51,20 +51,20 @@ spec:
         - name: quay-io-image-tag-name
           value: "latest"
         - name: url
-          value: $(params.gitrepository.url)
+          value: $(tt.params.gitrepository.url)
         - name: gitrepository_fullname
-          value: $(params.gitrepository.fullname)
+          value: $(tt.params.gitrepository.fullname)
         - name: revision
-          value: $(params.gitrevision)
+          value: $(tt.params.gitrevision)
         - name: commit_prior_revision
-          value: $(params.commit.prior_revision)
+          value: $(tt.params.commit.prior_revision)
         - name: commit_ref
-          value: $(params.commit.ref)
+          value: $(tt.params.commit.ref)
         - name: commit_id
-          value: $(params.commit.id)
+          value: $(tt.params.commit.id)
         - name: commit_date
-          value: $(params.commit.date)
+          value: $(tt.params.commit.date)
         - name: commit_message
-          value: $(params.commit.message)
+          value: $(tt.params.commit.message)
         - name: commit_author
-          value: $(params.commit.author)
+          value: $(tt.params.commit.author)

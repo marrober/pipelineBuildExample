@@ -94,7 +94,7 @@ spec:
       - name: pipelineRunName
         value: $(context.pipelineRun.name)
       - name: pipelineName
-        value: $(context.pipeline.name)   
+        value: $(context.pipeline.name)
     resources:
       inputs:
       - name: intermediate-image
@@ -145,7 +145,7 @@ spec:
       - name: quay-io-image-tag-name
         value: $(params.quay-io-image-tag-name)
       - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)      
+        value: $(params.STORAGE_DRIVER)
     resources:
       inputs:
       - name: runtime-image

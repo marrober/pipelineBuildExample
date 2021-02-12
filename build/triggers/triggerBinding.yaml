@@ -22,5 +22,3 @@ spec:
     value: $(body.head_commit.message)
   - name: commit.author
     value: $(body.head_commit.author.name)
-  - name: service-account
-    value: pipeline    
