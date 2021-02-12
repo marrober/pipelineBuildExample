@@ -19,6 +19,7 @@ spec:
     metadata:
       generateName: liberty-rest-app-run-pr-tr-
     spec:
+      serviceAccountName: pipeline
       pipelineRef:
         name: liberty-rest-app
       resources:
