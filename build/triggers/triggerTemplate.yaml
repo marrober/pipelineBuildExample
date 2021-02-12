@@ -13,14 +13,12 @@ spec:
   - name: commit.date
   - name: commit.message
   - name: commit.author
-  - name: service-account
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
       generateName: liberty-rest-app-run-pr-tr-
     spec:
-      serviceAccountName: $(params.service-account)
       pipelineRef:
         name: liberty-rest-app
       resources:
