@@ -15,8 +15,6 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
@@ -29,20 +27,6 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      securityContext:
-        privileged: true
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
-    - name: buildah-validate-images
-      command:
-        - buildah
-        - images
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers

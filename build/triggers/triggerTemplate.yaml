@@ -4,24 +4,22 @@ metadata:
   name: liberty-rest-trigger-pipeline-template
 spec:
   params:
+  - name: gitrepository.url
+  - name: gitrepository.fullname
   - name: gitrevision
-    description: The git revision
-    default: master
-  - name: gitrepositoryurl
-    description: The git repository url
-  - name: pull_request_title
-    description: The title of the pull request  
-  - name: pull_request_action
-    description: The action performed within the pull request 
-  - name: service-account
-    description: The ServiceAccount under which to run the Pipeline.    
+  - name: commit.prior_revision
+  - name: commit.ref
+  - name: commit.id
+  - name: commit.date
+  - name: commit.message
+  - name: commit.author
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
       generateName: liberty-rest-app-run-pr-tr-
     spec:
-      serviceAccountName: $(params.service-account)
+      serviceAccountName: pipeline
       pipelineRef:
         name: liberty-rest-app
       resources:
@@ -30,9 +28,9 @@ spec:
             type: git
             params:
             - name: revision
-              value: $(params.gitrevision)
+              value: $(tt.params.gitrevision)
             - name: url
-              value: $(params.gitrepositoryurl)
+              value: $(tt.params.gitrepository.url)
         - name: intermediate-image
           resourceRef:
             name: intermediate
@@ -47,16 +45,26 @@ spec:
         - name: appGroup
           value: Liberty
         - name: quay-io-account
-          value: "mrobertsredhat"
+          value: "marrober"
         - name: quay-io-repository
           value: "liberty-rest"
         - name: quay-io-image-tag-name
           value: "latest"
-        - name: title
-          value: $(params.pull_request_title)
-        - name: revision
-          value: $(params.gitrevision)
         - name: url
-          value: $(params.gitrepositoryurl)
-        - name: action
-          value: $(params.pull_request_action)
+          value: $(tt.params.gitrepository.url)
+        - name: gitrepository_fullname
+          value: $(tt.params.gitrepository.fullname)
+        - name: revision
+          value: $(tt.params.gitrevision)
+        - name: commit_prior_revision
+          value: $(tt.params.commit.prior_revision)
+        - name: commit_ref
+          value: $(tt.params.commit.ref)
+        - name: commit_id
+          value: $(tt.params.commit.id)
+        - name: commit_date
+          value: $(tt.params.commit.date)
+        - name: commit_message
+          value: $(tt.params.commit.message)
+        - name: commit_author
+          value: $(tt.params.commit.author)

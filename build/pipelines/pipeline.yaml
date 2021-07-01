@@ -17,12 +17,31 @@ spec:
   - name: runtime-image
     type: image
   params:
-  - name: templateFileName
+  - name: STORAGE_DRIVER
     type: string
-    default: build/template/deploy-app-template.yaml
+    default: vfs
+  - name: url
+    type: string
+  - name: gitrepository_fullname
+    type: string
+  - name: commit_prior_revision
+    type: string
+  - name: commit_ref
+    type: string
+  - name: commit_id
+    type: string
+  - name: commit_date
+    type: string
+  - name: commit_message
+    type: string
+  - name: commit_author
+    type: string
   - name: appName
     type: string
     default: liberty-rest
+  - name: templateFileName
+    type: string
+    default: build/template/deploy-app-template.yaml
   - name: appGroup
     type: string
     default: Liberty
@@ -35,11 +54,14 @@ spec:
   - name: quay-io-image-tag-name
     type: string
     default: "latest"
-  - name: STORAGE_DRIVER
-    description: The Buildah storage STORAGE_DRIVER
-    type: string
-    default: 'overlay'
   tasks:
+  - name: clear-buildah-repo-start
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
+    taskRef:
+      kind: Task
+      name: clear-buildah-repo
   - name: build
     params:
       - name: STORAGE_DRIVER
@@ -54,10 +76,32 @@ spec:
     taskRef:
       kind: Task
       name: build
+    runAfter:
+      - clear-buildah-repo-start
   - name: create-runtime-image
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
+      - name: gitrepository_url
+        value: $(params.url)
+      - name: gitrepository_fullname
+        value: $(params.gitrepository_fullname)
+      - name: commit_prior_revision
+        value: $(params.commit_prior_revision)
+      - name: commit_ref
+        value: $(params.commit_ref)
+      - name: commit_id
+        value: $(params.commit_id)
+      - name: commit_date
+        value: $(params.commit_date)
+      - name: commit_message
+        value: $(params.commit_message)
+      - name: commit_author
+        value: $(params.commit_author)
+      - name: pipelineRunName
+        value: $(context.pipelineRun.name)
+      - name: pipelineName
+        value: $(context.pipeline.name)
     resources:
       inputs:
       - name: intermediate-image
@@ -108,7 +152,7 @@ spec:
       - name: quay-io-image-tag-name
         value: $(params.quay-io-image-tag-name)
       - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)      
+        value: $(params.STORAGE_DRIVER)
     resources:
       inputs:
       - name: runtime-image
@@ -118,7 +162,7 @@ spec:
       name: push-image-to-quay
     runAfter:
       - create-runtime-image
-  - name: clear-buildah-repo
+  - name: clear-buildah-repo-end
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)

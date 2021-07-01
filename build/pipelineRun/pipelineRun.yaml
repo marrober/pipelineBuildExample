@@ -16,6 +16,24 @@ spec:
       resourceRef:
         name: liberty-rest-app
   params:
+    - name: url
+      value: ""
+    - name: gitrepository_fullname
+      value: ""
+    - name: revision
+      value: ""
+    - name: commit_prior_revision
+      value: ""
+    - name: commit_ref
+      value: ""
+    - name: commit_id
+      value: ""
+    - name: commit_date
+      value: ""
+    - name: commit_message
+      value: ""
+    - name: commit_author
+      value: ""
     - name: templateFileName
       value: build/template/deploy-app-template.yaml
     - name: appName

@@ -4,13 +4,21 @@ metadata:
   name: liberty-rest-pipeline-binding
 spec:
   params:
-  - name: gitrevision
-    value: $(body.pull_request.head.sha)
-  - name: gitrepositoryurl
+  - name: gitrepository.url
     value: $(body.repository.html_url)
-  - name: pull_request_title
-    value: $(body.pull_request.title)
-  - name: pull_request_action
-    value: $(body.action)
-  - name: service-account
-    value: pipeline    
+  - name: gitrepository.fullname
+    value: $(body.repository.full_name)
+  - name: gitrevision
+    value: $(body.head_commit.id)
+  - name: commit.prior_revision
+    value: $(body.before)
+  - name: commit.ref
+    value: $(body.ref)
+  - name: commit.id
+    value: $(body.head_commit.id)
+  - name: commit.date
+    value: $(body.head_commit.timestamp)
+  - name: commit.message
+    value: $(body.head_commit.message)
+  - name: commit.author
+    value: $(body.head_commit.author.name)
