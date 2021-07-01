@@ -33,8 +33,6 @@ spec:
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
@@ -44,8 +42,6 @@ spec:
         - images
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
@@ -58,8 +54,6 @@ spec:
         - /etc/secret-volume/.dockerconfigjson
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume

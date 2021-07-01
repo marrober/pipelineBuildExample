@@ -24,11 +24,11 @@ spec:
     - name: commit_message
       type: string
     - name: commit_author
-      type: string  
+      type: string
     - name: pipelineName
       type: string
     - name: pipelineRunName
-      type: string      
+      type: string
   resources:
     inputs:
       - name: intermediate-image
@@ -65,6 +65,18 @@ spec:
         - name: envparams
           mountPath: /env-params
       workingDir: /env-params
+    - name: df-1
+      command:
+        - df
+        - -m
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+        - name: envparams
+          mountPath: /env-params
+      workingDir: /env-params
     - name: extract-built-object
       command:
         - buildah
@@ -73,20 +85,18 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--layers'
         - '-f'
-        - ext-dockerfile.gen
+        - /env-params/ext-dockerfile.gen
         - '-t'
         - $(resources.outputs.runtime-image.url)
         - .
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
         - name: envparams
           mountPath: /env-params
-      workingDir: /env-params
+      workingDir: /var/lib/containers
     - name: view-images
       command:
         - buildah
@@ -94,8 +104,6 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
@@ -109,8 +117,6 @@ spec:
         - 'docker://$(resources.outputs.runtime-image.url)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      securityContext:
-        privileged: true
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers

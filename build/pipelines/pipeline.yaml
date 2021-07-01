@@ -17,32 +17,12 @@ spec:
   - name: runtime-image
     type: image
   params:
-  - name: templateFileName
-    type: string
-    default: build/template/deploy-app-template.yaml
-  - name: appName
-    type: string
-    default: liberty-rest
-  - name: appGroup
-    type: string
-    default: Liberty
-  - name: quay-io-account
-    type: string
-    default: ""
-  - name: quay-io-repository
-    type: string
-    default: "liberty-rest"
-  - name: quay-io-image-tag-name
-    type: string
-    default: "latest"
   - name: STORAGE_DRIVER
     type: string
-    default: 'overlay'
+    default: vfs
   - name: url
     type: string
   - name: gitrepository_fullname
-    type: string
-  - name: revision
     type: string
   - name: commit_prior_revision
     type: string
@@ -56,7 +36,32 @@ spec:
     type: string
   - name: commit_author
     type: string
+  - name: appName
+    type: string
+    default: liberty-rest
+  - name: templateFileName
+    type: string
+    default: build/template/deploy-app-template.yaml
+  - name: appGroup
+    type: string
+    default: Liberty
+  - name: quay-io-account
+    type: string
+    default: ""
+  - name: quay-io-repository
+    type: string
+    default: "liberty-rest"
+  - name: quay-io-image-tag-name
+    type: string
+    default: "latest"
   tasks:
+  - name: clear-buildah-repo-start
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
+    taskRef:
+      kind: Task
+      name: clear-buildah-repo
   - name: build
     params:
       - name: STORAGE_DRIVER
@@ -71,6 +76,8 @@ spec:
     taskRef:
       kind: Task
       name: build
+    runAfter:
+      - clear-buildah-repo-start
   - name: create-runtime-image
     params:
       - name: STORAGE_DRIVER
@@ -155,7 +162,7 @@ spec:
       name: push-image-to-quay
     runAfter:
       - create-runtime-image
-  - name: clear-buildah-repo
+  - name: clear-buildah-repo-end
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
