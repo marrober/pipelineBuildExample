@@ -18,11 +18,8 @@ public class PropertiesJavaHome {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getProperties() {
-<<<<<<< HEAD
-       String javaHome = "Java Home -=----> " + System.getProperty("java.home");
-=======
-       String javaHome = "Java Home -----> " + System.getProperty("java.home");
->>>>>>> triggers
+       String javaHome = "Java Home -*-*-*-*> " + System.getProperty("java.home");
+
 
        return(javaHome);
     }

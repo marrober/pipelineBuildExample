@@ -65,18 +65,6 @@ spec:
         - name: envparams
           mountPath: /env-params
       workingDir: /env-params
-    - name: df-1
-      command:
-        - df
-        - -m
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
-        - name: envparams
-          mountPath: /env-params
-      workingDir: /env-params
     - name: extract-built-object
       command:
         - buildah
