@@ -68,6 +68,7 @@ OpenShift Pipelines is delivered to an OpenShift platform using the [Operator](h
 Users can interact with OpenShift Pipelines using the web user interface, command line interface, and via a Visual Studio Code editor plugin. Other editor plugins do exist so check with your editors plugins page to see what it offers for Tekton. The command line access is a mixture of the OpenShift `oc` command line utility and the `tkn` command line for specific Tekton commands. The tkn and oc command line utilities can be downloaded from the OpenShift web user interface. Simply press the white circle containing a black question mark near your name on the top right corner and then select Command Line Tools as shown in figure 1.
 
 ![](/images/figure1.webp)
+
 ```Figure 1 - OpenShift web user interface command line tools access```
 
 The fundamental resource of the Tekton process is the task. A Task contains at least one step to be executed and performs a useful function. It is possible to create a taskRun object that makes reference to a task, and enables the user to invoke the task. This will not be covered in this article since the purpose here is to create richer objects that can be used from within the OpenShift web user interface and can be called from a webhook as part of a CI/CD process. In the example presented here tasks are grouped into an ordered execution using a pipeline resource.
@@ -83,6 +84,7 @@ A pipelineRun resource invokes the execution of a pipeline. This allows specific
 Each step has a number of elements that define how it will execute the required command. Figure 2 shows the elements of the step and the relationship between the above resources.
 
 ![](/images/figure2.webp)
+
 ```Figure 2 - Tekton resource relationship```
 
 ### ELEMENTS OF A STEP
@@ -259,11 +261,13 @@ The Red Hat OpenShift `Source to Image` (S2I) build process is a fantastic capab
 6. Create an instance of the builder image, with the built application, and execute the container in a pod (the purple arrow in figure 3).
 
 ![](/images/figure3.webp)
+
 ```Figure 3 - Source to image process```
 
 All of the above actions take place simply by selecting a Git repository as shown in figure 4.
 
 ![](/images/figure4.webp)
+
 ```Figure 4 - Selecting a Git repository from which the source code should be built```
 
 Note that in figure 4 the node.js language has been identified in the source code, and figure 4 also shows the full range of languages that are supported by S2I (as of OpenShift 4.5).
@@ -278,6 +282,7 @@ After a few seconds OpenShift created a number of resources as shown in figure 5
 All of the above has been created simply by pointing OpenShift at a Git repository.
 
 ![](/images/figure5.webp)
+
 ```Figure 5 - The result of a source to image build process```
 
 ## Creating a runtime image without source code
@@ -344,6 +349,7 @@ spec:
 The reference to the Git resource at the top of the task file has a name of `source`. This ensures that the Git repository will be cloned to a directory of `/workspace/source` as shown in figure 6 labelled 1. The working directory of the step is set to this location and the S2I build process expects to find the source code in the location, identified by the parameter `$(params.PATH_CONTEXT)`, which is set to the value of ‘.’ as a default value.
 
 ![](/images/figure6.webp)
+
 ```Figure 6 - File movement in source to image build phase```
 
 The source to image build process refers to an `openjdk18-openshift` image that is used as the builder image and identifies where the source to image binaries are to be found in that image. The next argument identifies where the dockerfile is to be located and the file name as indicated by label 2 in figure 6. This location is very important because in addition to putting the dockerfile in the location the source to image build process also copies the source code from the source code location (current working directory) to the path:
@@ -398,6 +404,7 @@ The result of running this step will be a new image created by the Buildah comma
 At this stage the intermediate builder image contains the built asset which is a war file compiled from the java source. Figure 1 shows the progression of the assets through this stage of the process. Due to the execution of the build task the builder image has been taken from the image registry, the source code has been pulled into the builder image and the builder image has become the intermediate image containing the source code, tools, and deliverables (steps 1 to 3 in figure 8).
 
 ![](/images/figure8.webp)
+
 ```Figure 8 - Creation of the runtime image```
 
 The Tekton task for this stage of the process is in the file `/build/tasks/createRuntimeImage.yaml`.
@@ -470,6 +477,7 @@ This command will list all images streams that are visible to the current user. 
 Figure 9 shows an image stream in OpenShift in which the URL reported by `oc get is` is the second URL whereas the URL required to be used in the step is the first shown URL beginning image-repository.
 
 ![](/images/figure9.webp)
+
 ```Figure 9 - Image stream URL’s presented by OpenShift```
 
 The clear resource step, taken from the file `build/tasks/clearResources.yaml` is shown below, in which a shell script is created and executed within the same step.
@@ -533,6 +541,7 @@ The secret is used by the Tekton task by mounting it as a volume as shown below:
 Before pushing the image to quay.io the images in the local buildah repository are viewed. This will show similar to the below:
 
 ![](/images/figure10.webp)
+
 ```Figure 10 - Example of local buldah repository```
 
 The content has been cut down on the first and last lines to avoid wrapping:
