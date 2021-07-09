@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: oc-deploy-application
+spec:
+  steps:
+    - name: view-git-files
+      resources: {}
+      command:
+        - ls
+        - -al
+        - /workspace/source/deployment
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      volumeMounts:
+        - name: deployment-files
+          mountPath: /deployment-files
+      workingDir: /deployment-files
+    - name: oc-create-resources
+      resources: {}
+      command:
+        - oc
+        - apply
+        - '-k'
+        - .
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      workingDir: /workspace/source/deployment
+    - name: oc-get-resources
+      resources: {}
+      command:
+        - oc
+        - get
+        - all
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest

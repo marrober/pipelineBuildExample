@@ -6,43 +6,61 @@ spec:
   pipelineRef:
     name: liberty-rest-app
   resources:
-    - name: app-source
-      resourceRef:
-        name: liberty-rest-app-source-code
-    - name: intermediate-image
-      resourceRef:
-        name: intermediate
-    - name: runtime-image
-      resourceRef:
-        name: liberty-rest-app
+  - name: app-source
+    resourceRef:
+      name: liberty-rest-app-source-code
+  - name: intermediate-image
+    resourceRef:
+      name: intermediate
+  - name: runtime-image
+    resourceRef:
+      name: liberty-rest-app
   params:
-    - name: url
-      value: ""
-    - name: gitrepository_fullname
-      value: ""
-    - name: revision
-      value: ""
-    - name: commit_prior_revision
-      value: ""
-    - name: commit_ref
-      value: ""
-    - name: commit_id
-      value: ""
-    - name: commit_date
-      value: ""
-    - name: commit_message
-      value: ""
-    - name: commit_author
-      value: ""
-    - name: templateFileName
-      value: build/template/deploy-app-template.yaml
-    - name: appName
-      value: liberty-rest
-    - name: appGroup
-      value: Liberty
-    - name: quay-io-account
-      value: "marrober"
-    - name: quay-io-repository
-      value: "liberty-rest"
-    - name: quay-io-image-tag-name
-      value: "latest"
+  - name: url
+    value: ""
+  - name: appName
+    value: liberty-rest
+  - name: gitrepository_fullname
+    value: ""
+  - name: revision
+    value: ""
+  - name: commit_prior_revision
+    value: ""
+  - name: commit_ref
+    value: ""
+  - name: commit_id
+    value: ""
+  - name: commit_date
+    value: ""
+  - name: commit_message
+    value: ""
+  - name: commit_author
+    value: ""
+  - name: quay-io-account
+    value: "marrober"
+  - name: quay-io-repository
+    value: "liberty-rest"
+  - name: quay-io-image-tag-name
+    value: "latest"
+  - name: acs_central_endpoint
+    value: acs-secret
+  - name: acs_api_token
+    value: acs-secret
+  - name: git-url
+    value: https://github.com/marrober/pipelineBuildExample.git
+  - name: git-revision
+    value: acs
+  - name: file-location-in-git-repo
+    value: deployment
+  - name: recursive-search
+    value: "false"
+  workspaces:
+    - name: files
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Mi
+        status: {}

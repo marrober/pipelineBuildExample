@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: liberty-rest
+  labels:
+    app: liberty-rest
+spec:
+  ports:
+  - name: http
+    port: 9080
+  selector:
+    app: liberty-rest
