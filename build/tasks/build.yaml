@@ -83,6 +83,8 @@ spec:
         - bud
         - '--tls-verify=$(params.TLSVERIFY)'
         - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
         - '--layers'
         - '-f'
         - /gen-source/Dockerfile.gen
@@ -92,8 +94,6 @@ spec:
       image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
       resources: {}
       volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
         - name: gen-source
           mountPath: /gen-source
       workingDir: /gen-source
@@ -102,16 +102,15 @@ spec:
         - buildah
         - images
         - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
   volumes:
     - emptyDir: {}
       name: envparams
     - emptyDir: {}
       name: gen-source
-    - name: pipeline-cache
-      persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
+  workspaces:
+  - name: files
+    mountPath: /files

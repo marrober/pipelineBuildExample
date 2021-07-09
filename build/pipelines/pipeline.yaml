@@ -41,7 +41,6 @@ spec:
   - name: templateFileName
     type: string
     default: build/template/deploy-app-template.yaml
-    default: Liberty
   - name: quay-io-account
     type: string
     default: ""
@@ -131,6 +130,9 @@ spec:
       name: build
     runAfter:
       - clear-buildah-repo-start
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Create the runtime image from a base container image and
 # deployable asset extracted from the builder container image.
