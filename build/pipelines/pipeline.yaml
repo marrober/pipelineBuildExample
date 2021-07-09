@@ -194,6 +194,10 @@ spec:
 # Deploy the application locally from the image stream
 ##------------------------------------------------------------------
   - name: deploy-application
+    resources:
+      inputs:
+      - name: source
+        resource: app-source
     taskRef:
       kind: Task
       name: oc-deploy-application

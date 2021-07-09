@@ -3,9 +3,12 @@ kind: Task
 metadata:
   name: oc-deploy-application
 spec:
+  resources:
+    inputs:
+      - name: source
+        type: git
   steps:
     - name: view-git-files
-      resources: {}
       command:
         - ls
         - -al
@@ -16,7 +19,6 @@ spec:
           mountPath: /deployment-files
       workingDir: /deployment-files
     - name: oc-create-resources
-      resources: {}
       command:
         - oc
         - apply
@@ -25,7 +27,6 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       workingDir: /workspace/source/deployment
     - name: oc-get-resources
-      resources: {}
       command:
         - oc
         - get
