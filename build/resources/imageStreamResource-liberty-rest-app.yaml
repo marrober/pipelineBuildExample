@@ -7,4 +7,4 @@ spec:
   params:
   - name: url
     value: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app
-  type: image 
+  type: image

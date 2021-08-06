@@ -22,6 +22,8 @@ spec:
     default: vfs
   - name: appName
     type: string
+  - name: public-name
+    type: string
   - name: url
     type: string
   - name: gitrepository_fullname
@@ -63,16 +65,6 @@ spec:
   - name: recursive-search
     type: string
   tasks:
-##------------------------------------------------------------------
-# Clear out the buildah repo ready for a new build
-##------------------------------------------------------------------
-#  - name: clear-buildah-repo-start
-#    params:
-#      - name: STORAGE_DRIVER
-#        value: $(params.STORAGE_DRIVER)
-#    taskRef:
-#      kind: Task
-#      name: clear-buildah-repo
 ##------------------------------------------------------------------
 # Git clone task
 ##------------------------------------------------------------------
@@ -128,8 +120,6 @@ spec:
     taskRef:
       kind: Task
       name: build
-#    runAfter:
-#      - clear-buildah-repo-start
     workspaces:
     - name: files
       workspace: files
@@ -161,6 +151,8 @@ spec:
         value: $(context.pipelineRun.name)
       - name: pipelineName
         value: $(context.pipeline.name)
+      - name: public-name
+        value: $(params.public-name)
     resources:
       inputs:
       - name: intermediate-image
@@ -179,6 +171,9 @@ spec:
     runAfter:
     - resource-deployment-check
     - build
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
@@ -207,6 +202,25 @@ spec:
       - create-runtime-image
       - clear-resources
 ##------------------------------------------------------------------
+# Perform image check
+##------------------------------------------------------------------
+  - name: image-check
+    params:
+      - name: acs_central_endpoint
+        value: $(params.acs_central_endpoint)
+      - name: acs_api_token
+        value: $(params.acs_api_token)
+      - name: public-url
+        value: $(tasks.create-runtime-image.results.public-repo-location)
+    taskRef:
+      kind: Task
+      name: acs-image-check
+    runAfter:
+      - create-runtime-image
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
   - name: push-image-to-quay
@@ -227,19 +241,10 @@ spec:
       kind: Task
       name: push-image-to-quay
     runAfter:
-      - create-runtime-image
-##------------------------------------------------------------------
-# Clear the buildah resources from the persistent volume
-##------------------------------------------------------------------
-#  - name: clear-buildah-repo-end
-#    params:
-#      - name: STORAGE_DRIVER
-#        value: $(params.STORAGE_DRIVER)
-#    taskRef:
-#      kind: Task
-#      name: clear-buildah-repo
-#    runAfter:
-#      - push-image-to-quay
+      - image-check
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Workspace definitions
 ##------------------------------------------------------------------

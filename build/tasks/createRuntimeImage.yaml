@@ -29,6 +29,8 @@ spec:
       type: string
     - name: pipelineRunName
       type: string
+    - name: public-name
+      type: string
   resources:
     inputs:
       - name: intermediate-image
@@ -36,6 +38,8 @@ spec:
     outputs:
       - name: runtime-image
         type: image
+  results:
+    - name: public-repo-location
   steps:
     - name: gen-binary-extraction-dockerfile
       command:
@@ -44,7 +48,7 @@ spec:
       args:
         - |-
           echo "FROM localhost/$(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
-          echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
+          echo "FROM openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml" >> ext-dockerfile.gen
           echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
@@ -80,11 +84,9 @@ spec:
         - $(resources.outputs.runtime-image.url)
         - .
       image: registry.redhat.io/rhel8/buildah
-      resources: {}
       volumeMounts:
         - name: envparams
           mountPath: /env-params
-      workingDir: /var/lib/containers
     - name: view-images
       command:
         - buildah
@@ -93,7 +95,6 @@ spec:
         - '--root'
         - '/files/buildah-containers'
       image: registry.redhat.io/rhel8/buildah
-      resources: {}
     - name: push-image-to-openshift
       command:
         - buildah
@@ -105,7 +106,15 @@ spec:
         - $(resources.outputs.runtime-image.url)
         - 'docker://$(resources.outputs.runtime-image.url)'
       image: registry.redhat.io/rhel8/buildah
-      resources: {}
+    - name: get-public-docker-image-repository
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        oc get is/$(params.public-name) -o jsonpath='{.status.publicDockerImageRepository}'> $(results.public-repo-location.path)
+
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:
     - emptyDir: {}
       name: envparams

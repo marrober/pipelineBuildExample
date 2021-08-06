@@ -21,8 +21,8 @@ spec:
   steps:
 ##------------------------------------------------------------------
 # Rox deployment check - check deployment resource files
-##------------------------------------------------------------------      
-    - name: rox-deployment-check 
+##------------------------------------------------------------------
+    - name: rox-deployment-check
       env:
         - name: ROX_API_TOKEN
           valueFrom:
@@ -50,7 +50,7 @@ spec:
         yum install jq -y -q
 
         if [[ "$(params.recursive-search)" == "true" ]]; then
-      
+
           fileList=`find /files/$(params.source_location) -name '*.yaml' -o -name '*.yml'`
 
         else
@@ -61,122 +61,129 @@ spec:
 
         failTask="false"
 
-        for file in $fileList    
-     
+        for file in $fileList
+
         do
 
-          echo "Deployment check on file : $file"
+          if (grep -q "apiVersion: route.openshift.io" "$file") || (grep -q "apiVersion: kustomize.config.k8s.io" "$file"); then
 
-          ./roxctl deployment check --json --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $file > $file.scan-result
+            echo "Skipping unsupported resource"
 
-          cat $file.scan-result | wc -c > $file.scan-result.wc
-
-          read charCount < $file.scan-result.wc
-
-          if test $charCount -gt 10
-
-          then
+          else
           
-            numberAlerts=`jq '.alerts' $file.scan-result | jq length` 
+            echo "Deployment check on file : $file"
 
-            if test $numberAlerts -gt 1 
+            ./roxctl deployment check --json --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $file > $file.scan-result
+
+            cat $file.scan-result | wc -c > $file.scan-result.wc
+
+            read charCount < $file.scan-result.wc
+
+            if test $charCount -gt 10
+
             then
 
-              echo "$numberAlerts alerts found ..."
-              
-            else
+              numberAlerts=`jq '.alerts' $file.scan-result | jq length`
 
-              echo "1 alert found ..." 
-            
-            fi
-
-            counter=0
-
-            while [ $counter -lt $numberAlerts ]
-            do            
-
-              jqCommandPolicyEnforcementCmd="jq --argjson index "$counter" '.alerts[\$index].policy.enforcementActions[] | select (. | contains(\"FAIL_BUILD_ENFORCEMENT\"))' $file.scan-result 2>/dev/null | wc -c > $file.scan-result.wc"
-
-              eval $jqCommandPolicyEnforcementCmd > /dev/null
-
-              jqCommandPolicyName="jq --argjson index "$counter" '.alerts[\$index].policy.name' $file.scan-result"
-
-              alertPolicyName=`eval $jqCommandPolicyName` > /dev/null
-
-              alertPolicyName=`echo "$alertPolicyName" | sed s/\"//g`
-
-              echo "Alert policy name : $alertPolicyName"
-
-              read charCount < $file.scan-result.wc
-
-              if test $charCount -gt 2 
-
+              if test $numberAlerts -gt 1
               then
 
-                ## Issue found is enough to stop the CI process
-
-                failTask="true"
-          
-                echo "-- Build will be halted --"
+                echo "$numberAlerts alerts found ..."
 
               else
 
-                echo "-- Policy violations will not stop the build process --"
+                echo "1 alert found ..."
 
-              fi  
+              fi
 
-              echo "- - - - - - - - - - - - - - - - - - - - - - - - - -"
+              counter=0
 
-              numberViolationsCmd="jq --argjson index \"$counter\" '.alerts[\$index].violations' $file.scan-result | jq length"
-     
-              numberViolations=`eval $numberViolationsCmd` >> /dev/null
-
-              if test $numberViolations -eq 1 
-              then
-
-                echo "1 violation found ..." 
-
-              else
-
-                echo "$numberViolations violations found ..."
-            
-              fi              
-
-              violationCounter=0
-
-              while [ "$violationCounter" -lt "$numberViolations" ]
+              while [ $counter -lt $numberAlerts ]
               do
 
-                jqCommand="jq --argjson index "$counter" --argjson violationIndex "$violationCounter" '.alerts[\$index].violations[\$violationIndex].message' $file.scan-result"
+                jqCommandPolicyEnforcementCmd="jq --argjson index "$counter" '.alerts[\$index].policy.enforcementActions[] | select (. | contains(\"FAIL_BUILD_ENFORCEMENT\"))' $file.scan-result 2>/dev/null | wc -c > $file.scan-result.wc"
 
-                violation=`eval $jqCommand` >> /dev/null
+                eval $jqCommandPolicyEnforcementCmd > /dev/null
 
-                violation=`echo "$violation" | sed s/\"//g`
+                jqCommandPolicyName="jq --argjson index "$counter" '.alerts[\$index].policy.name' $file.scan-result"
 
-                echo "violation : -- $violation"
+                alertPolicyName=`eval $jqCommandPolicyName` > /dev/null
 
-                violationCounter=`expr $violationCounter + 1`
+                alertPolicyName=`echo "$alertPolicyName" | sed s/\"//g`
+
+                echo "Alert policy name : $alertPolicyName"
+
+                read charCount < $file.scan-result.wc
+
+                if test $charCount -gt 2
+
+                then
+
+                  ## Issue found is enough to stop the CI process
+
+                  failTask="true"
+
+                  echo "-- Build will be halted --"
+
+                else
+
+                  echo "-- Policy violations will not stop the build process --"
+
+                fi
+
+                echo "- - - - - - - - - - - - - - - - - - - - - - - - - -"
+
+                numberViolationsCmd="jq --argjson index \"$counter\" '.alerts[\$index].violations' $file.scan-result | jq length"
+
+                numberViolations=`eval $numberViolationsCmd` >> /dev/null
+
+                if test $numberViolations -eq 1
+                then
+
+                  echo "1 violation found ..."
+
+                else
+
+                  echo "$numberViolations violations found ..."
+
+                fi
+
+                violationCounter=0
+
+                while [ "$violationCounter" -lt "$numberViolations" ]
+                do
+
+                  jqCommand="jq --argjson index "$counter" --argjson violationIndex "$violationCounter" '.alerts[\$index].violations[\$violationIndex].message' $file.scan-result"
+
+                  violation=`eval $jqCommand` >> /dev/null
+
+                  violation=`echo "$violation" | sed s/\"//g`
+
+                  echo "violation : -- $violation"
+
+                  violationCounter=`expr $violationCounter + 1`
+
+                done
+
+                echo "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -"
+
+                echo ""
+
+                counter=`expr $counter + 1`
 
               done
 
-              echo "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -"
+              echo "-----------------------------------------------------"
+
+            else
+
+              echo "-- No errors found in this file --"
 
               echo ""
 
-              counter=`expr $counter + 1`
-
-            done           
-
-            echo "-----------------------------------------------------"
-
-          else
-
-            echo "-- No errors found in this file --"
-
-            echo ""
+            fi
 
           fi
-          
         done
 
         if [[ "$failTask" == "true" ]]; then
@@ -185,7 +192,7 @@ spec:
 
           echo -n "fail" | tee $(results.scan-result.path) >> /dev/null
 
-        else 
+        else
 
           echo "Setting overall result to pass"
 

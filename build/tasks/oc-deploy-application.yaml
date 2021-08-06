@@ -14,10 +14,6 @@ spec:
         - -al
         - /workspace/source/deployment
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      volumeMounts:
-        - name: deployment-files
-          mountPath: /deployment-files
-      workingDir: /deployment-files
     - name: oc-create-resources
       command:
         - oc

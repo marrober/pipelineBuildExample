@@ -20,6 +20,8 @@ spec:
     value: ""
   - name: appName
     value: liberty-rest
+  - name: public-name
+    value: liberty-rest-app
   - name: gitrepository_fullname
     value: ""
   - name: revision
@@ -62,5 +64,5 @@ spec:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 10Gi
+              storage: 15Gi
         status: {}
