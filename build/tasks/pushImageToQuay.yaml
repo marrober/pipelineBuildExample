@@ -29,22 +29,18 @@ spec:
         - buildah
         - tag
         - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
         - $(resources.inputs.runtime-image.url)
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
     - name: buildah-list-images-after-tagging
       command:
         - buildah
         - images
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
     - name: push-image-to-quay
       command:
         - buildah
@@ -52,19 +48,20 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--authfile'
         - /etc/secret-volume/.dockerconfigjson
+        - '--root'
+        - '/files/buildah-containers'
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
       workingDir: /quay
   volumes:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
     - name: pipeline-cache
-      persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
+  workspaces:
+  - name: files
+    mountPath: /files

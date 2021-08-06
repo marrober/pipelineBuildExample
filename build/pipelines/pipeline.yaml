@@ -66,13 +66,13 @@ spec:
 ##------------------------------------------------------------------
 # Clear out the buildah repo ready for a new build
 ##------------------------------------------------------------------
-  - name: clear-buildah-repo-start
-    params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    taskRef:
-      kind: Task
-      name: clear-buildah-repo
+#  - name: clear-buildah-repo-start
+#    params:
+#      - name: STORAGE_DRIVER
+#        value: $(params.STORAGE_DRIVER)
+#    taskRef:
+#      kind: Task
+#      name: clear-buildah-repo
 ##------------------------------------------------------------------
 # Git clone task
 ##------------------------------------------------------------------
@@ -128,8 +128,8 @@ spec:
     taskRef:
       kind: Task
       name: build
-    runAfter:
-      - clear-buildah-repo-start
+#    runAfter:
+#      - clear-buildah-repo-start
     workspaces:
     - name: files
       workspace: files
@@ -231,15 +231,15 @@ spec:
 ##------------------------------------------------------------------
 # Clear the buildah resources from the persistent volume
 ##------------------------------------------------------------------
-  - name: clear-buildah-repo-end
-    params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    taskRef:
-      kind: Task
-      name: clear-buildah-repo
-    runAfter:
-      - push-image-to-quay
+#  - name: clear-buildah-repo-end
+#    params:
+#      - name: STORAGE_DRIVER
+#        value: $(params.STORAGE_DRIVER)
+#    taskRef:
+#      kind: Task
+#      name: clear-buildah-repo
+#    runAfter:
+#      - push-image-to-quay
 ##------------------------------------------------------------------
 # Workspace definitions
 ##------------------------------------------------------------------

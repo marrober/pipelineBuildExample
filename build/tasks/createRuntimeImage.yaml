@@ -43,7 +43,7 @@ spec:
         - '-c'
       args:
         - |-
-          echo "FROM $(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
+          echo "FROM localhost/$(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
           echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml" >> ext-dockerfile.gen
@@ -74,14 +74,14 @@ spec:
         - '--layers'
         - '-f'
         - /env-params/ext-dockerfile.gen
+        - '--root'
+        - '/files/buildah-containers'
         - '-t'
         - $(resources.outputs.runtime-image.url)
         - .
       image: registry.redhat.io/rhel8/buildah
       resources: {}
       volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
         - name: envparams
           mountPath: /env-params
       workingDir: /var/lib/containers
@@ -90,29 +90,27 @@ spec:
         - buildah
         - images
         - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
     - name: push-image-to-openshift
       command:
         - buildah
         - push
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--tls-verify=$(params.TLSVERIFY)'
+        - '--root'
+        - '/files/buildah-containers'
         - $(resources.outputs.runtime-image.url)
         - 'docker://$(resources.outputs.runtime-image.url)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
   volumes:
     - emptyDir: {}
       name: envparams
     - emptyDir: {}
       name: gen-source
-    - name: pipeline-cache
-      persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
+  workspaces:
+  - name: files
+    mountPath: /files
