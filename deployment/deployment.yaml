@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - env:
-        image: default-route-openshift-image-registry.apps.cluster-fd65.fd65.sandbox205.opentlc.com/liberty-rest/liberty-rest-app:latest
+        image: default-route-openshift-image-registry.apps.cluster-7742.7742.sandbox1284.opentlc.com/liberty-rest/liberty-rest-app:latest
         imagePullPolicy: Always
         name: liberty-rest
         ports:
