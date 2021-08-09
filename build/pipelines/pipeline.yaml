@@ -66,6 +66,39 @@ spec:
     type: string
   tasks:
 ##------------------------------------------------------------------
+## TEST
+##------------------------------------------------------------------
+#  - name: create-runtime-image-test
+#    params:
+#      - name: public-name
+#        value: $(params.public-name)
+#      - name: appName
+#        value: $(params.appName)
+#    taskRef:
+#      kind: Task
+#      name: create-runtime-image-test
+#    workspaces:
+#    - name: files
+#      workspace: files
+##------------------------------------------------------------------
+# Perform image check - TEST
+##------------------------------------------------------------------
+  - name: image-check-test
+    params:
+      - name: acs_central_endpoint
+        value: $(params.acs_central_endpoint)
+      - name: acs_api_token
+        value: $(params.acs_api_token)
+      - name: public-url
+        value: default-route-openshift-image-registry.apps.cluster-7742.7742.sandbox1284.opentlc.com/liberty-rest/liberty-rest-app
+    taskRef:
+      kind: Task
+      name: acs-image-check
+    workspaces:
+    - name: files
+      workspace: files
+##-----------------------
+##------------------------------------------------------------------
 # Git clone task
 ##------------------------------------------------------------------
   - name: git-clone-workspace
@@ -153,6 +186,8 @@ spec:
         value: $(context.pipeline.name)
       - name: public-name
         value: $(params.public-name)
+      - name: appName
+        value: $(params.appName)
     resources:
       inputs:
       - name: intermediate-image
@@ -163,11 +198,11 @@ spec:
     taskRef:
       kind: Task
       name: create-runtime-image
-    when:
-    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
+#    when:
+#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
     runAfter:
     - resource-deployment-check
     - build
@@ -240,6 +275,11 @@ spec:
     taskRef:
       kind: Task
       name: push-image-to-quay
+    when:
+    - input: "$(tasks.image-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     runAfter:
       - image-check
     workspaces:

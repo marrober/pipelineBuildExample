@@ -47,7 +47,9 @@ spec:
 
         failTask="false"
 
-        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --json > image-scan-result
+        echo "image to be scanned : $(params.public-url)"
+
+        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --json > image-scan-result 2> /dev/null
 
         cat image-scan-result | wc -c > image-scan-result.wc
 
@@ -71,7 +73,7 @@ spec:
 
           while [ $counter -lt $numberAlerts ]; do
 
-            jqCommandPolicyEnforcementCmd="jq --argjson index "$counter" '.alerts[\$index].policy.enforcementActions[] | select (. | contains(\"FAIL_BUILD_ENFORCEMENT\"))' image-scan-result 2>/dev/null | wc -c > image-scan-result.wc"
+            jqCommandPolicyEnforcementCmd="jq --argjson index "$counter" '.alerts[\$index].policy.enforcementActions[] | select (. | contains(\"SCALE_TO_ZERO_ENFORCEMENT\"))' image-scan-result 2>/dev/null | wc -c > image-scan-result.wc"
 
             eval $jqCommandPolicyEnforcementCmd > /dev/null
 
@@ -81,7 +83,31 @@ spec:
 
             alertPolicyName=`echo "$alertPolicyName" | sed s/\"//g`
 
+            jqCommandPolicyDescription="jq --argjson index "$counter" '.alerts[\$index].policy.description' image-scan-result"
+
+            alertPolicyDescription=`eval $jqCommandPolicyDescription` > /dev/null
+
+            alertPolicyDescription=`echo "$alertPolicyDescription" | sed s/\"//g`
+
+            jqCommandPolicyRationale="jq --argjson index "$counter" '.alerts[\$index].policy.rationale' image-scan-result"
+
+            alertPolicyRationale=`eval $jqCommandPolicyRationale` > /dev/null
+
+            alertPolicyRationale=`echo "$alertPolicyRationale" | sed s/\"//g`
+
+            jqCommandPolicyRemediation="jq --argjson index "$counter" '.alerts[\$index].policy.remediation' image-scan-result"
+
+            alertPolicyRemediation=`eval $jqCommandPolicyRemediation` > /dev/null
+
+            alertPolicyRemediation=`echo "$alertPolicyRemediation" | sed s/\"//g`
+
             echo "Alert policy name : $alertPolicyName"
+
+            echo "  Description : $alertPolicyDescription"
+
+            echo "  Rationale   : $alertPolicyRationale"
+
+            echo "  Remediation : $alertPolicyRemediation"
 
             read charCount < image-scan-result.wc
 
@@ -91,15 +117,15 @@ spec:
 
               failTask="true"
 
-              echo "-- Build will be halted --"
+              echo "  -- Deployment should not take place with this image --"
 
             else
 
-              echo "-- Policy violations will not stop the build process --"
+              echo "  -- Deployment will be allowed --"
 
             fi
 
-            echo "- - - - - - - - - - - - - - - - - - - - - - - - - -"
+            echo "  - - - - - - - - - - - - - - - - - - - - - - - - - -"
 
             numberViolationsCmd="jq --argjson index \"$counter\" '.alerts[\$index].violations' image-scan-result | jq length"
 
@@ -107,11 +133,11 @@ spec:
 
             if test $numberViolations -eq 1; then
 
-              echo "1 violation found ..."
+              echo "  1 violation found ..."
 
             else
 
-              echo "$numberViolations violations found ..."
+              echo "  $numberViolations violations found ..."
 
             fi
 
@@ -125,13 +151,13 @@ spec:
 
               violation=`echo "$violation" | sed s/\"//g`
 
-              echo "violation : -- $violation"
+              echo "  violation : -- $violation"
 
               violationCounter=`expr $violationCounter + 1`
 
             done
 
-            echo "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -"
+            echo "  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - - -"
 
             echo ""
 
@@ -143,7 +169,7 @@ spec:
 
         else
 
-          echo "-- No errors found in this file --"
+          echo "-- No errors found in this image --"
 
           echo ""
 
@@ -153,13 +179,13 @@ spec:
 
           echo "Setting overall result to fail"
 
-          echo -n "fail" | tee result >> /dev/null
+          echo -n "fail" | tee $(results.scan-result.path) >> /dev/null
 
         else
 
           echo "Setting overall result to pass"
 
-          echo -n "pass" | tee result >> /dev/null
+          echo -n "pass" | tee $(results.scan-result.path) >> /dev/null
 
         fi
 

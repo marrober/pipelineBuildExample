@@ -70,7 +70,7 @@ spec:
             echo "Skipping unsupported resource"
 
           else
-          
+
             echo "Deployment check on file : $file"
 
             ./roxctl deployment check --json --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $file > $file.scan-result
@@ -111,7 +111,31 @@ spec:
 
                 alertPolicyName=`echo "$alertPolicyName" | sed s/\"//g`
 
+                jqCommandPolicyDescription="jq --argjson index "$counter" '.alerts[\$index].policy.description' $file.scan-result"
+
+                alertPolicyDescription=`eval $jqCommandPolicyDescription` > /dev/null
+
+                alertPolicyDescription=`echo "$alertPolicyDescription" | sed s/\"//g`
+
+                jqCommandPolicyRationale="jq --argjson index "$counter" '.alerts[\$index].policy.rationale' $file.scan-result"
+
+                alertPolicyRationale=`eval $jqCommandPolicyRationale` > /dev/null
+
+                alertPolicyRationale=`echo "$alertPolicyRationale" | sed s/\"//g`
+
+                jqCommandPolicyRemediation="jq --argjson index "$counter" '.alerts[\$index].policy.remediation' $file.scan-result"
+
+                alertPolicyRemediation=`eval $jqCommandPolicyRemediation` > /dev/null
+
+                alertPolicyRemediation=`echo "$alertPolicyRemediation" | sed s/\"//g`
+
                 echo "Alert policy name : $alertPolicyName"
+
+                echo "  Description : $alertPolicyDescription"
+
+                echo "  Rationale   : $alertPolicyRationale"
+
+                echo "  Remediation : $alertPolicyRemediation"
 
                 read charCount < $file.scan-result.wc
 
@@ -123,15 +147,15 @@ spec:
 
                   failTask="true"
 
-                  echo "-- Build will be halted --"
+                  echo "  -- Build will be halted --"
 
                 else
 
-                  echo "-- Policy violations will not stop the build process --"
+                  echo "  -- Policy violations will not stop the build process --"
 
                 fi
 
-                echo "- - - - - - - - - - - - - - - - - - - - - - - - - -"
+                echo "  - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 
                 numberViolationsCmd="jq --argjson index \"$counter\" '.alerts[\$index].violations' $file.scan-result | jq length"
 
@@ -140,11 +164,11 @@ spec:
                 if test $numberViolations -eq 1
                 then
 
-                  echo "1 violation found ..."
+                  echo "  1 violation found ..."
 
                 else
 
-                  echo "$numberViolations violations found ..."
+                  echo "  $numberViolations violations found ..."
 
                 fi
 
@@ -159,7 +183,7 @@ spec:
 
                   violation=`echo "$violation" | sed s/\"//g`
 
-                  echo "violation : -- $violation"
+                  echo "  violation : -- $violation"
 
                   violationCounter=`expr $violationCounter + 1`
 
@@ -177,7 +201,7 @@ spec:
 
             else
 
-              echo "-- No errors found in this file --"
+              echo "  -- No errors found in this file --"
 
               echo ""
 

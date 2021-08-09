@@ -1,0 +1,610 @@
+{
+  "alerts": [
+    {
+      "id": "e95f875f-1b4c-4a02-a12a-c378c4d0623b",
+      "policy": {
+        "id": "a919ccaf-6b43-4160-ac5d-a405e1440a41",
+        "name": "Fixable Severity at least Important",
+        "description": "Alert on deployments with fixable vulnerabilities with a Severity Rating at least Important",
+        "rationale": "Known vulnerabilities make it easier for adversaries to exploit your application. You can fix these high-severity vulnerabilities by updating to a newer version of the affected component(s).",
+        "remediation": "Use your package manager to update to a fixed version in future builds or speak with your security team to mitigate the vulnerabilities.",
+        "categories": [
+          "Vulnerability Management"
+        ],
+        "lifecycleStages": [
+          "BUILD",
+          "DEPLOY"
+        ],
+        "severity": "HIGH_SEVERITY",
+        "enforcementActions": [
+          "FAIL_BUILD_ENFORCEMENT",
+          "SCALE_TO_ZERO_ENFORCEMENT",
+          "UNSATISFIABLE_NODE_CONSTRAINT_ENFORCEMENT"
+        ],
+        "lastUpdated": "2021-08-09T13:22:13.690690405Z",
+        "SORTName": "Fixable Severity at least Important",
+        "SORTLifecycleStage": "BUILD,DEPLOY",
+        "SORTEnforcement": true,
+        "policyVersion": "1.1",
+        "policySections": [
+          {
+            "policyGroups": [
+              {
+                "fieldName": "Fixed By",
+                "values": [
+                  {
+                    "value": ".*"
+                  }
+                ]
+              },
+              {
+                "fieldName": "Severity",
+                "values": [
+                  {
+                    "value": "\u003e= IMPORTANT"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "lifecycleStage": "BUILD",
+      "image": {
+        "name": {
+          "registry": "quay.io",
+          "remote": "marrober/liberty-rest",
+          "tag": "latest",
+          "fullName": "quay.io/marrober/liberty-rest:latest"
+        }
+      },
+      "violations": [
+        {
+          "message": "Fixable RHSA-2021:2717 (CVSS 5.5) (severity Important) found in component 'systemd' (version 239-45.el8_4.1.x86_64), resolved by version 0:239-45.el8_4.2"
+        },
+        {
+          "message": "Fixable RHSA-2021:2717 (CVSS 5.5) (severity Important) found in component 'systemd-libs' (version 239-45.el8_4.1.x86_64), resolved by version 0:239-45.el8_4.2"
+        },
+        {
+          "message": "Fixable RHSA-2021:2717 (CVSS 5.5) (severity Important) found in component 'systemd-pam' (version 239-45.el8_4.1.x86_64), resolved by version 0:239-45.el8_4.2"
+        }
+      ],
+      "time": "2021-08-09T14:30:48.315515552Z"
+    },
+    {
+      "id": "93c185ce-d243-4a44-9488-478a6ed2f821",
+      "policy": {
+        "id": "08a06f5c-eed0-4fb8-a09e-16cc975e7beb",
+        "name": "Docker CIS 4.4: Ensure images are scanned and rebuilt to include security patches",
+        "description": "Images should be scanned frequently for any vulnerabilities. You should rebuild all images to include these patches and then instantiate new containers from them.",
+        "rationale": "Vulnerabilities are loopholes or bugs that can be exploited by hackers or malicious users, and security patches are updates to resolve these vulnerabilities. Image vulnerability scanning tools can be use to find vulnerabilities in images and then check for available patches to mitigate these. Patches update the system to a more recent code base which does not contain these problems, and being on a supported version of the code base is very important, as vendors do not tend to supply patches for older versions which have gone out of support. Security patches should be evaluated before applying and patching should be implemented in line with the organization's IT Security Policy. Care should be taken with the results returned by vulnerability assessment tools, as some will simply return results based on software banners, and these may not be entirely accurate.",
+        "remediation": "Images should be re-built ensuring that the latest version of the base images are used, to keep the operating system patch level at an appropriate level. Once the images have been re-built, containers should be re-started making use of the updated images.",
+        "categories": [
+          "Docker CIS"
+        ],
+        "lifecycleStages": [
+          "BUILD"
+        ],
+        "severity": "MEDIUM_SEVERITY",
+        "SORTName": "Docker CIS 4.4: Ensure images are scanned and rebuilt to include security patches",
+        "SORTLifecycleStage": "BUILD",
+        "policyVersion": "1.1",
+        "policySections": [
+          {
+            "policyGroups": [
+              {
+                "fieldName": "Fixed By",
+                "values": [
+                  {
+                    "value": ".*"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "lifecycleStage": "BUILD",
+      "image": {
+        "name": {
+          "registry": "quay.io",
+          "remote": "marrober/liberty-rest",
+          "tag": "latest",
+          "fullName": "quay.io/marrober/liberty-rest:latest"
+        }
+      },
+      "violations": [
+        {
+          "message": "Fixable RHSA-2021:2717 (CVSS 5.5) (severity Important) found in component 'systemd' (version 239-45.el8_4.1.x86_64), resolved by version 0:239-45.el8_4.2"
+        },
+        {
+          "message": "Fixable RHSA-2021:2717 (CVSS 5.5) (severity Important) found in component 'systemd-libs' (version 239-45.el8_4.1.x86_64), resolved by version 0:239-45.el8_4.2"
+        },
+        {
+          "message": "Fixable RHSA-2021:2717 (CVSS 5.5) (severity Important) found in component 'systemd-pam' (version 239-45.el8_4.1.x86_64), resolved by version 0:239-45.el8_4.2"
+        }
+      ],
+      "time": "2021-08-09T14:30:48.318950566Z"
+    },
+    {
+      "id": "6845844c-2fe3-4946-b34d-1c525b8042bc",
+      "policy": {
+        "id": "2e90874a-3521-44de-85c6-5720f519a701",
+        "name": "Latest tag",
+        "description": "Alert on deployments with images using tag 'latest'",
+        "rationale": "Using latest tag can result in running heterogeneous versions of code. Many Docker hosts cache the Docker images, which means newer versions of the latest tag will not be picked up. See https://docs.docker.com/develop/dev-best-practices for more best practices.",
+        "remediation": "Consider moving to semantic versioning based on code releases (semver.org) or using the first 12 characters of the source control SHA. This will allow you to tie the Docker image to the code.",
+        "categories": [
+          "DevOps Best Practices"
+        ],
+        "lifecycleStages": [
+          "BUILD",
+          "DEPLOY"
+        ],
+        "exclusions": [
+          {
+            "name": "Don't alert on kube-system namespace",
+            "deployment": {
+              "scope": {
+                "namespace": "kube-system"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on istio-system namespace",
+            "deployment": {
+              "scope": {
+                "namespace": "istio-system"
+              }
+            }
+          }
+        ],
+        "severity": "LOW_SEVERITY",
+        "SORTName": "Latest tag",
+        "SORTLifecycleStage": "BUILD,DEPLOY",
+        "policyVersion": "1.1",
+        "policySections": [
+          {
+            "policyGroups": [
+              {
+                "fieldName": "Image Tag",
+                "values": [
+                  {
+                    "value": "latest"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "lifecycleStage": "BUILD",
+      "image": {
+        "name": {
+          "registry": "quay.io",
+          "remote": "marrober/liberty-rest",
+          "tag": "latest",
+          "fullName": "quay.io/marrober/liberty-rest:latest"
+        }
+      },
+      "violations": [
+        {
+          "message": "Image has tag 'latest'"
+        }
+      ],
+      "time": "2021-08-09T14:30:48.319656041Z"
+    },
+    {
+      "id": "20be37c4-f1cf-46c0-8dbb-80a925e8d3e8",
+      "policy": {
+        "id": "f95ff08d-130a-465a-a27e-32ed1fb05555",
+        "name": "Red Hat Package Manager in Image",
+        "description": "Alert on deployments with components of the Red Hat/Fedora/CentOS package management system.",
+        "rationale": "Package managers make it easier for attackers to use compromised containers, since they can easily add software.",
+        "remediation": "Run `rpm -e $(rpm -qa *rpm*) $(rpm -qa *dnf*) $(rpm -qa *libsolv*) $(rpm -qa *hawkey*) $(rpm -qa yum*)` in the image build for production containers.",
+        "categories": [
+          "Security Best Practices"
+        ],
+        "lifecycleStages": [
+          "BUILD",
+          "DEPLOY"
+        ],
+        "exclusions": [
+          {
+            "name": "Don't alert on StackRox scanner",
+            "deployment": {
+              "name": "scanner",
+              "scope": {
+                "namespace": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-apiserver",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-apiserver"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-apiserver-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-apiserver-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-authentication",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-authentication"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-authentication-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-authentication-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cloud-credential-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cloud-credential-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cluster-csi-drivers",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cluster-csi-drivers"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cluster-machine-approver",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cluster-machine-approver"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cluster-node-tuning-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cluster-node-tuning-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cluster-samples-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cluster-samples-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cluster-storage-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cluster-storage-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-cluster-version",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-cluster-version"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-config-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-config-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-console",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-console"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-console-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-console-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-controller-manager",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-controller-manager"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-controller-manager-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-controller-manager-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-dns",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-dns"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-dns-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-dns-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-etcd",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-etcd"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-etcd-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-etcd-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-image-registry",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-image-registry"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-ingress",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-ingress"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-ingress-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-ingress-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-insights",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-insights"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-apiserver",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-apiserver"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-apiserver-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-apiserver-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-controller-manager",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-controller-manager"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-controller-manager-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-controller-manager-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-scheduler",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-scheduler"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-scheduler-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-scheduler-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-storage-version-migrator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-storage-version-migrator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-kube-storage-version-migrator-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-kube-storage-version-migrator-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-machine-api",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-machine-api"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-machine-config-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-machine-config-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-marketplace",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-marketplace"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-monitoring",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-monitoring"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-multus",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-multus"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-network-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-network-operator"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-oauth-apiserver",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-oauth-apiserver"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-operator-lifecycle-manager",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-operator-lifecycle-manager"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-sdn",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-sdn"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-service-ca",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-service-ca"
+              }
+            }
+          },
+          {
+            "name": "Don't alert on openshift-service-ca-operator",
+            "deployment": {
+              "scope": {
+                "namespace": "openshift-service-ca-operator"
+              }
+            }
+          }
+        ],
+        "severity": "LOW_SEVERITY",
+        "lastUpdated": "2021-08-03T09:55:45.939224752Z",
+        "SORTName": "Red Hat Package Manager in Image",
+        "SORTLifecycleStage": "BUILD,DEPLOY",
+        "policyVersion": "1.1",
+        "policySections": [
+          {
+            "policyGroups": [
+              {
+                "fieldName": "Image Component",
+                "values": [
+                  {
+                    "value": "rpm|dnf|yum="
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "lifecycleStage": "BUILD",
+      "image": {
+        "name": {
+          "registry": "quay.io",
+          "remote": "marrober/liberty-rest",
+          "tag": "latest",
+          "fullName": "quay.io/marrober/liberty-rest:latest"
+        }
+      },
+      "violations": [
+        {
+          "message": "Image includes component 'dnf' (version 4.4.2-11.el8.noarch)"
+        },
+        {
+          "message": "Image includes component 'rpm' (version 4.14.3-14.el8_4.x86_64)"
+        },
+        {
+          "message": "Image includes component 'yum' (version 4.4.2-11.el8.noarch)"
+        }
+      ],
+      "time": "2021-08-09T14:30:48.320189273Z"
+    }
+  ]
+}
