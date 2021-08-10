@@ -34,7 +34,7 @@ spec:
     outputs:
       - name: intermediate-image
         type: image
-  steps :
+  steps:
     - name: gen-env-file
       command:
         - /bin/sh
@@ -111,10 +111,10 @@ spec:
       image: registry.redhat.io/rhel8/buildah
       resources: {}
   volumes:
-    - emptyDir: {}
-      name: envparams
-    - emptyDir: {}
-      name: gen-source
+  - emptyDir: {}
+    name: envparams
+  - emptyDir: {}
+    name: gen-source
   workspaces:
   - name: files
     mountPath: /files
