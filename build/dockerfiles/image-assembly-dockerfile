@@ -1,0 +1,14 @@
+FROM localhost/$(resources.inputs.intermediate-image.url) as intermediate-image
+FROM openliberty/open-liberty as runtime-image
+COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war
+COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml
+LABEL github.repository.url=\"$(params.gitrepository_url)\" \\
+github.repository.fullname=\"$(params.gitrepository_fullname)\" \\
+github.commit.ref=\"$(params.commit_ref)\" \\
+github.commit.id=\"$(params.commit_id)\" \\
+github.commit.message=\"$(params.commit_message)\" \\
+github.commit.date=\"$(params.commit_date)\" \\
+github.commit_author=\"$(params.commit_author)\" \\
+pipeline.name=\"$(params.pipelineName)\" \\
+pipeline.run=\"$(params.pipelineRunName)\" \\
+pipeline.task.run.name=\"$(context.taskRun.name)\"

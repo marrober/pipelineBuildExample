@@ -8,12 +8,24 @@ spec:
       type: string
     - name: appName
       type: string
+    - name: STORAGE_DRIVER
+      type: string
   results:
     - name: public-repo-location
   steps:
+    - name: view-images
+      command:
+        - buildah
+        - images
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
+      image: registry.redhat.io/rhel8/buildah
     - name: get-public-docker-image-repository
       script: >-
         #!/usr/bin/env bash
+
+        ls /files
 
         set +x
 

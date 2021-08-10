@@ -68,18 +68,22 @@ spec:
 ##------------------------------------------------------------------
 ## TEST
 ##------------------------------------------------------------------
-#  - name: create-runtime-image-test
-#    params:
-#      - name: public-name
-#        value: $(params.public-name)
-#      - name: appName
-#        value: $(params.appName)
-#    taskRef:
-#      kind: Task
-#      name: create-runtime-image-test
-#    workspaces:
-#    - name: files
-#      workspace: files
+  - name: create-runtime-image-test
+    params:
+      - name: public-name
+        value: $(params.public-name)
+      - name: appName
+        value: $(params.appName)
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
+    taskRef:
+      kind: Task
+      name: create-runtime-image-test
+    runAfter:
+    - git-clone-workspace
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Perform image check - TEST
 ##------------------------------------------------------------------
