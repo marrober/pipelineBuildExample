@@ -11,7 +11,7 @@ spec:
     - name: MAVEN_ARGS_APPEND
       description: Additional Maven arguments
       type: string
-      default: ''
+      default: '-X -Dmaven.repo.local=/maven-cache/repository'
     - name: MAVEN_MIRROR_URL
       description: The base URL of a mirror used for retrieving artifacts
       type: string
@@ -58,6 +58,47 @@ spec:
         - name: envparams
           mountPath: /env-params
       workingDir: /env-params
+#    - name: test-1
+#      command:
+#        - mkdir
+#        - /maven-cache/repository
+#      image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+#      volumeMounts:
+#        - name: gen-source
+#          mountPath: /gen-source
+#        - name: envparams
+#          mountPath: /env-params
+#        - name: maven-cache
+#          mountPath: /maven-cache
+      workingDir: /workspace/source
+    - name: test-2
+      command:
+        - chmod
+        - '777'
+        - /maven-cache/repository
+      image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+      volumeMounts:
+        - name: gen-source
+          mountPath: /gen-source
+        - name: envparams
+          mountPath: /env-params
+        - name: maven-cache
+          mountPath: /maven-cache
+      workingDir: /workspace/source
+    - name: test-3
+      command:
+        - ls
+        - -al
+        - /maven-cache
+      image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+      volumeMounts:
+        - name: gen-source
+          mountPath: /gen-source
+        - name: envparams
+          mountPath: /env-params
+        - name: maven-cache
+          mountPath: /maven-cache
+      workingDir: /workspace/source
     - name: generate
       command:
         - s2i
@@ -76,6 +117,8 @@ spec:
           mountPath: /gen-source
         - name: envparams
           mountPath: /env-params
+        - name: maven-cache
+          mountPath: /maven-cache
       workingDir: /workspace/source
     - name: build
       command:
@@ -100,6 +143,8 @@ spec:
       volumeMounts:
         - name: gen-source
           mountPath: /gen-source
+        - name: maven-cache
+          mountPath: /maven-cache
       workingDir: /gen-source
     - name: view-images
       command:
@@ -115,6 +160,9 @@ spec:
     name: envparams
   - emptyDir: {}
     name: gen-source
+  - name: maven-cache
+    persistentVolumeClaim:
+      claimName: maven-cache-pvc
   workspaces:
   - name: files
     mountPath: /files
