@@ -35,12 +35,12 @@ spec:
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-    - name: buildah-list-images-after-tagging
-      command:
-        - buildah
-        - images
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-      image: registry.redhat.io/rhel8/buildah
+#    - name: buildah-list-images-after-tagging
+#      command:
+#        - buildah
+#        - images
+#        - '--storage-driver=$(params.STORAGE_DRIVER)'
+#      image: registry.redhat.io/rhel8/buildah
     - name: push-image-to-quay
       command:
         - buildah

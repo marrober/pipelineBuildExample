@@ -66,43 +66,6 @@ spec:
     type: string
   tasks:
 ##------------------------------------------------------------------
-## TEST
-##------------------------------------------------------------------
-  - name: create-runtime-image-test
-    params:
-      - name: public-name
-        value: $(params.public-name)
-      - name: appName
-        value: $(params.appName)
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    taskRef:
-      kind: Task
-      name: create-runtime-image-test
-    runAfter:
-    - git-clone-workspace
-    workspaces:
-    - name: files
-      workspace: files
-##------------------------------------------------------------------
-# Perform image check - TEST
-##------------------------------------------------------------------
-  - name: image-check-test
-    params:
-      - name: acs_central_endpoint
-        value: $(params.acs_central_endpoint)
-      - name: acs_api_token
-        value: $(params.acs_api_token)
-      - name: public-url
-        value: default-route-openshift-image-registry.apps.cluster-7742.7742.sandbox1284.opentlc.com/liberty-rest/liberty-rest-app
-    taskRef:
-      kind: Task
-      name: acs-image-check
-    workspaces:
-    - name: files
-      workspace: files
-##-----------------------
-##------------------------------------------------------------------
 # Git clone task
 ##------------------------------------------------------------------
   - name: git-clone-workspace
@@ -119,27 +82,7 @@ spec:
     workspaces:
     - name: output
       workspace: files
-##------------------------------------------------------------------
-# Perform resource deployment check on files of interest
-##------------------------------------------------------------------
-  - name: resource-deployment-check
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: source_location
-      value: $(params.file-location-in-git-repo)
-    - name: recursive-search
-      value: $(params.recursive-search)
-    taskRef:
-      kind: Task
-      name: acs-deployment-check
-    workspaces:
-    - name: files
-      workspace: files
-    runAfter:
-    - git-clone-workspace
+
 ##------------------------------------------------------------------
 # Build the jar file deliverable
 ##------------------------------------------------------------------
@@ -202,17 +145,33 @@ spec:
     taskRef:
       kind: Task
       name: create-runtime-image
-#    when:
-#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
     runAfter:
-    - resource-deployment-check
     - build
     workspaces:
     - name: files
       workspace: files
+##------------------------------------------------------------------
+# Perform resource deployment check on files of interest
+##------------------------------------------------------------------
+  - name: resource-deployment-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: source_location
+      value: $(params.file-location-in-git-repo)
+    - name: recursive-search
+      value: $(params.recursive-search)
+    taskRef:
+      kind: Task
+      name: acs-deployment-check
+    workspaces:
+    - name: files
+      workspace: files
+    runAfter:
+    - git-clone-workspace
+    - create-runtime-image
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
@@ -224,8 +183,14 @@ spec:
     taskRef:
       kind: Task
       name: clear-resources
+#    when:
+#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
     runAfter:
       - build
+      - resource-deployment-check
 ##------------------------------------------------------------------
 # Deploy the application locally from the image stream
 ##------------------------------------------------------------------

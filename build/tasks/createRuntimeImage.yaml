@@ -42,6 +42,7 @@ spec:
         type: image
   results:
     - name: public-repo-location
+    - name: new-tag
   steps:
     - name: gen-binary-extraction-dockerfile
       command:
@@ -86,13 +87,16 @@ spec:
         - $(resources.outputs.runtime-image.url)
         - .
       image: registry.redhat.io/rhel8/buildah
-    - name: view-images
+      volumeMounts:
+        - name: envparams
+          mountPath: /env-params
+    - name: generate-tag
       command:
-        - buildah
-        - images
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - '--root'
-        - '/files/buildah-containers'
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
+          cut -d'-' -f6 <<< $(params.pipelineRunName) >  $(results.new-tag.path)
       image: registry.redhat.io/rhel8/buildah
     - name: push-image-to-openshift
       command:
@@ -101,10 +105,11 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--tls-verify=$(params.TLSVERIFY)'
         - '--root'
-        - '/files/buildah-containers'
+        - /files/buildah-containers
         - $(resources.outputs.runtime-image.url)
         - 'docker://$(resources.outputs.runtime-image.url)'
       image: registry.redhat.io/rhel8/buildah
+      resources: {}
     - name: get-public-docker-image-repository
       script: >-
         #!/usr/bin/env bash
@@ -113,15 +118,18 @@ spec:
 
         oc project $(params.appName)
 
-        echo "oc get is/$(params.public-name) -o jsonpath='{.status.publicDockerImageRepository}'> $(results.public-repo-location.path)"
-
-        oc get is
-
-        oc get is/$(params.public-name) -o jsonpath='{.status.publicDockerImageRepository}'
+        echo " New tag: $(results.new-tag.path)"
 
         oc get is/$(params.public-name) -o jsonpath='{.status.publicDockerImageRepository}'> $(results.public-repo-location.path)
 
+        echo "Public repo id : $(results.public-repo-location.path)"
+
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+  volumes:
+    - emptyDir: {}
+      name: envparams
+    - emptyDir: {}
+      name: gen-source
   workspaces:
   - name: files
     mountPath: /files
