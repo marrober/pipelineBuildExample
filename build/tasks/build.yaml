@@ -91,12 +91,7 @@ spec:
         - '-t'
         - $(resources.outputs.intermediate-image.url)
         - .
-      resources:
-        requests:
-          memory: "2000Mi"
-          cpu: "1000m"
       image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
-      resources: {}
       volumeMounts:
         - name: gen-source
           mountPath: /gen-source
