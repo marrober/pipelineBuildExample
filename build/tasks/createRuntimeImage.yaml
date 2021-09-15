@@ -115,4 +115,4 @@ spec:
       name: gen-source
     - name: pipeline-cache
       persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
+        claimName: pipeline-task-cache-pvc-2
