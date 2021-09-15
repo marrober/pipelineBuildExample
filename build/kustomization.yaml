@@ -1,4 +1,5 @@
 resources:
+- rolebindings/argocd-admin.yaml
 - image-streams/imageStream-liberty-rest-app.yaml 
 - persistentVolumes/task-cache-pvc.yaml 
 - resources/imageStreamResource-intermediate.yaml 
