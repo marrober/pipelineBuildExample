@@ -1,0 +1,13 @@
+resources:
+- image-streams/imageStream-liberty-rest-app.yaml 
+- persistentVolumes/task-cache-pvc.yaml 
+- resources/imageStreamResource-intermediate.yaml 
+- resources/imageStreamResource-liberty-rest-app.yaml 
+- resources/sourceCode-GitResource.yaml 
+- tasks/build.yaml 
+- tasks/clearBuildahRepo.yaml 
+- tasks/clearResources.yaml 
+- tasks/createRuntimeImage.yaml 
+- tasks/ocProcessDeploymentTemplate.yaml 
+- tasks/pushImageToQuay.yaml
+- pipelines/pipeline.yaml

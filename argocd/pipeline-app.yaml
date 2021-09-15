@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pipeline-app
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: liberty-rest
+    server: https://kubernetes.default.svc
+  ignoreDifferences:
+  - group: argoproj.io
+    jsonPointers:
+    - /status
+    kind: Application
+  - group: triggers.tekton.dev
+    jsonPointers:
+    - /status
+    kind: EventListener
+  - group: triggers.tekton.dev
+    jsonPointers:
+    - /status
+    kind: TriggerTemplate
+  - group: triggers.tekton.dev
+    jsonPointers:
+    - /status
+    kind: TriggerBinding
+  - group: route.openshift.io
+    jsonPointers:
+    - /spec/host
+    kind: Route
+  project: default
+  source:
+    path: build
+    repoURL: https://github.com/marrober/pipelineBuildExample.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
