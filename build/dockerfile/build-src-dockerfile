@@ -1,4 +1,4 @@
-FROM quay.io/marrober/maven-build@sha256:9b83db48a99ee5c03261a913dacac2a55a6b71a0ad52c9d2b135fbc572bc36bb
+FROM quay.io/marrober/maven-build:latest
 
 USER 1001 
 
