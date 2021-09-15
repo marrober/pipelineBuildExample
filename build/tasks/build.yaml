@@ -101,7 +101,7 @@ spec:
       command:
         - ls
         - -al
-      image: quay.io/marrober/maven-build@sha256:9b83db48a99ee5c03261a913dacac2a55a6b71a0ad52c9d2b135fbc572bc36bb
+      image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
       resources: {}
       volumeMounts:
         - name: pipeline-cache
@@ -119,7 +119,7 @@ spec:
         - '-t'
         - $(resources.outputs.intermediate-image.url)
         - .
-      image: quay.io/marrober/maven-build@sha256:9b83db48a99ee5c03261a913dacac2a55a6b71a0ad52c9d2b135fbc572bc36bb
+      image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
       resources: {}
       volumeMounts:
         - name: pipeline-cache
