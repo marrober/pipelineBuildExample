@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pipeline-task-cache-pvc
+  name: pipeline-task-cache-pvc-2
 spec:
   accessModes:
     - ReadWriteOnce
