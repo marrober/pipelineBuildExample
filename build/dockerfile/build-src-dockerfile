@@ -4,7 +4,14 @@ USER 1001
 
 WORKDIR /home/maven
 
-COPY . .
+RUN mkdir /home/maven/target
+RUN mkdir /home/maven/src
+
+RUN ls -al /home/maven
+
+COPY build/dockerfile/server.xml /home/maven/target
+COPY pom.xml .
+COPY /src /home/maven/src
 
 RUN ls 
 
