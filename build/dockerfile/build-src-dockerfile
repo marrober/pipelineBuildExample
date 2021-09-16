@@ -12,7 +12,7 @@ COPY /src /home/maven/src
 
 RUN ls 
 
-RUN mvn package
+RUN mvn --batch-mode package
 
 RUN ls /home/maven/target
 
