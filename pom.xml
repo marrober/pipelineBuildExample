@@ -136,16 +136,16 @@
                             <outputDirectory>/deployments</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/liberty/config</directory>
+                                    <directory>src</directory>
                                     <includes>
-                                        <include>server.xml</include>
+                                        <include>**/*</include>
                                     </includes>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
-        </plugins>
+            </plugin>  
+       </plugins>
     </build>
 </project>
