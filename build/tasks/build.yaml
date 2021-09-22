@@ -111,7 +111,7 @@ spec:
       command:
         - podman
         - run 
-        - $(resources.outputs.intermediate-image.url)
+        - localhost/$(resources.outputs.intermediate-image.url)
         - ls -alr /deployments
       image: registry.redhat.io/rhel8/podman
       resources: {}
@@ -122,7 +122,7 @@ spec:
       command:
         - podman
         - run 
-        - $(resources.outputs.intermediate-image.url)
+        - localhost/$(resources.outputs.intermediate-image.url)
         - ls -alr /tmp/src
       image: registry.redhat.io/rhel8/podman
       resources: {}
