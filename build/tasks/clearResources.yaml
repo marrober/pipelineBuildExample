@@ -5,7 +5,7 @@ metadata:
 spec:
   params:
     - name: appName
-      default: ""
+      default: ''
       Description: Name of the application to be removed
       type: string
   steps:
