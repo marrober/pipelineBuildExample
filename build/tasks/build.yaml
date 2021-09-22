@@ -126,7 +126,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--authfile'
         - /etc/secret-volume/.dockerconfigjson
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+        - quay.io/marrober/liberty-rest:latest
       image: registry.redhat.io/rhel8/buildah
       volumeMounts:
         - name: quay-auth-secret
