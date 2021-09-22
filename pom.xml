@@ -109,7 +109,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>deployments</outputDirectory>
+                            <outputDirectory>/deployments</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>
@@ -133,7 +133,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>deployments</outputDirectory>
+                            <outputDirectory>/deployments</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/liberty/config</directory>
