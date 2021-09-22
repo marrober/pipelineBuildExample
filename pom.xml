@@ -136,7 +136,7 @@
                             <outputDirectory>/deployments</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src</directory>
+                                    <directory>src/main/liberty/config</directory>
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
