@@ -121,6 +121,30 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin> 
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resource-two</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>deployments</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/liberty/config</directory>
+                                    <includes>
+                                        <include>server.xml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>            
         </plugins>
     </build>
