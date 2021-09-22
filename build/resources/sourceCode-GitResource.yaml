@@ -7,4 +7,6 @@ spec:
   params:
   - name: url
     value: https://github.com/marrober/pipelineBuildExample.git
+    name: revision
+    value: triggers
   type: git
