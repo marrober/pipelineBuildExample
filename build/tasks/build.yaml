@@ -107,6 +107,28 @@ spec:
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
+    - name: view-files-1
+      command:
+        - podman
+        - run 
+        - $(resources.outputs.intermediate-image.url)
+        - ls -alr /deployments
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
+    - name: view-files-2
+      command:
+        - podman
+        - run 
+        - $(resources.outputs.intermediate-image.url)
+        - ls -alr /tmp/src
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
+      volumeMounts:
+        - name: pipeline-cache
+          mountPath: /var/lib/containers
   volumes:
     - emptyDir: {}
       name: envparams
