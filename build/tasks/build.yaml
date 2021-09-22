@@ -112,7 +112,7 @@ spec:
         - buildah
         - tag
         - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - $(resources.inputs.runtime-image.url)
+        - $(resources.outputs.intermediate-image.url)
         - quay.io/marrober/liberty-rest:latest
       image: registry.redhat.io/rhel8/buildah
       resources: {}
@@ -126,7 +126,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--authfile'
         - /etc/secret-volume/.dockerconfigjson
-        - quay.io/marrober/liberty-rest:latest
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       volumeMounts:
         - name: quay-auth-secret
