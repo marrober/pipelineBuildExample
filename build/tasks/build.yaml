@@ -113,7 +113,7 @@ spec:
         - run 
         - $(resources.outputs.intermediate-image.url)
         - ls -alr /deployments
-      image: registry.redhat.io/rhel8/buildah
+      image: registry.redhat.io/rhel8/podman
       resources: {}
       volumeMounts:
         - name: pipeline-cache
@@ -124,7 +124,7 @@ spec:
         - run 
         - $(resources.outputs.intermediate-image.url)
         - ls -alr /tmp/src
-      image: registry.redhat.io/rhel8/buildah
+      image: registry.redhat.io/rhel8/podman
       resources: {}
       volumeMounts:
         - name: pipeline-cache
