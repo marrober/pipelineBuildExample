@@ -60,7 +60,6 @@ spec:
           readOnly: true
         - name: pipeline-cache
           mountPath: /var/lib/containers
-      workingDir: /quay
   volumes:
     - name: quay-auth-secret
       secret:

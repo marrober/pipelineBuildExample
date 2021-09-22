@@ -107,29 +107,37 @@ spec:
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
-    - name: view-files-1
+    - name: buildah-tag-image
       command:
-        - podman
-        - run 
-        - localhost/$(resources.outputs.intermediate-image.url)
-        - ls -alr /deployments
-      image: registry.redhat.io/rhel8/podman
+        - buildah
+        - tag
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - $(resources.inputs.runtime-image.url)
+        - quay.io/marrober/liberty-rest:latest
+      image: registry.redhat.io/rhel8/buildah
       resources: {}
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
-    - name: view-files-2
+    - name: push-image-to-quay
       command:
-        - podman
-        - run 
-        - localhost/$(resources.outputs.intermediate-image.url)
-        - ls -alr /tmp/src
-      image: registry.redhat.io/rhel8/podman
-      resources: {}
+        - buildah
+        - push
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--authfile'
+        - /etc/secret-volume/.dockerconfigjson
+        - quay.io/marrober/liberty-rest:latest
+      image: registry.redhat.io/rhel8/buildah
       volumeMounts:
+        - name: quay-auth-secret
+          mountPath: /etc/secret-volume
+          readOnly: true
         - name: pipeline-cache
           mountPath: /var/lib/containers
   volumes:
+    - name: quay-auth-secret
+      secret:
+        secretName: quay-auth-secret          
     - emptyDir: {}
       name: envparams
     - emptyDir: {}
