@@ -97,16 +97,6 @@ spec:
         - name: gen-source
           mountPath: /gen-source
       workingDir: /gen-source
-#    - name: view-images
-#      command:
-#        - buildah
-#        - images
-#        - '--storage-driver=$(params.STORAGE_DRIVER)'
-#      image: registry.redhat.io/rhel8/buildah
-#      resources: {}
-#      volumeMounts:
-#        - name: pipeline-cache
-#          mountPath: /var/lib/containers
   volumes:
     - name: quay-auth-secret
       secret:
