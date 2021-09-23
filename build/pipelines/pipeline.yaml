@@ -55,13 +55,13 @@ spec:
     type: string
     default: "latest"
   tasks:
-  - name: clear-buildah-repo-start
-    params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    taskRef:
-      kind: Task
-      name: clear-buildah-repo
+#  - name: clear-buildah-repo-start
+#    params:
+#      - name: STORAGE_DRIVER
+#        value: $(params.STORAGE_DRIVER)
+#    taskRef:
+#      kind: Task
+#      name: clear-buildah-repo
   - name: build
     params:
       - name: STORAGE_DRIVER
@@ -76,8 +76,8 @@ spec:
     taskRef:
       kind: Task
       name: build
-    runAfter:
-      - clear-buildah-repo-start
+#    runAfter:
+#      - clear-buildah-repo-start
   - name: create-runtime-image
     params:
       - name: STORAGE_DRIVER

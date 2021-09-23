@@ -65,19 +65,7 @@ spec:
         - name: envparams
           mountPath: /env-params
       workingDir: /env-params
-    - name: df-1
-      command:
-        - df
-        - -m
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
-        - name: envparams
-          mountPath: /env-params
-      workingDir: /env-params
-    - name: extract-built-object
+    - name: create-runtime-image
       command:
         - buildah
         - bud
@@ -97,17 +85,17 @@ spec:
         - name: envparams
           mountPath: /env-params
       workingDir: /var/lib/containers
-    - name: view-images
-      command:
-        - buildah
-        - images
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
-    - name: push-image-to-openshift
+#    - name: view-images
+#      command:
+#        - buildah
+#        - images
+#        - '--storage-driver=$(params.STORAGE_DRIVER)'
+#      image: registry.redhat.io/rhel8/buildah
+#      resources: {}
+#      volumeMounts:
+#        - name: pipeline-cache
+#          mountPath: /var/lib/containers
+    - name: push-runtime-image-to-openshift
       command:
         - buildah
         - push

@@ -36,15 +36,15 @@ spec:
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
-    - name: buildah-list-images-after-tagging
-      command:
-        - buildah
-        - images
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-      image: registry.redhat.io/rhel8/buildah
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
+#    - name: buildah-list-images-after-tagging
+#      command:
+#        - buildah
+#        - images
+#        - '--storage-driver=$(params.STORAGE_DRIVER)'
+#      image: registry.redhat.io/rhel8/buildah
+#      volumeMounts:
+#        - name: pipeline-cache
+#          mountPath: /var/lib/containers
     - name: push-image-to-quay
       command:
         - buildah
