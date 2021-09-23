@@ -23,17 +23,17 @@ spec:
       - name: runtime-image
         type: image
   steps:
-    - name: view-git-files
-      resources: {}
-      command:
-        - ls
-        - -al
-        - /workspace/source/$(params.templateFileName)
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      volumeMounts:
-        - name: deployment-files
-          mountPath: /deployment-files
-      workingDir: /deployment-files
+#    - name: view-git-files
+#      resources: {}
+#      command:
+#        - ls
+#        - -al
+#        - /workspace/source/$(params.templateFileName)
+#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+#      volumeMounts:
+#        - name: deployment-files
+#          mountPath: /deployment-files
+#      workingDir: /deployment-files
     - name: gen-oc-process-script
       command:
         - /bin/sh
@@ -62,24 +62,24 @@ spec:
         - name: deployment-files
           mountPath: /deployment-files
       workingDir: /deployment-files
-    - name: oc-get-resources
-      resources: {}
-      command:
-        - oc
-        - get 
-        - all 
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-    - name: view-deployment-files
-      resources: {}
-      command:
-        - ls
-        - -alR
-        - /deployment-files
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      volumeMounts:
-        - name: deployment-files
-          mountPath: /deployment-files
-      workingDir: /deployment-files
+#    - name: oc-get-resources
+#      resources: {}
+#      command:
+#        - oc
+#        - get 
+#        - all 
+#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+#    - name: view-deployment-files
+#      resources: {}
+#      command:
+#        - ls
+#        - -alR
+#        - /deployment-files
+#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+#      volumeMounts:
+#        - name: deployment-files
+#          mountPath: /deployment-files
+#      workingDir: /deployment-files
   volumes:
     - emptyDir: {}
       name: deployment-files
