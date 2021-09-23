@@ -7,5 +7,4 @@ spec:
   params:
   - name: url
     value: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app
-#    value: default-route-openshift-image-registry.apps.cluster-7742.7742.sandbox1284.opentlc.com/liberty-rest/liberty-rest-app
-  type: image
+  type: image 

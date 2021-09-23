@@ -4,9 +4,7 @@ metadata:
   name: liberty-rest-app-source-code
   namespace: liberty-rest
 spec:
-  type: git
   params:
   - name: url
     value: https://github.com/marrober/pipelineBuildExample.git
-  - name: revision
-    value: acs
+  type: git
