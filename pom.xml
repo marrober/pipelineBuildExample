@@ -64,7 +64,7 @@
             <artifactId>yasson</artifactId>
             <version>1.0.7</version>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>  -->
     </dependencies>
 
     <build>
@@ -92,8 +92,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
-            </plugin>
-            <!-- Plugin to run unit tests -->
+            </plugin> -->
+            <!-- Plugin to run unit tests 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
