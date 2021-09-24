@@ -9,7 +9,7 @@ resources:
 - tasks/clearBuildahRepo.yaml 
 - tasks/clearResources.yaml 
 - tasks/createRuntimeImage.yaml 
-- tasks/ocProcessDeploymentTemplate.yaml 
+- tasks/ocDeployApplication.yaml 
 - tasks/pushImageToQuay.yaml
 - tasks/acs-deployment-check.yaml
 - tasks/acs-image-check.yaml
