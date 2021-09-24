@@ -11,4 +11,6 @@ resources:
 - tasks/createRuntimeImage.yaml 
 - tasks/ocProcessDeploymentTemplate.yaml 
 - tasks/pushImageToQuay.yaml
+- tasks/acs-deployment-check.yaml
+- tasks/acs-image-check.yaml
 - pipelines/pipeline.yaml
