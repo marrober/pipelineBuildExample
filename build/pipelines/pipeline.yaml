@@ -54,6 +54,8 @@ spec:
   - name: quay-io-image-tag-name
     type: string
     default: "latest"
+  - name: publicName
+    type: string
   tasks:
   - name: clear-buildah-repo-start
     params:
@@ -102,6 +104,10 @@ spec:
         value: $(context.pipelineRun.name)
       - name: pipelineName
         value: $(context.pipeline.name)
+      - name: publicName
+        value: $(params.publicName)
+      - name: appName
+        value: $(params.appName)
     resources:
       inputs:
       - name: intermediate-image

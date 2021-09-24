@@ -29,7 +29,7 @@ spec:
       type: string
     - name: pipelineRunName
       type: string
-    - name: public-name
+    - name: publicName
       type: string
     - name: appName
       type: string
@@ -120,7 +120,7 @@ spec:
 
         echo " New tag: $(results.new-tag.path)"
 
-        oc get is/$(params.public-name) -o jsonpath='{.status.publicDockerImageRepository}'> $(results.public-repo-location.path)
+        oc get is/$(params.publicName) -o jsonpath='{.status.publicDockerImageRepository}'> $(results.public-repo-location.path)
 
         echo "Public repo id : $(results.public-repo-location.path)"
 
