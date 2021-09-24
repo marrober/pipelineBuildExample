@@ -6,9 +6,5 @@ COPY src/main/liberty/config/server.xml /home/maven/target
 COPY pom.xml .
 COPY /src /home/maven/src
 
-RUN ls 
-
-RUN mvn --batch-mode package
-
-RUN ls /home/maven/target
+RUN ls && mvn --batch-mode package && ls /home/maven/target
 
