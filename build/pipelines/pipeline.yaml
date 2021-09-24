@@ -86,7 +86,6 @@ spec:
     workspaces:
     - name: output
       workspace: files
-
 ##------------------------------------------------------------------
 # Build the jar file deliverable
 ##------------------------------------------------------------------
@@ -135,8 +134,8 @@ spec:
         value: $(context.pipelineRun.name)
       - name: pipelineName
         value: $(context.pipeline.name)
-      - name: public-name
-        value: $(params.public-name)
+      - name: publicName
+        value: $(params.publicName)
       - name: appName
         value: $(params.appName)
     resources:
