@@ -26,3 +26,7 @@ LABEL \
         maintainer="mroberts@redhat.com" \
         io.openshift.maintainer.product="OpenShift Container Platform" \
         io.openshift.maintainer.component="Maven" 
+
+WORKDIR /home/maven
+
+RUN mkdir /home/maven/target /home/maven/src

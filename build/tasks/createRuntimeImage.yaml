@@ -52,8 +52,8 @@ spec:
         - |-
           echo "FROM localhost/$(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
           echo "FROM openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
-          echo "COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
-          echo "COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /home/maven/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /home/maven/target/server.xml /config/server.xml" >> ext-dockerfile.gen
           echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
           echo "github.repository.fullname=\"$(params.gitrepository_fullname)\" \\" >> ext-dockerfile.gen
           echo "github.commit.ref=\"$(params.commit_ref)\" \\" >> ext-dockerfile.gen
