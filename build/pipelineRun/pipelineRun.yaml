@@ -48,3 +48,25 @@ spec:
       value: "latest"
     - name: publicName
       value: liberty-rest-app
+    - name: acs_central_endpoint
+      value: acs-secret
+    - name: acs_api_token
+      value: acs-secret
+    - name: git-url
+      value: https://github.com/marrober/pipelineBuildExample.git
+    - name: git-revision
+      value: acs
+    - name: file-location-in-git-repo
+      value: deployment
+    - name: recursive-search
+      value: "true"      
+  workspaces:
+  - name: files
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 15Gi
+
