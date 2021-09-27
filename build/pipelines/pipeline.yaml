@@ -74,6 +74,8 @@ spec:
     taskRef:
       kind: Task
       name: build
+    runAfter:
+    - clear-buildah-repo-start
   - name: generate-runtime-image-dockerfile
     params:
       - name: gitrepository_url
