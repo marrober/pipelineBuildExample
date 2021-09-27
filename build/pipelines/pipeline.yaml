@@ -174,7 +174,6 @@ spec:
       workspace: files
     runAfter:
     - git-clone-workspace
-    - create-runtime-image
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
@@ -192,7 +191,7 @@ spec:
 #      values:
 #      - "pass"
     runAfter:
-      - build
+      - create-runtime-image
       - resource-deployment-check
 ##------------------------------------------------------------------
 # Deploy the application locally from the image stream
@@ -206,7 +205,7 @@ spec:
       kind: Task
       name: oc-deploy-application
     runAfter:
-      - create-runtime-image
+      - resource-deployment-check
       - clear-resources
 ##------------------------------------------------------------------
 # Perform image check
