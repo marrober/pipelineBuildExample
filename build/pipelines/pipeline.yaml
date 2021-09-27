@@ -76,12 +76,10 @@ spec:
     taskRef:
       kind: Task
       name: build
-#    runAfter:
-#      - clear-buildah-repo-start
-  - name: create-runtime-image
+  - name: generate-runtime-image-dockerfile
     params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
+      - name: appName
+        value: $(params.appName)
       - name: gitrepository_url
         value: $(params.url)
       - name: gitrepository_fullname
@@ -101,7 +99,14 @@ spec:
       - name: pipelineRunName
         value: $(context.pipelineRun.name)
       - name: pipelineName
-        value: $(context.pipeline.name)
+        value: $(context.pipeline.name)        
+    taskRef:
+      kind: Task
+      name: generate-runtime-image-dockerfile
+  - name: create-runtime-image
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
     resources:
       inputs:
       - name: intermediate-image
@@ -114,6 +119,7 @@ spec:
       name: create-runtime-image
     runAfter:
       - build
+      - generate-runtime-image-dockerfile
   - name: clear-resources
     params:
       - name: appName
