@@ -7,8 +7,6 @@ spec:
   triggers:
     - name: github-listener
       bindings:
-#         Up to version 4.5 of OpenShift Pipelines the binding has a 'name' item
-#         From the preview version of the operator forwards the binding has a 'ref' item
         - ref: liberty-rest-pipeline-binding
       template:
         ref: liberty-rest-trigger-pipeline-template
