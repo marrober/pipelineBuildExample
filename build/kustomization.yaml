@@ -13,3 +13,7 @@ resources:
 - tasks/ocProcessDeploymentTemplate.yaml 
 - tasks/pushImageToQuay.yaml
 - pipelines/pipeline.yaml
+- triggers/eventListener.yaml 
+- triggers/eventListenerRoute.yaml 
+- triggers/triggerBinding.yaml 
+- triggers/triggerTemplate.yaml 
