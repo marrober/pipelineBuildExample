@@ -11,4 +11,4 @@ spec:
 #         From the preview version of the operator forwards the binding has a 'ref' item
         - ref: liberty-rest-pipeline-binding
       template:
-        name: liberty-rest-trigger-pipeline-template
+        ref: liberty-rest-trigger-pipeline-template
