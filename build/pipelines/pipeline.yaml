@@ -78,8 +78,6 @@ spec:
       name: build
   - name: generate-runtime-image-dockerfile
     params:
-      - name: appName
-        value: $(params.appName)
       - name: gitrepository_url
         value: $(params.url)
       - name: gitrepository_fullname
