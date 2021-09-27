@@ -96,6 +96,13 @@ spec:
         value: $(context.pipelineRun.name)
       - name: pipelineName
         value: $(context.pipeline.name)        
+    resources:
+      inputs:
+      - name: intermediate-image
+        resource: intermediate-image
+      outputs:
+      - name: runtime-image
+        resource: runtime-image    
     taskRef:
       kind: Task
       name: generate-runtime-image-dockerfile
