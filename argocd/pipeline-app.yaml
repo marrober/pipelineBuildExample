@@ -32,8 +32,4 @@ spec:
   source:
     path: build
     repoURL: https://github.com/marrober/pipelineBuildExample.git
-    targetRevision: triggers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    targetRevision: main

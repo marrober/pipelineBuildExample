@@ -1,0 +1,9 @@
+<server description="libert-rest-server">
+    <featureManager>
+        <feature>jsp-2.3</feature>
+    </featureManager>
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="8080"
+                  httpsPort="8443" />
+    <applicationManager autoExpand="true" />
+</server>
