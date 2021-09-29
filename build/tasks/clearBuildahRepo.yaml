@@ -8,16 +8,16 @@ spec:
       description: The Buildah storage STORAGE_DRIVER
       type: string
   steps :
-    - name: buildah-list-images
-      command:
-        - buildah
-        - images
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
+#    - name: buildah-list-images
+#      command:
+#        - buildah
+#        - images
+#        - '--storage-driver=$(params.STORAGE_DRIVER)'
+#      image: registry.redhat.io/rhel8/buildah
+#      resources: {}
+#      volumeMounts:
+#        - name: pipeline-cache
+#          mountPath: /var/lib/containers
     - name: buildah-remove-images
       command:
         - buildah

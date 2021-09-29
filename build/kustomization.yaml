@@ -1,4 +1,5 @@
 resources:
+- namespace/namespace.yaml
 - rolebindings/argocd-admin.yaml
 - image-streams/imageStream-liberty-rest-app.yaml 
 - persistentVolumes/task-cache-pvc.yaml 
@@ -12,3 +13,7 @@ resources:
 - tasks/ocProcessDeploymentTemplate.yaml 
 - tasks/pushImageToQuay.yaml
 - pipelines/pipeline.yaml
+- triggers/eventListener.yaml 
+- triggers/eventListenerRoute.yaml 
+- triggers/triggerBinding.yaml 
+- triggers/triggerTemplate.yaml 

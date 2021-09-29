@@ -4,17 +4,17 @@ metadata:
   name: oc-process-deployment-template
 spec:
   params:
-    - name: templateFileName
-      default: ""
-      Description: Deployment template file
+    - default: ''
+      description: Deployment template file
+      name: templateFileName
       type: string
-    - name: appName
-      default: ""
-      Description: Name of the application to be deployed
+    - default: ''
+      description: Name of the application to be deployed
+      name: appName
       type: string
-    - name: appGroup
-      default: ""
-      Description: Application grouping within the topology view of the OpenShift web UI
+    - default: ''
+      description: Application grouping within the topology view of the OpenShift web UI
+      name: appGroup
       type: string
   resources:
     inputs:
@@ -23,17 +23,17 @@ spec:
       - name: runtime-image
         type: image
   steps:
-    - name: view-git-files
-      resources: {}
-      command:
-        - ls
-        - -al
-        - /workspace/source/$(params.templateFileName)
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      volumeMounts:
-        - name: deployment-files
-          mountPath: /deployment-files
-      workingDir: /deployment-files
+#    - name: view-git-files
+#      resources: {}
+#      command:
+#        - ls
+#        - -al
+#        - /workspace/source/$(params.templateFileName)
+#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+#      volumeMounts:
+#        - name: deployment-files
+#          mountPath: /deployment-files
+#      workingDir: /deployment-files
     - name: gen-oc-process-script
       command:
         - /bin/sh
@@ -62,24 +62,24 @@ spec:
         - name: deployment-files
           mountPath: /deployment-files
       workingDir: /deployment-files
-    - name: oc-get-resources
-      resources: {}
-      command:
-        - oc
-        - get 
-        - all 
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-    - name: view-deployment-files
-      resources: {}
-      command:
-        - ls
-        - -alR
-        - /deployment-files
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      volumeMounts:
-        - name: deployment-files
-          mountPath: /deployment-files
-      workingDir: /deployment-files
+#    - name: oc-get-resources
+#      resources: {}
+#      command:
+#        - oc
+#        - get 
+#        - all 
+#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+#    - name: view-deployment-files
+#      resources: {}
+#      command:
+#        - ls
+#        - -alR
+#        - /deployment-files
+#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+#      volumeMounts:
+#        - name: deployment-files
+#          mountPath: /deployment-files
+#      workingDir: /deployment-files
   volumes:
     - emptyDir: {}
       name: deployment-files
