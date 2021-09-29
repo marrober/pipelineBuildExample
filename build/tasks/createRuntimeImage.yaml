@@ -9,6 +9,26 @@ spec:
       default: 'false'
     - name: STORAGE_DRIVER
       type: string
+    - name: gitrepository_url
+      type: string
+    - name: gitrepository_fullname
+      type: string
+    - name: commit_prior_revision
+      type: string
+    - name: commit_ref
+      type: string
+    - name: commit_id
+      type: string
+    - name: commit_date
+      type: string
+    - name: commit_message
+      type: string
+    - name: commit_author
+      type: string
+    - name: pipelineName
+      type: string
+    - name: pipelineRunName
+      type: string
   resources:
     inputs:
       - name: intermediate-image
@@ -17,6 +37,34 @@ spec:
       - name: runtime-image
         type: image
   steps:
+    - name: gen-binary-extraction-dockerfile
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
+          echo "FROM $(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
+          echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /deployments/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /deployments/server.xml /config/server.xml" >> ext-dockerfile.gen
+          echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
+          echo "github.repository.fullname=\"$(params.gitrepository_fullname)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.ref=\"$(params.commit_ref)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.id=\"$(params.commit_id)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.message=\"$(params.commit_message)\" \\" >> ext-dockerfile.gen
+          echo "github.commit.date=\"$(params.commit_date)\" \\" >> ext-dockerfile.gen
+          echo "github.commit_author=\"$(params.commit_author)\" \\" >> ext-dockerfile.gen
+          echo "pipeline.name=\"$(params.pipelineName)\" \\" >> ext-dockerfile.gen
+          echo "pipeline.run=\"$(params.pipelineRunName)\" \\" >> ext-dockerfile.gen
+          echo "pipeline.task.run.name=\"$(context.taskRun.name)\"" >> ext-dockerfile.gen
+          echo "------------------------------"
+          cat ext-dockerfile.gen
+          echo "------------------------------"
+      image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+      volumeMounts:
+        - name: envparams
+          mountPath: /env-params
+      workingDir: /env-params
     - name: create-runtime-image
       command:
         - buildah
@@ -25,7 +73,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--layers'
         - '-f'
-        - /var/lib/containers/ext-dockerfile.gen
+        - /env-params/ext-dockerfile.gen
         - '-t'
         - $(resources.outputs.runtime-image.url)
         - .
@@ -34,7 +82,19 @@ spec:
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
+        - name: envparams
+          mountPath: /env-params
       workingDir: /var/lib/containers
+#    - name: view-images
+#      command:
+#        - buildah
+#        - images
+#        - '--storage-driver=$(params.STORAGE_DRIVER)'
+#      image: registry.redhat.io/rhel8/buildah
+#      resources: {}
+#      volumeMounts:
+#        - name: pipeline-cache
+#          mountPath: /var/lib/containers
     - name: push-runtime-image-to-openshift
       command:
         - buildah
@@ -49,6 +109,10 @@ spec:
         - name: pipeline-cache
           mountPath: /var/lib/containers
   volumes:
+    - emptyDir: {}
+      name: envparams
+    - emptyDir: {}
+      name: gen-source
     - name: pipeline-cache
       persistentVolumeClaim:
         claimName: pipeline-task-cache-pvc

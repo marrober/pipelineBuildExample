@@ -10,7 +10,6 @@ resources:
 - tasks/clearBuildahRepo.yaml 
 - tasks/clearResources.yaml 
 - tasks/createRuntimeImage.yaml 
-- tasks/generate-runtime-image-dockerfile.yaml
 - tasks/ocProcessDeploymentTemplate.yaml 
 - tasks/pushImageToQuay.yaml
 - pipelines/pipeline.yaml
