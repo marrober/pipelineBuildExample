@@ -8,5 +8,5 @@ spec:
   - name: url
     value: https://github.com/marrober/pipelineBuildExample.git
   - name: revision
-    value: triggers
+    value: main
   type: git
