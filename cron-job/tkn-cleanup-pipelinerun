@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  parallelism: 1    
+  completions: 1    
+  activeDeadlineSeconds: 60 
+  backoffLimit: 6   
+  template:         
+    metadata:
+      name: tkn-clean-pipeline
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: OnFailure 

@@ -4,9 +4,9 @@ metadata:
   name: clear-resources
 spec:
   params:
-    - name: appName
-      default: ""
-      Description: Name of the application to be removed
+    - default: ''
+      description: Name of the application to be removed
+      name: appName
       type: string
   steps:
     - name: clear-resources
