@@ -65,7 +65,7 @@ spec:
 
         do
 
-          if ((grep -q "apiVersion: route.openshift.io" "$file") || (grep -q "apiVersion: kustomize.config.k8s.io" "$file")); then
+          if (((grep -q "apiVersion: route.openshift.io" "$file") -eq 0) || ((grep -q "apiVersion: kustomize.config.k8s.io" "$file") -eq 0)); then
 
             echo "Skipping unsupported resource : $file"
 
