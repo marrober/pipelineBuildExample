@@ -1,4 +1,5 @@
 resources:
+- namespace/namespace.yaml
 - rolebindings/argocd-admin.yaml
 - image-streams/imageStream-liberty-rest-app.yaml 
 - resources/imageStreamResource-intermediate.yaml 
