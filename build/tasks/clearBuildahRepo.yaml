@@ -12,6 +12,8 @@ spec:
       command:
         - buildah
         - images
+        - '--root'
+        - '/files/buildah-containers'          
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
@@ -22,15 +24,13 @@ spec:
       command:
         - buildah
         - rmi
+        - '--root'
+        - '/files/buildah-containers'          
         - '-a'
         - '-f'
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
-  volumes:
-    - name: pipeline-cache
-      persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
+  workspaces:
+  - name: files
+    mountPath: /files

@@ -8,12 +8,6 @@ spec:
       - name: source
         type: git
   steps:
-#    - name: view-git-files
-#      command:
-#        - ls
-#        - -al
-#        - /workspace/source/deployment
-#      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
     - name: oc-create-resources
       command:
         - oc

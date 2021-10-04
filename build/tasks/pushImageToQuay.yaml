@@ -54,3 +54,6 @@ spec:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
+  workspaces:
+  - name: files
+    mountPath: /files
