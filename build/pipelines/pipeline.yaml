@@ -185,11 +185,11 @@ spec:
     taskRef:
       kind: Task
       name: clear-resources
-#    when:
-#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
+    when:
+    - input: "$(tasks.resource-deployment-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     runAfter:
       - create-runtime-image
       - resource-deployment-check
@@ -204,6 +204,11 @@ spec:
     taskRef:
       kind: Task
       name: oc-deploy-application
+    when:
+    - input: "$(tasks.resource-deployment-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"      
     runAfter:
       - resource-deployment-check
       - clear-resources
@@ -220,7 +225,7 @@ spec:
         value: $(tasks.create-runtime-image.results.public-repo-location)
     taskRef:
       kind: Task
-      name: acs-image-check
+      name: acs-image-check     
     runAfter:
       - create-runtime-image
     workspaces:
