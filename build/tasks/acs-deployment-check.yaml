@@ -73,11 +73,9 @@ spec:
 
           result2=$?
 
-          echo $file
-
           if [ $result1 == "0" ] || [ $result2 == "0" ] ; then
 
-            echo "Skipping unsupported resource : $file"
+            echo "."
 
           else
 
