@@ -32,7 +32,7 @@ spec:
   source:
     path: build
     repoURL: https://github.com/marrober/pipelineBuildExample.git
-    targetRevision: acs
+    targetRevision: fix-acs
   syncPolicy:
     automated:
       prune: true

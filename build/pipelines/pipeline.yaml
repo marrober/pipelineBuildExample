@@ -38,6 +38,8 @@ spec:
     type: string
   - name: appName
     type: string
+  - name: baseImage
+    type: string
     default: liberty-rest
   - name: templateFileName
     type: string
@@ -138,6 +140,8 @@ spec:
         value: $(params.publicName)
       - name: appName
         value: $(params.appName)
+      - name: baseImage
+        value: $(params.baseImage)
     resources:
       inputs:
       - name: intermediate-image
