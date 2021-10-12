@@ -69,9 +69,9 @@ spec:
     type: string    
   tasks:
 ##------------------------------------------------------------------
-# Git clone task
+# Git clone resources task
 ##------------------------------------------------------------------
-  - name: git-clone-workspace
+  - name: git-clone-resources
     params:
     - name: url
       value: $(params.git-url)
@@ -79,12 +79,33 @@ spec:
       value: $(params.git-revision)
     - name: verbose
       value: 'false'
+    - name: subdirectory
+      value: resources
     taskRef:
       kind: ClusterTask
       name:  git-clone
     workspaces:
     - name: output
       workspace: files
+##------------------------------------------------------------------
+# Git clone source code task
+##------------------------------------------------------------------
+  - name: git-clone-source
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.git-revision)
+    - name: verbose
+      value: 'false'
+    - name: subdirectory
+      value: source
+    taskRef:
+      kind: ClusterTask
+      name:  git-clone
+    workspaces:
+    - name: output
+      workspace: files      
 ##------------------------------------------------------------------
 # Build the jar file deliverable
 ##------------------------------------------------------------------
@@ -93,15 +114,14 @@ spec:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
     resources:
-      inputs:
-      - name: source
-        resource: app-source
       outputs:
       - name: intermediate-image
         resource: intermediate-image
     taskRef:
       kind: Task
       name: build
+    runAfter:
+    - git-clone-source      
     workspaces:
     - name: files
       workspace: files
@@ -167,8 +187,6 @@ spec:
       value: $(params.file-location-in-git-repo)
     - name: recursive-search
       value: $(params.recursive-search)
-    - name: git-clone-commit-id
-      value: $(tasks.git-clone-workspace.results.commit)
     taskRef:
       kind: Task
       name: acs-deployment-check
@@ -176,7 +194,7 @@ spec:
     - name: files
       workspace: files
     runAfter:
-    - git-clone-workspace
+    - git-clone-resources
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment

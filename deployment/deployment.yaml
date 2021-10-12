@@ -28,7 +28,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: acs_central_endpoint
-                name: $(params.acs_central_endpoint)          
+                name: acs-secret        
         volumes:
         - name: docker-socket
           hostPath:

@@ -16,8 +16,6 @@ spec:
     - name: recursive-search
       description: search for files recursively in directory tree
       type: string
-    - name: git-clone-commit-id
-      type: string
   results:
     - name: scan-result
   steps:
@@ -43,8 +41,6 @@ spec:
 
         set +x
 
-        echo "$(params.git-clone-commit-id)"
-
         curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
         https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
         ./roxctl > /dev/null; echo "Getting roxctl"
@@ -55,11 +51,11 @@ spec:
 
         if [[ "$(params.recursive-search)" == "true" ]]; then
 
-          fileList=`find /files/$(params.source_location) -name '*.yaml' -o -name '*.yml'`
+          fileList=`find /files/resources/$(params.source_location) -name '*.yaml' -o -name '*.yml'`
 
         else
 
-          fileList=`ls /files/$(params.source_location)/*.y*ml`
+          fileList=`ls /files/resources/$(params.source_location)/*.y*ml`
 
         fi
 
