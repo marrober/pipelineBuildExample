@@ -41,9 +41,6 @@ spec:
   - name: baseImage
     type: string
     default: liberty-rest
-  - name: templateFileName
-    type: string
-    default: build/template/deploy-app-template.yaml
   - name: appGroup
     type: string
     default: Liberty
