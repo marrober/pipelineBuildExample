@@ -23,13 +23,19 @@ spec:
         - containerPort: 9080
           name: http
           protocol: TCP
+        env:          
+          - name: ROX_CENTRAL_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                key: acs_central_endpoint
+                name: $(params.acs_central_endpoint)          
         volumes:
         - name: docker-socket
           hostPath:
             path: /var/run/docker.sock
         - name: host-etc
           hostPath:
-            path: /etc
+            path: /etc/passwd
         resources:
           requests:
             memory: "64Mi"
