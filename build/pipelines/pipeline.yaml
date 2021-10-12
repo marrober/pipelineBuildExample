@@ -167,6 +167,8 @@ spec:
       value: $(params.file-location-in-git-repo)
     - name: recursive-search
       value: $(params.recursive-search)
+    - name: git-clone-commit-id
+      value: $(tasks.git-clone-workspace.results.commit)"
     taskRef:
       kind: Task
       name: acs-deployment-check

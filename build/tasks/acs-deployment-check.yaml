@@ -16,6 +16,8 @@ spec:
     - name: recursive-search
       description: search for files recursively in directory tree
       type: string
+    - name: git-clone-commit-id
+      type: string
   results:
     - name: scan-result
   steps:
@@ -40,6 +42,8 @@ spec:
         #!/usr/bin/env bash
 
         set +x
+
+        echo "$(params.git-clone-commit-id)"
 
         curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
         https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
