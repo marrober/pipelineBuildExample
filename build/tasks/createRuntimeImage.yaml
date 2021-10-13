@@ -45,7 +45,7 @@ spec:
       - name: runtime-image
         type: image
   results:
-    - name: public-repo-location
+    - name: new-image-repo-location
     - name: new-tag
   steps:
     - name: gen-binary-extraction-dockerfile
