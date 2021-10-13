@@ -16,4 +16,4 @@ resources:
 - triggers/eventListener.yaml
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
-- triggers/Template.yaml
+- triggers/triggerTemplate.yaml
