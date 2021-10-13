@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: liberty-rest
-        image: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:latest
+        image: quay.io/marrober/liberty-rest:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9080
