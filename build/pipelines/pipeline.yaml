@@ -234,9 +234,9 @@ spec:
       - resource-deployment-check
       - clear-resources
 ##------------------------------------------------------------------
-# Perform image check
+# Perform image build check
 ##------------------------------------------------------------------
-  - name: image-check
+  - name: image-build-check
     params:
       - name: acs_central_endpoint
         value: $(params.acs_central_endpoint)
@@ -246,7 +246,7 @@ spec:
         value: $(tasks.create-runtime-image.results.new-image-repo-location)
     taskRef:
       kind: Task
-      name: acs-image-check     
+      name: acs-image-build-check    
     runAfter:
       - create-runtime-image
     workspaces:
@@ -262,7 +262,7 @@ spec:
       - name: quay-io-repository
         value: $(params.quay-io-repository)
       - name: quay-io-image-tag-name
-        value: $(params.quay-io-image-tag-name)
+        value: $(tasks.create-runtime-image.results.new-tag)
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
     resources:
@@ -273,12 +273,12 @@ spec:
       kind: Task
       name: push-image-to-quay
     when:
-    - input: "$(tasks.image-check.results.scan-result)"
+    - input: "$(tasks.image-build-check.results.scan-result)"
       operator: in
       values:
       - "pass"
     runAfter:
-      - image-check
+      - image-build-check
     workspaces:
     - name: files
       workspace: files

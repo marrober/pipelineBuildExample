@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: acs-image-check
+  name: acs-image-build-check
 spec:
   params:
     - name: acs_central_endpoint
@@ -18,7 +18,7 @@ spec:
 ##------------------------------------------------------------------
 # Rox iamge check - check built image
 ##------------------------------------------------------------------
-    - name: rox-image-check
+    - name: rox-image-build-check
       env:
         - name: ROX_API_TOKEN
           valueFrom:
