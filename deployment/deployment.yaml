@@ -23,9 +23,10 @@ spec:
         - containerPort: 9080
           name: http
           protocol: TCP
-        env:          
-          - name: VAR-1
-            valueFrom:
-              secretKeyRef:
-                key: acs_central_endpoint
-                name: acs-secret        
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
