@@ -135,8 +135,8 @@ spec:
         - '-c'
       args:
         - |-
-        oc project $(params.appName)
-        oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}' $(results.new-image-repo-location.path)
+          oc project $(params.appName)
+          oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}' $(results.new-image-repo-location.path)
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:
     - emptyDir: {}
