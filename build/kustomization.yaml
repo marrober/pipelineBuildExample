@@ -13,3 +13,7 @@ resources:
 - tasks/acs-deployment-check.yaml
 - tasks/acs-image-build-check.yaml
 - pipelines/pipeline.yaml
+- triggers/eventListener.yaml
+- triggers/eventListenerRoute.yaml
+- triggers/triggerBinding.yaml
+- triggers/Template.yaml
