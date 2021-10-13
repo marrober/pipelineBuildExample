@@ -94,13 +94,15 @@ spec:
       volumeMounts:
         - name: envparams
           mountPath: /env-params
-    - name: generate-tag-and-push
+    - name: generate-tag
       script: >-
         #!/usr/bin/env bash
 
         set +x
 
         var1=$(params.sourceCommitTag)
+
+        ehco $var1
 
         var2=${var1:0:4}
 
@@ -114,24 +116,19 @@ spec:
 
         echo $tag >  $(results.new-tag.path)
 
-        buildah push --storage-driver=$(params.STORAGE_DRIVER) \
-        --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
-        $(resources.outputs.runtime-image.url) \
-        docker://$(resources.outputs.runtime-image.url):$tag
-
       image: registry.redhat.io/rhel8/buildah
-#    - name: push-image-to-openshift
-#      command:
-#        - buildah
-#        - push
-#        - '--storage-driver=$(params.STORAGE_DRIVER)'
-#        - '--tls-verify=$(params.TLSVERIFY)'
-#        - '--root'
-#        - /files/buildah-containers
-#        - $(resources.outputs.runtime-image.url)
-#        - 'docker://$(resources.outputs.runtime-image.url):'
-#      image: registry.redhat.io/rhel8/buildah
-#      resources: {}
+    - name: push-image-to-openshift
+      command:
+        - buildah
+        - push
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--tls-verify=$(params.TLSVERIFY)'
+        - '--root'
+        - /files/buildah-containers
+        - $(resources.outputs.runtime-image.url)
+        - 'docker://$(resources.outputs.runtime-image.url)'
+      image: registry.redhat.io/rhel8/buildah
+      resources: {}
     - name: get-image-repository-url
       script: >-
         #!/usr/bin/env bash
