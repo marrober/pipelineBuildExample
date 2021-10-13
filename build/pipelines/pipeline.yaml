@@ -293,7 +293,7 @@ spec:
       - name: acs_api_token
         value: $(params.acs_api_token)
       - name: public-url
-        value: "quay.io/marrober/liberty-rest:$(tasks.create-runtime-image.results.new-tag)"
+        value: "quay.io/marrober/liberty-rest:latest"
     taskRef:
       kind: Task
       name: acs-image-build-check    
