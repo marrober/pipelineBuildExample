@@ -29,15 +29,3 @@ spec:
               secretKeyRef:
                 key: acs_central_endpoint
                 name: acs-secret        
-        volumeMounts:
-            - name: docker-socket
-              mountPath: /var/run/docker.sock      
-            - name: host-etc
-              mountPath: /etc
-        volumes:
-        - name: docker-socket
-          hostPath:
-            path: /var/run/docker.sock
-        - name: host-etc
-          hostPath:
-            path: /etc
