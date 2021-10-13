@@ -35,6 +35,8 @@ spec:
       type: string
     - name: baseImage
       type: string
+    - name: sourceCommitTag
+      type: string
   resources:
     inputs:
       - name: intermediate-image
@@ -92,27 +94,45 @@ spec:
       volumeMounts:
         - name: envparams
           mountPath: /env-params
-    - name: generate-tag
-      command:
-        - /bin/sh
-        - '-c'
-      args:
-        - |-
-          cut -d'-' -f6 <<< $(params.pipelineRunName) >  $(results.new-tag.path)
+    - name: generate-tag-and-push
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        var1=$(params.sourceCommitTag)
+
+        var2=${:0:4}
+
+        var3=$(params.pipelineRunName)
+
+        var4=${var3:${#var3}-5:${#var3}}
+
+        tag=$var2-$var4
+
+        echo $tag
+
+        echo $tag >  $(results.new-tag.path)
+
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) \
+        --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
+        $(resources.outputs.runtime-image.url) \
+        docker://$(resources.outputs.runtime-image.url):$tag
+
       image: registry.redhat.io/rhel8/buildah
-    - name: push-image-to-openshift
-      command:
-        - buildah
-        - push
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - '--tls-verify=$(params.TLSVERIFY)'
-        - '--root'
-        - /files/buildah-containers
-        - $(resources.outputs.runtime-image.url)
-        - 'docker://$(resources.outputs.runtime-image.url)'
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-    - name: get-public-docker-image-repository
+#    - name: push-image-to-openshift
+#      command:
+#        - buildah
+#        - push
+#        - '--storage-driver=$(params.STORAGE_DRIVER)'
+#        - '--tls-verify=$(params.TLSVERIFY)'
+#        - '--root'
+#        - /files/buildah-containers
+#        - $(resources.outputs.runtime-image.url)
+#        - 'docker://$(resources.outputs.runtime-image.url):'
+#      image: registry.redhat.io/rhel8/buildah
+#      resources: {}
+    - name: get-image-repository-url
       script: >-
         #!/usr/bin/env bash
 
@@ -120,11 +140,7 @@ spec:
 
         oc project $(params.appName)
 
-        echo " New tag: $(results.new-tag.path)"
-
-        oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}'> $(results.public-repo-location.path)
-
-        echo "Public repo id : $(results.public-repo-location.path)"
+        oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}'> $(results.new-image-repo-location.path)
 
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:

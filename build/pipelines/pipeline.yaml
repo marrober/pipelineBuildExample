@@ -157,6 +157,8 @@ spec:
         value: $(params.appName)
       - name: baseImage
         value: $(params.baseImage)
+      - name: sourceCommitTag
+        value: (tasks.git-clone-source.results.commit)
     resources:
       inputs:
       - name: intermediate-image
@@ -241,7 +243,7 @@ spec:
       - name: acs_api_token
         value: $(params.acs_api_token)
       - name: public-url
-        value: $(tasks.create-runtime-image.results.public-repo-location)
+        value: $(tasks.create-runtime-image.results.new-image-repo-location)
     taskRef:
       kind: Task
       name: acs-image-check     

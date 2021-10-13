@@ -49,8 +49,6 @@ spec:
 
         yum install jq -y -q
 
-        ls -al /files/resources
-
         if [[ "$(params.recursive-search)" == "true" ]]; then
 
           fileList=`find /files/resources/$(params.source_location) \
