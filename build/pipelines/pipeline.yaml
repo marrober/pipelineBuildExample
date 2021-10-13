@@ -175,27 +175,6 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
-# Perform resource deployment check on files of interest
-##------------------------------------------------------------------
-  - name: resource-deployment-check
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: source_location
-      value: $(params.file-location-in-git-repo)
-    - name: recursive-search
-      value: $(params.recursive-search)
-    taskRef:
-      kind: Task
-      name: acs-deployment-check
-    workspaces:
-    - name: files
-      workspace: files
-    runAfter:
-    - git-clone-resources
-##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
 ##------------------------------------------------------------------
@@ -233,6 +212,28 @@ spec:
     runAfter:
       - resource-deployment-check
       - clear-resources
+##------------------------------------------------------------------
+# Perform resource deployment check on files of interest
+##------------------------------------------------------------------
+  - name: resource-deployment-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: source_location
+      value: $(params.file-location-in-git-repo)
+    - name: recursive-search
+      value: $(params.recursive-search)
+    taskRef:
+      kind: Task
+      name: acs-deployment-check
+    workspaces:
+    - name: files
+      workspace: files
+    runAfter:
+    - git-clone-resources
+    - create-runtime-image      
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
