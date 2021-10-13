@@ -1,3 +1,5 @@
+FIX -------------------------------------------------------------------------------------------
+
       - name: liberty-rest
         image: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:1
         imagePullPolicy: Always
@@ -12,3 +14,25 @@
           limits:
             memory: "128Mi"
             cpu: "500m"
+
+RESET TO ERROR ----------------------------------------------------------------------------------
+
+      - name: liberty-rest
+        image: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9080
+          name: http
+          protocol: TCP
+        volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run/docker.sock      
+            - name: host-etc
+              mountPath: /etc
+        volumes:
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+        - name: host-etc
+          hostPath:
+            path: /etc          

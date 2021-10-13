@@ -130,19 +130,13 @@ spec:
       image: registry.redhat.io/rhel8/buildah
       resources: {}
     - name: get-image-repository-url
-      script: >-
-        #!/usr/bin/env bash
-
-        set +x
-
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
         oc project $(params.appName)
-
-        oc get is/$(params.publicName) \
-
-        -o jsonpath='{.status.dockerImageRepository}' \
-        
-        > $(results.new-image-repo-location.path)
-
+        oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}' $(results.new-image-repo-location.path)
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:
     - emptyDir: {}
