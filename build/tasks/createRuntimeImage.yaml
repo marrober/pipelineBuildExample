@@ -114,7 +114,7 @@ spec:
 
         echo $tag
 
-        echo $tag >  $(results.new-tag.path)
+        echo -n $tag >  $(results.new-tag.path)
 
       image: registry.redhat.io/rhel8/buildah
     - name: push-image-to-openshift
