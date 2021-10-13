@@ -102,7 +102,7 @@ spec:
 
         var1=$(params.sourceCommitTag)
 
-        var2=${:0:4}
+        var2=${var1:0:4}
 
         var3=$(params.pipelineRunName)
 
