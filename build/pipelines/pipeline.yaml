@@ -284,6 +284,25 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
+# Perform image build check-2
+##------------------------------------------------------------------
+  - name: image-build-check-2
+    params:
+      - name: acs_central_endpoint
+        value: $(params.acs_central_endpoint)
+      - name: acs_api_token
+        value: $(params.acs_api_token)
+      - name: public-url
+        value: "quay.io/marrober/liberty-rest:$(tasks.create-runtime-image.results.new-tag)"
+    taskRef:
+      kind: Task
+      name: acs-image-build-check    
+    runAfter:
+      - push-image-to-quay
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
 # Workspace definitions
 ##------------------------------------------------------------------
   workspaces:
