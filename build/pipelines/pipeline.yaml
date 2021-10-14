@@ -175,6 +175,15 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
+# sleep 6 minutes
+##------------------------------------------------------------------
+  - name: sleep
+    taskRef:
+      kind: Task
+      name: sleep
+    runAfter:
+      - create-runtime-image
+##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
 ##------------------------------------------------------------------
@@ -232,6 +241,7 @@ spec:
     - name: files
       workspace: files
     runAfter:
+    - sleep
     - git-clone-resources
     - create-runtime-image      
 ##------------------------------------------------------------------
@@ -249,7 +259,8 @@ spec:
       kind: Task
       name: acs-image-build-check    
     runAfter:
-      - create-runtime-image
+    - sleep
+    - create-runtime-image
     workspaces:
     - name: files
       workspace: files

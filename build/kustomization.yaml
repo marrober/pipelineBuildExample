@@ -17,3 +17,4 @@ resources:
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
 - triggers/triggerTemplate.yaml
+- tasks/sleep.yaml
