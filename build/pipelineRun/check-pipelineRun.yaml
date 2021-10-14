@@ -55,7 +55,7 @@ spec:
     - name: git-url
       value: https://github.com/marrober/pipelineBuildExample.git
     - name: git-revision
-      value: acs
+      value: fix-acs
     - name: file-location-in-git-repo
       value: deployment
     - name: recursive-search
