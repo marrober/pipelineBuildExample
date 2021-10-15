@@ -19,3 +19,4 @@ resources:
 - triggers/triggerTemplate.yaml
 - tasks/sleep.yaml
 - tasks/sleep-2.yaml
+- tasks/skopeo-inspect.yaml

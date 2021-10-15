@@ -175,6 +175,18 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
+# Inspect the image
+##------------------------------------------------------------------
+  - name: skopeo-inspect
+    params:
+      - name: image-url
+        value: $(tasks.create-runtime-image.results.new-image-repo-location)  
+    taskRef:
+      kind: Task
+      name: skopeo-inspect
+    runAfter:
+      - create-runtime-image
+##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
 ##------------------------------------------------------------------
