@@ -173,6 +173,7 @@ spec:
     - name: files
       workspace: files
     runAfter:
+    - create-runtime-image
     - git-clone-workspace
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
