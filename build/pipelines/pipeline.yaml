@@ -180,7 +180,7 @@ spec:
   - name: skopeo-inspect
     params:
       - name: image-url
-        value: $(tasks.create-runtime-image.results.new-image-repo-location)  
+        value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
     taskRef:
       kind: Task
       name: skopeo-inspect
