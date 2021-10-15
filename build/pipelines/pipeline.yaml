@@ -213,6 +213,15 @@ spec:
       - resource-deployment-check
       - clear-resources
 ##------------------------------------------------------------------
+# sleep 6 minutes
+##------------------------------------------------------------------
+  - name: sleep-2
+    taskRef:
+      kind: Task
+      name: sleep-2
+    runAfter:
+    - create-runtime-image     
+##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
   - name: resource-deployment-check
@@ -232,6 +241,7 @@ spec:
     - name: files
       workspace: files
     runAfter:
+    - sleep-2
     - git-clone-resources
     - create-runtime-image      
 ##------------------------------------------------------------------
@@ -249,6 +259,7 @@ spec:
       kind: Task
       name: acs-image-build-check    
     runAfter:
+    - sleep-2
     - create-runtime-image
     workspaces:
     - name: files
