@@ -175,14 +175,6 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
-# sleep 6 minutes
-##------------------------------------------------------------------
-  - name: sleep
-    taskRef:
-      kind: Task
-      name: sleep
-    runAfter:
-##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
 ##------------------------------------------------------------------
