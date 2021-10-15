@@ -46,16 +46,4 @@ RESET TO ERROR -----------------------------------------------------------------
         ports:
         - containerPort: 9080
           name: http
-          protocol: TCP
-        volumeMounts:
-            - name: docker-socket
-              mountPath: /var/run/docker.sock      
-            - name: host-etc
-              mountPath: /etc
-        volumes:
-        - name: docker-socket
-          hostPath:
-            path: /var/run/docker.sock
-        - name: host-etc
-          hostPath:
-            path: /etc          
+          protocol: TCP     
