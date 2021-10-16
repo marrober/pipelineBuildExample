@@ -51,7 +51,7 @@ spec:
       args:
         - |-
           echo "FROM localhost/$(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
-          echo "FROM openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
+          echo "FROM quay.io/marrober/open-liberty-base:2 as runtime-image" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /home/maven/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /home/maven/target/server.xml /config/server.xml" >> ext-dockerfile.gen
           echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
