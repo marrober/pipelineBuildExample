@@ -117,7 +117,7 @@ spec:
       - name: acs_api_token
         value: $(params.acs_api_token)
       - name: public-url
-        value: "default-route-openshift-image-registry.apps.skylake.demolab.local/liberty-rest/liberty-rest-app"
+        value: "default-route-openshift-image-registry.apps.cluster-aa69.aa69.sandbox1485.opentlc.com/liberty-rest/liberty-rest-app"
     taskRef:
       kind: Task
       name: acs-image-check     
