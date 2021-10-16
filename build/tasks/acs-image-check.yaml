@@ -51,141 +51,25 @@ spec:
 
         ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --json > image-scan-result 2> /dev/null
 
-        cat image-scan-result | wc -c > image-scan-result.wc
+        cat imageScanResult
 
-        read charCount < image-scan-result.wc
+        imageScanResultNewVar=`cat imageScanResult | sed ':a;N;$!ba;s/\n/ /g'`
 
-        if test $charCount -gt 10 ; then
-
-          numberAlerts=`jq '.alerts' image-scan-result | jq length`
-
-          if test $numberAlerts -gt 1; then
-
-            echo "$numberAlerts alerts found ..."
-
-          else
-
-            echo "1 alert found ..."
-
-          fi
-
-          counter=0
-
-          while [ $counter -lt $numberAlerts ]; do
-
-            jqCommandPolicyEnforcementCmd="jq --argjson index "$counter" '.alerts[\$index].policy.enforcementActions[] | select (. | contains(\"SCALE_TO_ZERO_ENFORCEMENT\"))' image-scan-result 2>/dev/null | wc -c > image-scan-result.wc"
-
-            eval $jqCommandPolicyEnforcementCmd > /dev/null
-
-            jqCommandPolicyName="jq --argjson index "$counter" '.alerts[\$index].policy.name' image-scan-result"
-
-            alertPolicyName=`eval $jqCommandPolicyName` > /dev/null
-
-            alertPolicyName=`echo "$alertPolicyName" | sed s/\"//g`
-
-            jqCommandPolicyDescription="jq --argjson index "$counter" '.alerts[\$index].policy.description' image-scan-result"
-
-            alertPolicyDescription=`eval $jqCommandPolicyDescription` > /dev/null
-
-            alertPolicyDescription=`echo "$alertPolicyDescription" | sed s/\"//g`
-
-            jqCommandPolicyRationale="jq --argjson index "$counter" '.alerts[\$index].policy.rationale' image-scan-result"
-
-            alertPolicyRationale=`eval $jqCommandPolicyRationale` > /dev/null
-
-            alertPolicyRationale=`echo "$alertPolicyRationale" | sed s/\"//g`
-
-            jqCommandPolicyRemediation="jq --argjson index "$counter" '.alerts[\$index].policy.remediation' image-scan-result"
-
-            alertPolicyRemediation=`eval $jqCommandPolicyRemediation` > /dev/null
-
-            alertPolicyRemediation=`echo "$alertPolicyRemediation" | sed s/\"//g`
-
-            echo "Alert policy name : $alertPolicyName"
-
-            echo "  Description : $alertPolicyDescription"
-
-            echo "  Rationale   : $alertPolicyRationale"
-
-            echo "  Remediation : $alertPolicyRemediation"
-
-            read charCount < image-scan-result.wc
-
-            if test $charCount -gt 2; then
-
-              ## Issue found is enough to stop the deployment
-
-              failTask="true"
-
-              echo "  -- Deployment should not take place with this image --"
-
-            else
-
-              echo "  -- Deployment will be allowed --"
-
-            fi
-
-            echo "  - - - - - - - - - - - - - - - - - - - - - - - - - -"
-
-            numberViolationsCmd="jq --argjson index \"$counter\" '.alerts[\$index].violations' image-scan-result | jq length"
-
-            numberViolations=`eval $numberViolationsCmd` >> /dev/null
-
-            if test $numberViolations -eq 1; then
-
-              echo "  1 violation found ..."
-
-            else
-
-              echo "  $numberViolations violations found ..."
-
-            fi
-
-            violationCounter=0
-
-            while [ "$violationCounter" -lt "$numberViolations" ];  do
-
-              jqCommand="jq --argjson index "$counter" --argjson violationIndex "$violationCounter" '.alerts[\$index].violations[\$violationIndex].message' image-scan-result"
-
-              violation=`eval $jqCommand` >> /dev/null
-
-              violation=`echo "$violation" | sed s/\"//g`
-
-              echo "  violation : -- $violation"
-
-              violationCounter=`expr $violationCounter + 1`
-
-            done
-
-            echo "  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - - -"
-
-            echo ""
-
-            counter=`expr $counter + 1`
-
-          done
-
-          echo "-----------------------------------------------------"
-
-        else
-
-          echo "-- No errors found in this image --"
-
-          echo ""
-
+        if [[ "$imageScanResultNewVar" == *"Error: Violated a policy with CI enforcement set"* ]]; then
+          failTask=true
         fi
 
         if [[ "$failTask" == "true" ]]; then
 
           echo "Setting overall result to fail"
 
-          echo -n "fail" | tee $(results.scan-result.path) >> /dev/null
+          echo -n "fail" | tee result >> /dev/null
 
         else
 
           echo "Setting overall result to pass"
 
-          echo -n "pass" | tee $(results.scan-result.path) >> /dev/null
+          echo -n "pass" | tee result >> /dev/null
 
         fi
 
