@@ -81,7 +81,7 @@ spec:
 
             echo "Deployment check on file : $file"
 
-            ./roxctl deployment check --json --insecure-skip-tls-verify \
+            ./roxctl deployment check --insecure-skip-tls-verify \
             -e $ROX_CENTRAL_ENDPOINT --file $file > fileScanResult 2>&1
 
             cat fileScanResult
