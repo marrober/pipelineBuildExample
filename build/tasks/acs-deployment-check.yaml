@@ -82,138 +82,14 @@ spec:
             echo "Deployment check on file : $file"
 
             ./roxctl deployment check --json --insecure-skip-tls-verify \
-            -e $ROX_CENTRAL_ENDPOINT --file $file > $file.scan-result
+            -e $ROX_CENTRAL_ENDPOINT --file $file > fileScanResult 2>&1
 
-            cat $file.scan-result | wc -c > $file.scan-result.wc
+            cat fileScanResult
 
-            read charCount < $file.scan-result.wc
+            fileScanResultNewVar=`cat fileScanResult | sed ':a;N;$!ba;s/\n/ /g'`
 
-            if test $charCount -gt 10
-
-            then
-
-              numberAlerts=`jq '.alerts' $file.scan-result | jq length`
-
-              if test $numberAlerts -gt 1
-              then
-
-                echo "$numberAlerts alerts found ..."
-
-              else
-
-                echo "1 alert found ..."
-
-              fi
-
-              counter=0
-
-              while [ $counter -lt $numberAlerts ]
-              do
-
-                jqCommandPolicyEnforcementCmd="jq --argjson index "$counter" '.alerts[\$index].policy.enforcementActions[] | select (. | contains(\"FAIL_BUILD_ENFORCEMENT\"))' $file.scan-result 2>/dev/null | wc -c > $file.scan-result.wc"
-
-                eval $jqCommandPolicyEnforcementCmd > /dev/null
-
-                jqCommandPolicyName="jq --argjson index "$counter" '.alerts[\$index].policy.name' $file.scan-result"
-
-                alertPolicyName=`eval $jqCommandPolicyName` > /dev/null
-
-                alertPolicyName=`echo "$alertPolicyName" | sed s/\"//g`
-
-                jqCommandPolicyDescription="jq --argjson index "$counter" '.alerts[\$index].policy.description' $file.scan-result"
-
-                alertPolicyDescription=`eval $jqCommandPolicyDescription` > /dev/null
-
-                alertPolicyDescription=`echo "$alertPolicyDescription" | sed s/\"//g`
-
-                jqCommandPolicyRationale="jq --argjson index "$counter" '.alerts[\$index].policy.rationale' $file.scan-result"
-
-                alertPolicyRationale=`eval $jqCommandPolicyRationale` > /dev/null
-
-                alertPolicyRationale=`echo "$alertPolicyRationale" | sed s/\"//g`
-
-                jqCommandPolicyRemediation="jq --argjson index "$counter" '.alerts[\$index].policy.remediation' $file.scan-result"
-
-                alertPolicyRemediation=`eval $jqCommandPolicyRemediation` > /dev/null
-
-                alertPolicyRemediation=`echo "$alertPolicyRemediation" | sed s/\"//g`
-
-                echo "  Alert policy name : $alertPolicyName"
-
-                echo "  Description : $alertPolicyDescription"
-
-                echo "  Rationale   : $alertPolicyRationale"
-
-                echo "  Remediation : $alertPolicyRemediation"
-
-                read charCount < $file.scan-result.wc
-
-                if test $charCount -gt 2
-
-                then
-
-                  ## Issue found is enough to stop the CI process
-
-                  failTask="true"
-
-                  echo "  -- Build will be halted --"
-
-                else
-
-                  echo "  -- Policy violations will not stop the build process --"
-
-                fi
-
-                echo "  - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-
-                numberViolationsCmd="jq --argjson index \"$counter\" '.alerts[\$index].violations' $file.scan-result | jq length"
-
-                numberViolations=`eval $numberViolationsCmd` >> /dev/null
-
-                if test $numberViolations -eq 1
-                then
-
-                  echo "  1 violation found ..."
-
-                else
-
-                  echo "  $numberViolations violations found ..."
-
-                fi
-
-                violationCounter=0
-
-                while [ "$violationCounter" -lt "$numberViolations" ]
-                do
-
-                  jqCommand="jq --argjson index "$counter" --argjson violationIndex "$violationCounter" '.alerts[\$index].violations[\$violationIndex].message' $file.scan-result"
-
-                  violation=`eval $jqCommand` >> /dev/null
-
-                  violation=`echo "$violation" | sed s/\"//g`
-
-                  echo "  violation : -- $violation"
-
-                  violationCounter=`expr $violationCounter + 1`
-
-                done
-
-                echo "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -"
-
-                echo ""
-
-                counter=`expr $counter + 1`
-
-              done
-
-              echo "-----------------------------------------------------"
-
-            else
-
-              echo "  -- No errors found in this file --"
-
-              echo ""
-
+            if [[ "$fileScanResultNewVar" == *"Error: Violated a policy with Deploy Time enforcement set"* ]]; then
+              failTask=true
             fi
 
           fi
@@ -232,8 +108,6 @@ spec:
           echo -n "pass" | tee $(results.scan-result.path) >> /dev/null
 
         fi
-
-
 
       workingDir: /workspace
   workspaces:
