@@ -63,13 +63,13 @@ spec:
 
           echo "Setting overall result to fail"
 
-          echo -n "fail" | tee result >> /dev/null
+          echo -n "fail" | tee tee $(results.scan-result.path) >> /dev/null
 
         else
 
           echo "Setting overall result to pass"
 
-          echo -n "pass" | tee result >> /dev/null
+          echo -n "pass" | tee tee $(results.scan-result.path) >> /dev/null
 
         fi
 
