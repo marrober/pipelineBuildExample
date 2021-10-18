@@ -49,6 +49,8 @@ spec:
 
         echo "image to be scanned : $(params.public-url)"
 
+        ./roxctl image scan --image $(params.public-url)  --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT
+
         ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT > imageScanResult 2>&1
 
         cat imageScanResult
