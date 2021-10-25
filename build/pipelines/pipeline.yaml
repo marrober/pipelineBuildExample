@@ -37,6 +37,8 @@ spec:
   - name: appName
     type: string
     default: liberty-rest
+  - name: baseImage
+    type: string    
   - name: templateFileName
     type: string
     default: build/template/deploy-app-template.yaml
@@ -136,6 +138,8 @@ spec:
         value: $(params.publicName)
       - name: appName
         value: $(params.appName)
+      - name: baseImage
+        value: $(params.baseImage)
     resources:
       inputs:
       - name: intermediate-image

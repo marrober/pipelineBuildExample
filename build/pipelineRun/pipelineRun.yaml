@@ -38,6 +38,8 @@ spec:
       value: build/template/deploy-app-template.yaml
     - name: appName
       value: liberty-rest
+    - name: baseImage
+      value: quay.io/marrober/open-liberty-base:2      
     - name: appGroup
       value: Liberty
     - name: quay-io-account

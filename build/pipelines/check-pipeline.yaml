@@ -36,6 +36,8 @@ spec:
     type: string
   - name: commit_author
     type: string
+  - name: baseImage
+    type: string    
   - name: appName
     type: string
     default: liberty-rest
