@@ -14,13 +14,11 @@ spec:
     metadata:
       labels:
         app: liberty-rest
-      annotations:
     spec:
       containers:
-      - env:
-        image: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:latest
+      - name: liberty-rest
+        image: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app
         imagePullPolicy: Always
-        name: liberty-rest
         ports:
         - containerPort: 9080
           name: http

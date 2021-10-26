@@ -32,7 +32,7 @@ spec:
         - '--root'
         - '/files/buildah-containers'        
         - $(resources.inputs.runtime-image.url)
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):latest
       image: registry.redhat.io/rhel8/buildah
       resources: {}
     - name: push-image-to-quay
@@ -44,7 +44,7 @@ spec:
         - /etc/secret-volume/.dockerconfigjson
         - '--root'
         - '/files/buildah-containers'        
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):latest
       image: registry.redhat.io/rhel8/buildah
       volumeMounts:
         - name: quay-auth-secret

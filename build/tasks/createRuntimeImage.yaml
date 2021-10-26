@@ -34,7 +34,9 @@ spec:
     - name: appName
       type: string
     - name: baseImage
-      type: string      
+      type: string
+    - name: sourceCommitTag
+      type: string
   resources:
     inputs:
       - name: intermediate-image
@@ -43,7 +45,7 @@ spec:
       - name: runtime-image
         type: image
   results:
-    - name: public-repo-location
+    - name: new-image-repo-location
     - name: new-tag
   steps:
     - name: gen-binary-extraction-dockerfile
@@ -93,12 +95,27 @@ spec:
         - name: envparams
           mountPath: /env-params
     - name: generate-tag
-      command:
-        - /bin/sh
-        - '-c'
-      args:
-        - |-
-          cut -d'-' -f6 <<< $(params.pipelineRunName) >  $(results.new-tag.path)
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        var1=$(params.sourceCommitTag)
+
+        echo $var1
+
+        var2=${var1:0:4}
+
+        var3=$(params.pipelineRunName)
+
+        var4=${var3:${#var3}-5:${#var3}}
+
+        tag=$var2-$var4
+
+        echo $tag
+
+        echo -n $tag >  $(results.new-tag.path)
+
       image: registry.redhat.io/rhel8/buildah
     - name: push-image-to-openshift
       command:
@@ -112,20 +129,15 @@ spec:
         - 'docker://$(resources.outputs.runtime-image.url)'
       image: registry.redhat.io/rhel8/buildah
       resources: {}
-    - name: get-public-docker-image-repository
-      script: >-
-        #!/usr/bin/env bash
-
-        set +x
-
-        oc project $(params.appName)
-
-        echo " New tag: $(results.new-tag.path)"
-
-        oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}'> $(results.public-repo-location.path)
-
-        echo "Public repo id : $(results.public-repo-location.path)"
-
+    - name: get-image-repository-url
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
+          oc project $(params.appName)
+          oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}' > $(results.new-image-repo-location.path)
+          sleep 60
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:
     - emptyDir: {}
