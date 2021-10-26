@@ -41,7 +41,6 @@ spec:
     type: string    
   - name: templateFileName
     type: string
-    default: liberty-rest
   - name: appGroup
     type: string
     default: Liberty
