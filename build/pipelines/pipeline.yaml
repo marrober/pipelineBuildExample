@@ -187,7 +187,7 @@ spec:
       kind: Task
       name: skopeo-inspect
     runAfter:
-    - image-check
+    - image-build-check
     - git-clone-resources
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
@@ -228,15 +228,6 @@ spec:
       - resource-deployment-check
       - clear-resources
 ##------------------------------------------------------------------
-# sleep 6 minutes
-##------------------------------------------------------------------
-#  - name: sleep-2
-#    taskRef:
-#      kind: Task
-#      name: sleep-2
-#    runAfter:
-#    - create-runtime-image     
-##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
   - name: resource-deployment-check
@@ -256,7 +247,6 @@ spec:
     - name: files
       workspace: files
     runAfter:
-#    - sleep-2
     - git-clone-resources
     - create-runtime-image      
 ##------------------------------------------------------------------
@@ -328,16 +318,6 @@ spec:
 #    workspaces:
 #    - name: files
 #      workspace: files
-##------------------------------------------------------------------
-# sleep 6 minutes
-##------------------------------------------------------------------
-#  - name: sleep
-#    taskRef:
-#      kind: Task
-#      name: sleep
-#    runAfter:
-#    - image-build-check-2
-#    - deploy-application
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
