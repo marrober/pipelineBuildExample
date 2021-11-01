@@ -36,8 +36,6 @@ spec:
     default: liberty-rest
   - name: baseImage
     type: string    
-  - name: templateFileName
-    type: string
   - name: appGroup
     type: string
     default: Liberty
