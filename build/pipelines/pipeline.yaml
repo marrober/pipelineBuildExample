@@ -1,9 +1,6 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  labels:
-    app.kubernetes.io/instance: liberty-rest-app
-    pipeline.openshift.io/type: kubernetes
   name: liberty-rest-app
   namespace: liberty-rest
 spec:
