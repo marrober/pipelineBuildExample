@@ -259,7 +259,6 @@ spec:
       kind: Task
       name: acs-image-build-check    
     runAfter:
-#    - sleep-2
     - create-runtime-image
     workspaces:
     - name: files
