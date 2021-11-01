@@ -13,5 +13,5 @@ spec:
         - '-c'
       args:
         - |-
-          skopeo inspect $(params.image-url)
+          skopeo inspect docker://$(params.image-url)
       image: registry.redhat.io/rhel8/skopeo@sha256:16a9e6d89dbc80cf88fece341e63b99239082aabf705cc014c6350a14fb29509
