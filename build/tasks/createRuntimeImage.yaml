@@ -117,8 +117,11 @@ spec:
         echo -n $tag >  $(results.new-tag.path)
 
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
+        
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
+        
         $(resources.outputs.runtime-image.url) \
+        
         docker://$(resources.outputs.runtime-image.url):$tag
 
       image: registry.redhat.io/rhel8/buildah
