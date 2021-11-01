@@ -188,7 +188,7 @@ spec:
       name: skopeo-inspect
     runAfter:
     - image-check
-    - git-clone-workspace
+    - git-clone-resources
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
