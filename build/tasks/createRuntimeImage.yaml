@@ -94,7 +94,7 @@ spec:
       volumeMounts:
         - name: envparams
           mountPath: /env-params
-    - name: generate-tag
+    - name: generate-tag-push-to-ocp
       script: >-
         #!/usr/bin/env bash
 
@@ -116,17 +116,11 @@ spec:
 
         echo -n $tag >  $(results.new-tag.path)
 
-      image: registry.redhat.io/rhel8/buildah
-    - name: push-image-to-openshift
-      command:
-        - buildah
-        - push
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - '--tls-verify=$(params.TLSVERIFY)'
-        - '--root'
-        - /files/buildah-containers
-        - $(resources.outputs.runtime-image.url)
-        - 'docker://$(resources.outputs.runtime-image.url)'
+        buildah push - --storage-driver=$(params.STORAGE_DRIVER) \
+        --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
+        $(resources.outputs.runtime-image.url) \
+        docker://$(resources.outputs.runtime-image.url):$(results.new-tag.path)
+
       image: registry.redhat.io/rhel8/buildah
       resources: {}
     - name: get-image-repository-url
@@ -137,7 +131,6 @@ spec:
         - |-
           oc project $(params.appName)
           oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}' > $(results.new-image-repo-location.path)
-          sleep 60
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:
     - emptyDir: {}
