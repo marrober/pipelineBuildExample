@@ -1,0 +1,8 @@
+FROM registry.access.redhat.com/ubi8/ubi:latest
+
+RUN curl "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" >> kustomize.sh
+
+RUN chmod u+x kustomize.sh && ./kustomize.sh
+
+RUN mv /kustomize /usr/local/bin/kustomize
+

@@ -11,8 +11,6 @@ spec:
 # Configure the deployment yaml file to use the container image just built
 ##------------------------------------------------------------------------
     - name: configure-deployment-assets
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      workingDir: /workspace/source/deployment
       script: >-
         #!/usr/bin/env bash
 
@@ -27,6 +25,9 @@ spec:
         kustomize build > configured-deployment.yaml
 
         cat configured-deployment.yaml
+
+      image: quay.io/marrober/kustomize:latest
+      workingDir: /workspace/source/deployment
 
   workspaces:
   - name: files
