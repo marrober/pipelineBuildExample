@@ -137,10 +137,11 @@ spec:
           echo $TAG
 
           oc project $(params.appName)
-          oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}{":$TAG"}' > $(results.new-image-repo-location.path)
+          oc get is/$(params.publicName) -o jsonpath='{.status.dockerImageRepository}{":"}'$TAG > $(results.new-image-repo-location.path)
 
+          echo -------------------------------------
           cat $(results.new-image-repo-location.path)
-          
+
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   volumes:
     - emptyDir: {}
