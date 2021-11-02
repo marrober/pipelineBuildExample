@@ -12,8 +12,8 @@ spec:
       command:
         - oc
         - apply
-        - '-k'
-        - .
+        - '-f'
+        - configured-deployment.yaml
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       workingDir: /workspace/source/deployment
     - name: oc-get-resources
