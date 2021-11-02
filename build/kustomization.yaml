@@ -12,6 +12,7 @@ resources:
 - tasks/pushImageToQuay.yaml
 - tasks/acs-deployment-check.yaml
 - tasks/acs-image-build-check.yaml
+- tasks/configure-deployment-assets.yaml
 - pipelines/pipeline.yaml
 - triggers/eventListener.yaml
 - triggers/eventListenerRoute.yaml

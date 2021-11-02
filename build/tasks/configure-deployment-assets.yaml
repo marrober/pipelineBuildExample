@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: configure-deployment-assets
+spec:
+  params:
+    - name: public-url
+      type: string
+  steps:
+##------------------------------------------------------------------------
+# Configure the deployment yaml file to use the container image just built
+##------------------------------------------------------------------------
+    - name: configure-deployment-assets
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      workingDir: /workspace/source/deployment
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        kustomize edit set image $(params.public-url)
+
+        cat kustomization.yaml
+
+        kustomize build         
+
+        kustomize build > configured-deployment.yaml
+
+        cat configured-deployment.yaml
+
+  workspaces:
+  - name: files
+    mountPath: /files
