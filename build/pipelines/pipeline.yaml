@@ -172,7 +172,7 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
-# Inspect the image
+# Configure the deployment assets to get the new image
 ##------------------------------------------------------------------
   - name: configure-deployment-assets
     params:
@@ -184,6 +184,9 @@ spec:
     runAfter:
     - create-runtime-image
     - git-clone-resources
+    workspaces:
+    - name: output
+      workspace: files    
 ##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
