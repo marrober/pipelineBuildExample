@@ -185,7 +185,7 @@ spec:
     - create-runtime-image
     - git-clone-resources
     workspaces:
-    - name: output
+    - name: files
       workspace: files    
 ##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
