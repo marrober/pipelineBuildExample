@@ -15,10 +15,13 @@ spec:
         - '-f'
         - configured-deployment.yaml
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      workingDir: /workspace/source/deployment
+      workingDir: /files/resources/deployment
     - name: oc-get-resources
       command:
         - oc
         - get
         - all
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+  workspaces:
+  - name: files
+    mountPath: /files      

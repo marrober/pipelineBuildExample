@@ -265,6 +265,9 @@ spec:
     runAfter:
       - resource-deployment-check
       - clear-resources
+    workspaces:
+    - name: files
+      workspace: files       
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
