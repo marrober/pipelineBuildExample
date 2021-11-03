@@ -16,6 +16,8 @@ spec:
 
         set +x
 
+        ls -al
+
         kustomize edit set image $(params.public-url)
 
         cat kustomization.yaml
@@ -27,7 +29,7 @@ spec:
         cat configured-deployment.yaml
 
       image: quay.io/marrober/kustomize:latest
-      workingDir: /workspace/resources/deployment
+      workingDir: /files/resources/deployment
 
   workspaces:
   - name: files
