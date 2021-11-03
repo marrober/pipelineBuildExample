@@ -27,7 +27,7 @@ spec:
         cat configured-deployment.yaml
 
       image: quay.io/marrober/kustomize:latest
-      workingDir: /workspace/source/deployment
+      workingDir: /workspace/resources/deployment
 
   workspaces:
   - name: files
