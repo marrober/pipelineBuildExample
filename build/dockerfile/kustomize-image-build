@@ -1,8 +1,13 @@
 FROM registry.access.redhat.com/ubi8/ubi:latest
 
-RUN curl "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" >> kustomize.sh
+RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" >> kustomize.sh
 
 RUN chmod u+x kustomize.sh && ./kustomize.sh
 
 RUN mv /kustomize /usr/local/bin/kustomize
 
+ADD ./kubectl-slice/kubectl-slice /usr/local/bin/kubectl-slice
+ADD ./kubectl-slice/LICENSE /usr/local/bin/kubectl-slice-LICENSE
+ADD ./kubectl-slice/README.md /usr/local/bin/kubectl-slice-README.md
+
+RUN chmod u+x /usr/local/bin/kubectl-slice

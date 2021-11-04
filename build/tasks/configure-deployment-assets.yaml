@@ -28,6 +28,10 @@ spec:
 
         cat configured-deployment.yaml
 
+        mkdir output
+
+        kubectl-slice -f configured-deployment.yaml -o ./output
+
       image: quay.io/marrober/kustomize:latest
       workingDir: /files/resources/deployment
 

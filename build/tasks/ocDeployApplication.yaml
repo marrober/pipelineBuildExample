@@ -13,9 +13,9 @@ spec:
         - oc
         - apply
         - '-f'
-        - configured-deployment.yaml
+        - /files/resources/deployment/output
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      workingDir: /files/resources/deployment
+      workingDir: /files/resources/deployment/output
     - name: oc-get-resources
       command:
         - oc

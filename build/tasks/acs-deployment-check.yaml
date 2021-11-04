@@ -51,12 +51,12 @@ spec:
 
         if [[ "$(params.recursive-search)" == "true" ]]; then
 
-          fileList=`find /files/resources/$(params.source_location) \
+          fileList=`find /files/resources/$(params.source_location)/output \
           -name '*.yaml' -o -name '*.yml'`
 
         else
 
-          fileList=`ls /files/resources/$(params.source_location)/*.y*ml`
+          fileList=`ls /files/resources/$(params.source_location)/output/*.y*ml`
 
         fi
 
