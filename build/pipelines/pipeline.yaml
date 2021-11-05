@@ -79,6 +79,8 @@ spec:
     taskRef:
       kind: ClusterTask
       name:  git-clone
+    runAfter:
+    - git-clone-source        
     workspaces:
     - name: output
       workspace: files
