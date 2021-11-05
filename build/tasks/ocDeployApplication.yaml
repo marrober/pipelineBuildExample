@@ -3,10 +3,6 @@ kind: Task
 metadata:
   name: oc-deploy-application
 spec:
-  resources:
-    inputs:
-      - name: source
-        type: git
   steps:
     - name: oc-create-resources
       command:
