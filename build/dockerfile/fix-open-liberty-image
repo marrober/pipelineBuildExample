@@ -4,7 +4,7 @@ USER root
 
 RUN rm -rf /var/lib/rpm/.rpm.lock
 
-RUN yum update -y
+RUN yum update -y --allowerasing --nobest
 
 RUN rpm -e --nodeps --verbose dnf-data dnf dnf-plugin-subscription-manager python3-rpm python3-libdnf python3-dnf python3-dnf-plugins-core python3-hawkey libdnf
 
