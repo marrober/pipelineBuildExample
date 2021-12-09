@@ -60,7 +60,7 @@ spec:
 
         imageScanResultNewVar=`cat imageScanResult | sed ':a;N;$!ba;s/\n/ /g'`
 
-        if [[ "$imageScanResultNewVar" == *"ERROR: failed policies found:"* ]]; then
+        if [[ "$imageScanResultNewVar" == *"Error: failed policies found:"* ]]; then
           failTask=true
         fi
 
