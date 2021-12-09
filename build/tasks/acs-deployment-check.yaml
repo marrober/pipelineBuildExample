@@ -89,7 +89,7 @@ spec:
 
             fileScanResultNewVar=`cat fileScanResult | sed ':a;N;$!ba;s/\n/ /g'`
 
-            if [[ "$fileScanResultNewVar" == *"Error: Violated a policy with Deploy Time enforcement set"* ]]; then
+            if [[ "$fileScanResultNewVar" == *"Error: failed policies found:"* ]]; then
               failTask=true
             fi
 
