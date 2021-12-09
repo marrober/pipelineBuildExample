@@ -81,7 +81,7 @@ spec:
       - name: acs_api_token
         value: $(params.acs_api_token)
       - name: public-url
-        value: "image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:b664-58vxg"
+        value: "image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:ed8c-vcqcw"
     taskRef:
       kind: Task
       name: acs-image-build-check    

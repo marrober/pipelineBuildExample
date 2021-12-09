@@ -57,7 +57,7 @@ spec:
 
         imageScanResultNewVar=`cat imageScanResult | sed ':a;N;$!ba;s/\n/ /g'`
 
-        if [[ "$imageScanResultNewVar" == *"Error: Violated a policy with CI enforcement set"* ]]; then
+        if [[ "$imageScanResultNewVar" == *"ERROR: failed policies found:"* ]]; then
           failTask=true
         fi
 
