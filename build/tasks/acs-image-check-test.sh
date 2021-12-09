@@ -14,15 +14,13 @@ tag=$var2-$var4
 
 echo $tag
 
-exit;
-
-roxctl image check --image quay.io/marrober/layers:latest --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --json > image-scan-result
-
+`roxctl image check --image quay.io/marrober/open-liberty-base:2 --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT  -o table`
+        
 cat imageScanResult
 
 imageScanResultNewVar=`cat imageScanResult | sed ':a;N;$!ba;s/\n/ /g'`
 
-if [[ "$imageScanResultNewVar" == *"Error: Violated a policy with CI enforcement set"* ]]; then
+if [[ "$imageScanResultNewVar" == *"ERROR: failed policies found:"* ]]; then
   failTask=true
 fi
 
