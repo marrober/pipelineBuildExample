@@ -12,6 +12,9 @@ spec:
       type: string
     - name: public-url
       type: string
+    - name: roxctl-output-format
+      description : Roxctl output format - either table, json or csv
+      type: string        
   results:
     - name: scan-result
   steps:
@@ -51,7 +54,7 @@ spec:
 
         ./roxctl image scan --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --force > /dev/null 2>&1
 
-        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --retries 0 > imageScanResult 2>&1
+        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
 
         cat imageScanResult
 

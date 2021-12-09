@@ -16,6 +16,9 @@ spec:
     - name: recursive-search
       description: search for files recursively in directory tree
       type: string
+    - name: roxctl-output-format
+      description : Roxctl output format - either table, json or csv
+      type: string     
   results:
     - name: scan-result
   steps:
@@ -83,7 +86,8 @@ spec:
             echo "Deployment check on file : $file"
 
             ./roxctl deployment check --insecure-skip-tls-verify \
-            -e $ROX_CENTRAL_ENDPOINT --file $file --retries 0 > fileScanResult 2>&1
+            -e $ROX_CENTRAL_ENDPOINT --file $file -o $(params.roxctl-output-format) \
+            --retries 0 > fileScanResult 2>&1
 
             cat fileScanResult
 

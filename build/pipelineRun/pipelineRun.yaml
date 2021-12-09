@@ -60,7 +60,9 @@ spec:
     - name: file-location-in-git-repo
       value: deployment
     - name: recursive-search
-      value: "true"      
+      value: "true"     
+    - name: roxctl-output-format
+      value: "csv"      
   workspaces:
   - name: files
     volumeClaimTemplate:
