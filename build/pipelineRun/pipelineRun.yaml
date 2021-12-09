@@ -37,8 +37,8 @@ spec:
     - name: appName
       value: liberty-rest
     - name: baseImage
-#      value: quay.io/marrober/open-liberty-base:2  
-      value: quay.io/marrober/openliberty:5   
+      value: quay.io/marrober/open-liberty-base:2  
+#      value: quay.io/marrober/openliberty:5   
     - name: appGroup
       value: Liberty
     - name: quay-io-account
