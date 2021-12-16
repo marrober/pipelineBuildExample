@@ -23,7 +23,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: acs_api_token
-              name: $(params.acs_api_token)        
+              name: acs-secret        
         imagePullPolicy: Always
         ports:
         - containerPort: 9080
