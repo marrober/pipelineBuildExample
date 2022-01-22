@@ -60,6 +60,7 @@ All assets required to create your own instance of the resources described in th
 ## A comment on names
 The Open Source Tekton project has been brought into the OpenShift platform as OpenShift Pipelines. 
 
+
 `OpenShift Pipelines` and `Tekton` are often used `interchangeably`, and both will be used in this article.
 
 # Introducing OpenShift Pipelines
