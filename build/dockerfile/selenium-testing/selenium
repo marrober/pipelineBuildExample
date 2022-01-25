@@ -1,0 +1,24 @@
+FROM fedora
+ENV MAVEN_VERSION=3.6 
+RUN mkdir /home/maven
+ENV HOME=/home/maven
+RUN yum makecache
+RUN yum -y install -q liberation-fonts-common
+RUN yum install -y -q wget
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+RUN yum localinstall -q --assumeyes google-chrome-stable_current_x86_64.rpm
+RUN yum install -y -q unzip wget java-11-openjdk java-11-openjdk-devel
+RUN wget -q https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip 
+RUN unzip chromedriver_linux64.zip           
+RUN mv chromedriver /usr/bin/chromedriver 
+RUN chown root:root /usr/bin/chromedriver 
+RUN chmod +x /usr/bin/chromedriver 
+RUN wget -q https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar 
+RUN wget -q http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip 
+RUN unzip testng-6.8.7.jar.zip        
+COPY SeleniumTest.java /home/maven/SeleniumTest.java
+RUN mv selenium-server-standalone-3.13.0.jar /home/maven/selenium-server-standalone.jar
+RUN mv testng-6.8.7.jar /home/maven/testng.jar
+RUN ls /home/maven
+RUN export CLASSPATH=".:/home/maven:/home/maven/selenium-server-standalone.jar:/home/maven/testng.jar" 
+
