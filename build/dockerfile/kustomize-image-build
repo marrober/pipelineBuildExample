@@ -6,7 +6,7 @@ RUN chmod u+x kustomize.sh && ./kustomize.sh
 
 RUN mv /kustomize /usr/local/bin/kustomize
 
-RUN dnf install git-all
+RUN dnf install -y git
 
 ADD ./kubectl-slice/kubectl-slice /usr/local/bin/kubectl-slice
 ADD ./kubectl-slice/LICENSE /usr/local/bin/kubectl-slice-LICENSE
