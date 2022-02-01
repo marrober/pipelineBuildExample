@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8:8.4-209
+FROM registry.access.redhat.com/ubi8:8.5-214
 
 # Labels consumed by Red Hat build service
 
