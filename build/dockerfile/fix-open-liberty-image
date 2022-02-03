@@ -1,4 +1,5 @@
-FROM openliberty/open-liberty
+#FROM docker.io/openliberty/open-liberty:latest
+FROM openliberty/open-liberty:22.0.0.1-kernel-slim-java8-ibmjava-ubi
 
 USER root
 
