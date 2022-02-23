@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  generateName: liberty-rest-app-run-pr-
+  generateName: liberty-rest-app-check-
 spec:
   pipelineRef:
     name: liberty-rest-app-check

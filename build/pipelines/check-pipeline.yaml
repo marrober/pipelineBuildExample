@@ -70,6 +70,9 @@ spec:
     type: string
   - name: recursive-search
     type: string    
+  - name: roxctl-output-format
+    type: string
+    default: "table" 
   tasks:
 ##------------------------------------------------------------------
 # Perform image check
@@ -81,7 +84,9 @@ spec:
       - name: acs_api_token
         value: $(params.acs_api_token)
       - name: public-url
-        value: "image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:ed8c-vcqcw"
+        value: "image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:bd8a-tvwxc"
+      - name: roxctl-output-format
+        value: $(params.roxctl-output-format)
     taskRef:
       kind: Task
       name: acs-image-build-check    
