@@ -64,8 +64,6 @@ spec:
           failTask=true
         fi
 
-        echo "Fail Task : " $failTask
-
         if [[ "$failTask" == "true" ]]; then
 
           echo "Setting overall result to fail"

@@ -91,9 +91,9 @@ spec:
 
             cat fileScanResult
 
-            fileScanResultNewVar=`cat fileScanResult | sed ':a;N;$!ba;s/\n/ /g'`
+            fileScanResultNewVar=`cat fileScanResult`
 
-            if [[ "$fileScanResultNewVar" == *"Error: failed policies found:"* ]]; then
+            if [[ "$fileScanResultNewVar" == *"failed policies found:"* ]]; then
               failTask=true
             fi
 

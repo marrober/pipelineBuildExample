@@ -7,7 +7,7 @@ cat imageScanResult
 
 imageScanResultNewVar=`cat imageScanResult`
 
-if [[ "$imageScanResultNewVar" == *"ERROR: failed policies found:"* ]]; then
+if [[ "$imageScanResultNewVar" == *"failed policies found:"* ]]; then
   failTask=true
 fi
 
