@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: test
+  namespace: limit-testing
+spec:
+  tasks:
+##------------------------------------------------------------------
+# TASK-1
+##------------------------------------------------------------------
+  - name: task-1
+    taskRef:
+      kind: Task
+      name:  task-1
