@@ -79,6 +79,3 @@ spec:
         fi
 
       workingDir: /workspace
-  workspaces:
-  - name: files
-    mountPath: /files

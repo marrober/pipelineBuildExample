@@ -81,12 +81,10 @@ spec:
       value: resources
     taskRef:
       kind: ClusterTask
-      name:  git-clone
-    runAfter:
-    - git-clone-source        
+      name:  git-clone 
     workspaces:
     - name: output
-      workspace: files
+      workspace: resources
 ##------------------------------------------------------------------
 # Git clone source code task
 ##------------------------------------------------------------------
@@ -191,7 +189,7 @@ spec:
     - git-clone-resources
     workspaces:
     - name: files
-      workspace: files    
+      workspace: resources    
 ##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
@@ -212,7 +210,7 @@ spec:
       name: acs-deployment-check
     workspaces:
     - name: files
-      workspace: files
+      workspace: resources
     runAfter:
     - configure-deployment-assets   
 ##------------------------------------------------------------------
@@ -233,9 +231,6 @@ spec:
       name: acs-image-build-check    
     runAfter:
     - create-runtime-image
-    workspaces:
-    - name: files
-      workspace: files    
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
@@ -271,7 +266,7 @@ spec:
       - clear-resources
     workspaces:
     - name: files
-      workspace: files       
+      workspace: resources       
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
@@ -307,3 +302,4 @@ spec:
 ##------------------------------------------------------------------
   workspaces:
   - name: files
+  - name: resources

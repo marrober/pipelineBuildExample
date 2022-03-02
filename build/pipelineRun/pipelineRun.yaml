@@ -38,9 +38,9 @@ spec:
       value: liberty-rest
     - name: baseImage
       # - open-liberty-base:2 - bad image
-      # - openliberty:7 - good image
-      value: quay.io/marrober/open-liberty-base:2  
-#      value: quay.io/marrober/openliberty:7   
+      # - openliberty:8 - good image
+#      value: quay.io/marrober/open-liberty-base:2  
+      value: quay.io/marrober/openliberty:8   
     - name: appGroup
       value: Liberty
     - name: quay-io-account
@@ -74,4 +74,13 @@ spec:
         resources:
           requests:
             storage: 20Gi
+  - name: resources
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+
 
