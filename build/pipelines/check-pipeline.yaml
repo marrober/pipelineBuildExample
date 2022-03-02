@@ -84,7 +84,7 @@ spec:
       - name: acs_api_token
         value: $(params.acs_api_token)
       - name: public-url
-        value: "image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:bd8a-tvwxc"
+        value: "image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app:7173-qfc76"
       - name: roxctl-output-format
         value: $(params.roxctl-output-format)
     taskRef:
