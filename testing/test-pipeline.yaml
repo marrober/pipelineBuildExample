@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: test
-  namespace: limit-testing
+  namespace: quota-testing
 spec:
   tasks:
 ##------------------------------------------------------------------
