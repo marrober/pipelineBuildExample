@@ -1,0 +1,12 @@
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: example
+  namespace: limit-testing
+spec:
+  hard:
+    limits.cpu: '4'
+    limits.memory: 4Gi
+    pods: '4'
+    requests.cpu: '2'
+    requests.memory: 2Gi
