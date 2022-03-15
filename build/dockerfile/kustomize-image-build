@@ -7,6 +7,9 @@ RUN chmod u+x kustomize.sh && ./kustomize.sh
 RUN mv /kustomize /usr/local/bin/kustomize
 
 RUN dnf install -y git
+RUN dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+RUN dnf install -y gh
+
 
 ADD ./kubectl-slice/kubectl-slice /usr/local/bin/kubectl-slice
 ADD ./kubectl-slice/LICENSE /usr/local/bin/kubectl-slice-LICENSE
