@@ -23,10 +23,6 @@ spec:
     - name: STORAGE_DRIVER
       description: The Buildah storage STORAGE_DRIVER
       type: string
-  resources:
-    outputs:
-      - name: intermediate-image
-        type: image
   steps :
     - name: build-base-image
       command:
