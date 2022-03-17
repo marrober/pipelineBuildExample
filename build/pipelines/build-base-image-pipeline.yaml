@@ -38,7 +38,7 @@ spec:
       name:  git-clone 
     workspaces:
     - name: output
-      workspace: resources
+      workspace: files
 ##------------------------------------------------------------------
 # Build the base image
 ##------------------------------------------------------------------
