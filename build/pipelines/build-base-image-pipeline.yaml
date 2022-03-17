@@ -46,10 +46,13 @@ spec:
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
-    resources:
-      outputs:
-      - name: intermediate-image
-        resource: intermediate-image
+      - name: quay-io-account
+        value: $(params.quay-io-account)
+      - name: quay-io-repository
+        value: $(params.quay-io-repository)
+      - name: quay-io-image-tag-name
+        value: $(params.quay-io-image-tag-name)
+
     taskRef:
       kind: Task
       name: build-push-base-image

@@ -8,14 +8,14 @@ spec:
   params:
     - name: url
       value: https://github.com/marrober/pipelineBuildExample.git
+    - name: git-revision
+      value: acs      
     - name: quay-io-account
       value: "marrober"
     - name: quay-io-repository
       value: "openliberty"
     - name: quay-io-image-tag-name
       value: ""
-    - name: git-revision
-      value: acs
   workspaces:      
   - name: files
     volumeClaimTemplate:
