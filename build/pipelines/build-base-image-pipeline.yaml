@@ -56,8 +56,8 @@ spec:
     runAfter:
     - git-clone-resources      
     workspaces:
-    - name: resources
-      workspace: resources
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Workspace definitions
 ##------------------------------------------------------------------
