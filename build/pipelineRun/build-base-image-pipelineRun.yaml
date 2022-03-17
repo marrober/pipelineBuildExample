@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: build-base-image-pr-
+spec:
+  pipelineRef:
+    name: build-base-image
+  params:
+    - name: url
+      value: https://github.com/marrober/pipelineBuildExample.git
+    - name: quay-io-account
+      value: "marrober"
+    - name: quay-io-repository
+      value: "openliberty"
+    - name: quay-io-image-tag-name
+      value: ""
+    - name: git-revision
+      value: acs
+  workspaces:      
+  - name: files
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi      
