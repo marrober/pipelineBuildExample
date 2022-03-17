@@ -52,7 +52,6 @@ spec:
         value: $(params.quay-io-repository)
       - name: quay-io-image-tag-name
         value: $(params.quay-io-image-tag-name)
-
     taskRef:
       kind: Task
       name: build-push-base-image

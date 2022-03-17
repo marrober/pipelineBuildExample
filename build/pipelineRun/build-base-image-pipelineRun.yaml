@@ -15,7 +15,7 @@ spec:
     - name: quay-io-repository
       value: "openliberty"
     - name: quay-io-image-tag-name
-      value: ""
+      value: "latest"
   workspaces:      
   - name: files
     volumeClaimTemplate:
@@ -24,4 +24,4 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi      
+            storage: 20Gi      
