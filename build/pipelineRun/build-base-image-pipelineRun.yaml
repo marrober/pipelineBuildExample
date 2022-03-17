@@ -6,7 +6,7 @@ spec:
   pipelineRef:
     name: build-base-image
   params:
-    - name: url
+    - name: git-url
       value: https://github.com/marrober/pipelineBuildExample.git
     - name: git-revision
       value: acs      
