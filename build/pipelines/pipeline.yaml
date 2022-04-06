@@ -183,7 +183,7 @@ spec:
         value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
     taskRef:
       kind: Task
-      name: configure-deployment-assets
+      name: configure-deployment-assets-and-set-image
     runAfter:
     - create-runtime-image
     - git-clone-resources
@@ -212,7 +212,7 @@ spec:
     - name: files
       workspace: resources
     runAfter:
-    - configure-deployment-assets
+    - configure-deployment-assets-and-set-image
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
