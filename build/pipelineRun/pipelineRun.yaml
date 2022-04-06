@@ -38,9 +38,9 @@ spec:
       value: liberty-rest
     - name: baseImage
       # - open-liberty-base:2 - bad image
-      # - openliberty:9 - good image
-#      value: quay.io/marrober/open-liberty-base:2  
-      value: quay.io/marrober/openliberty:9   
+      # - openliberty:latest - good image
+#      value: quay.io/marrober/open-liberty-base:2
+      value: quay.io/marrober/openliberty:latest
     - name: appGroup
       value: Liberty
     - name: quay-io-account
@@ -62,9 +62,9 @@ spec:
     - name: file-location-in-git-repo
       value: deployment
     - name: recursive-search
-      value: "true"     
+      value: "true"
     - name: roxctl-output-format
-      value: "table"      
+      value: "table"
   workspaces:
   - name: files
     volumeClaimTemplate:
@@ -82,5 +82,3 @@ spec:
         resources:
           requests:
             storage: 5Gi
-
-

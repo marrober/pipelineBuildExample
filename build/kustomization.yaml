@@ -1,18 +1,18 @@
 resources:
 - namespace/namespace.yaml
 - rolebindings/argocd-admin.yaml
-- image-streams/imageStream-liberty-rest-app.yaml 
-- resources/imageStreamResource-intermediate.yaml 
-- resources/imageStreamResource-liberty-rest-app.yaml 
-- resources/sourceCode-GitResource.yaml 
-- tasks/build.yaml 
-- tasks/clearResources.yaml 
-- tasks/createRuntimeImage.yaml 
-- tasks/ocDeployApplication.yaml 
+- image-streams/imageStream-liberty-rest-app.yaml
+- resources/imageStreamResource-intermediate.yaml
+- resources/imageStreamResource-liberty-rest-app.yaml
+- resources/sourceCode-GitResource.yaml
+- tasks/build.yaml
+- tasks/clearResources.yaml
+- tasks/createRuntimeImage.yaml
+- tasks/ocDeployApplication.yaml
 - tasks/pushImageToQuay.yaml
 - tasks/acs-deployment-check.yaml
 - tasks/acs-image-build-check.yaml
-- tasks/configure-deployment-assets.yaml
+- tasks/configure-deployment-assets-and-set-image.yaml
 - tasks/build-push-base-image.yaml
 - pipelines/pipeline.yaml
 - pipelines/build-base-image-pipeline.yaml
