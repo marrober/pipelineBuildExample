@@ -50,6 +50,27 @@ spec:
           value: "liberty-rest"
         - name: quay-io-image-tag-name
           value: "latest"
+        - name: baseImage
+          # - open-liberty-base:2 - bad image
+          # - openliberty:latest - good image
+          value: quay.io/marrober/open-liberty-base:2
+    #      value: quay.io/marrober/openliberty:latest
+        - name: publicName
+          value: liberty-rest-app
+        - name: acs_central_endpoint
+          value: acs-secret
+        - name: acs_api_token
+          value: acs-secret
+        - name: git-url
+          value: https://github.com/marrober/pipelineBuildExample.git
+        - name: git-revision
+          value: acs
+        - name: file-location-in-git-repo
+          value: deployment
+        - name: recursive-search
+          value: "true"
+        - name: roxctl-output-format
+          value: "table"
         - name: url
           value: $(tt.params.gitrepository.url)
         - name: gitrepository_fullname
