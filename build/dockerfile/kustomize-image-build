@@ -6,6 +6,10 @@ RUN chmod u+x kustomize.sh && ./kustomize.sh
 
 RUN mv /kustomize /usr/local/bin/kustomize
 
+RUN curl -s https://github.com/argoproj/argo-cd/releases/download/v2.3.3/argocd-linux-amd64
+
+RUN mv argocd-linux-amd64 /usr/local/bin/argocd && chmod u+x /usr/local/bin/argocd
+
 RUN dnf install -y git
 RUN dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 RUN dnf install -y gh
