@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: configure-deployment-assets
+  name: configure-deployment-assets-and-set-image
 spec:
   params:
     - name: public-url
@@ -10,7 +10,7 @@ spec:
 ##------------------------------------------------------------------------
 # Configure the deployment yaml file to use the container image just built
 ##------------------------------------------------------------------------
-    - name: configure-deployment-assets
+    - name: configure-deployment-assets-and-set-image
       script: >-
         #!/usr/bin/env bash
 
@@ -22,7 +22,7 @@ spec:
 
         cat kustomization.yaml
 
-        kustomize build         
+        kustomize build
 
         kustomize build > configured-deployment.yaml
 

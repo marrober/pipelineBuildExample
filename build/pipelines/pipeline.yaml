@@ -35,7 +35,7 @@ spec:
     type: string
     default: liberty-rest
   - name: baseImage
-    type: string    
+    type: string
   - name: appGroup
     type: string
     default: Liberty
@@ -61,10 +61,10 @@ spec:
   - name: file-location-in-git-repo
     type: string
   - name: recursive-search
-    type: string   
+    type: string
   - name: roxctl-output-format
     type: string
-    default: "table"    
+    default: "table"
   tasks:
 ##------------------------------------------------------------------
 # Git clone resources task
@@ -81,7 +81,7 @@ spec:
       value: resources
     taskRef:
       kind: ClusterTask
-      name:  git-clone 
+      name:  git-clone
     workspaces:
     - name: output
       workspace: resources
@@ -103,7 +103,7 @@ spec:
       name:  git-clone
     workspaces:
     - name: output
-      workspace: files      
+      workspace: files
 ##------------------------------------------------------------------
 # Build the jar file deliverable
 ##------------------------------------------------------------------
@@ -119,7 +119,7 @@ spec:
       kind: Task
       name: build
     runAfter:
-    - git-clone-source      
+    - git-clone-source
     workspaces:
     - name: files
       workspace: files
@@ -177,19 +177,19 @@ spec:
 ##------------------------------------------------------------------
 # Configure the deployment assets to get the new image
 ##------------------------------------------------------------------
-  - name: configure-deployment-assets
+  - name: configure-deployment-assets-and-set-image
     params:
       - name: public-url
         value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
     taskRef:
       kind: Task
-      name: configure-deployment-assets
+      name: configure-deployment-assets-and-set-image
     runAfter:
     - create-runtime-image
     - git-clone-resources
     workspaces:
     - name: files
-      workspace: resources    
+      workspace: resources
 ##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
@@ -212,7 +212,7 @@ spec:
     - name: files
       workspace: resources
     runAfter:
-    - configure-deployment-assets   
+    - configure-deployment-assets-and-set-image
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
@@ -225,10 +225,10 @@ spec:
     - name: public-url
       value: $(tasks.create-runtime-image.results.new-image-repo-location)
     - name: roxctl-output-format
-      value: $(params.roxctl-output-format)        
+      value: $(params.roxctl-output-format)
     taskRef:
       kind: Task
-      name: acs-image-build-check    
+      name: acs-image-build-check
     runAfter:
     - create-runtime-image
 ##------------------------------------------------------------------
@@ -260,13 +260,12 @@ spec:
     - input: "$(tasks.resource-deployment-check.results.scan-result)"
       operator: in
       values:
-      - "pass"      
+      - "pass"
     runAfter:
-      - resource-deployment-check
       - clear-resources
     workspaces:
     - name: files
-      workspace: resources       
+      workspace: resources
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
