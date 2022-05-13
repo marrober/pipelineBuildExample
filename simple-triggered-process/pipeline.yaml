@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-test
+  namespace: pipeline-test
+spec:
+  params:
+  - name: git-url
+    type: string
+  - name: git-revision
+    type: string
+  tasks:
+##------------------------------------------------------------------
+# Git clone resources task
+##------------------------------------------------------------------
+  - name: git-clone-resources
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.git-revision)
+    - name: verbose
+      value: 'false'
+    - name: subdirectory
+      value: resources
+    taskRef:
+      kind: ClusterTask
+      name:  git-clone
+    workspaces:
+    - name: output
+      workspace: resources
+##------------------------------------------------------------------
+# View resources
+##------------------------------------------------------------------
+  - name: view-resources
+    taskRef:
+      kind: Task
+      name:  view-resources
+    runAfter:
+    - git-clone-resources
+    workspaces:
+    - name: resources
+      workspace: resources
+##------------------------------------------------------------------
+# Workspace definitions
+##------------------------------------------------------------------
+  workspaces:
+  - name: resources

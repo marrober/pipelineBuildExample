@@ -1,0 +1,34 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: pipeline-test-trigger-template
+spec:
+  params:
+  - name: gitrepository.url
+  - name: gitrevision
+  - name: branch
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: pipeline-test-pr-tr-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: pipeline-test
+      params:
+        - name: git-url
+          value: $(tt.params.gitrepository.url)
+        - name: git-revision
+          value: $(tt.params.gitrevision)
+        - name: branch
+          value: $(tt.params.branch)
+      workspaces:
+      - name: resources
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
