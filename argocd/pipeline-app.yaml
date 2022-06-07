@@ -4,6 +4,7 @@ metadata:
   name: pipeline-app
   namespace: openshift-gitops
 spec:
+  project: pipeline
   destination:
     namespace: liberty-rest
     server: https://kubernetes.default.svc
