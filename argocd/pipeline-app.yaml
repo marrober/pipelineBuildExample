@@ -29,7 +29,6 @@ spec:
     jsonPointers:
     - /spec/host
     kind: Route
-  project: default
   source:
     path: build
     repoURL: https://github.com/marrober/pipelineBuildExample.git

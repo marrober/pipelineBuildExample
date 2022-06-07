@@ -43,12 +43,12 @@ spec:
       value: quay.io/marrober/openliberty:latest
     - name: appGroup
       value: Liberty
-    - name: quay-io-account
-      value: "marrober"
-    - name: quay-io-repository
-      value: "liberty-rest"
-    - name: quay-io-image-tag-name
-      value: "latest"
+#    - name: quay-io-account
+#      value: "marrober"
+#    - name: quay-io-repository
+#      value: "liberty-rest"
+#    - name: quay-io-image-tag-name
+#      value: "latest"
     - name: publicName
       value: liberty-rest-app
     - name: acs_central_endpoint
