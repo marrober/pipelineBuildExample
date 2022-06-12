@@ -1,0 +1,49 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: base-image-ci-trigger-pipeline-template
+spec:
+  params:
+  - name: gitrepository.url
+  - name: gitrevision
+  - name: quay-io-account
+  - name: quay-io-repository
+  - name: quay-io-image-tag-name
+  - name: acs_central_endpoint
+  - name: acs_api_token
+  - name: roxctl-output-format
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: base-image-ci-tr-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: build-base-image
+      params:
+        - name: git-url
+          value: $(tt.params.gitrepository.url)
+        - name: git-revision
+          value: $(tt.params.gitrevision)
+        - name: quay-io-account
+          value: $(tt.params.quay-io-account)
+        - name: quay-io-repository
+          value: $(tt.params.quay-io-repository)
+        - name: quay-io-image-tag-name
+          value: $(tt.params.quay-io-image-tag-name)
+        - name: acs_central_endpoint
+          value: $(tt.params.acs_central_endpoint)
+        - name: acs_api_token
+          value: $(tt.params.acs_api_token)
+        - name: roxctl-output-format
+          value: $(tt.params.roxctl-output-format)
+      workspaces:
+      - name: files
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi

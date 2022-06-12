@@ -1,0 +1,134 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-base-image
+spec:
+  params:
+  - name: STORAGE_DRIVER
+    type: string
+    default: vfs
+  - name: git-url
+    type: string
+  - name: git-revision
+    type: string
+  - name: quay-io-account
+    type: string
+  - name: quay-io-repository
+    type: string
+  - name: quay-io-image-tag-name
+    type: string
+    default: "latest"
+  - name: acs_central_endpoint              # Advanced Cluster Security endpoint
+    type: string
+  - name: acs_api_token                     # Advanced Cluster Security access token secret
+    type: string
+  - name: roxctl-output-format              # Advanced Cluster Security image scan output format
+    type: string
+  tasks:
+##------------------------------------------------------------------
+# Perform image build check - before a possible rebuild
+##------------------------------------------------------------------
+  - name: image-build-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: quay.io/$(params.quay-io-account)/$(params.quay-io-repository):latest
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+##------------------------------------------------------------------
+# Git clone resources task
+##------------------------------------------------------------------
+  - name: git-clone-resources
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.git-revision)
+    - name: verbose
+      value: 'false'
+    - name: subdirectory
+      value: resources
+    taskRef:
+      kind: ClusterTask
+      name:  git-clone
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "fail"
+    runAfter:
+      - image-build-check
+    workspaces:
+    - name: output
+      workspace: files
+##------------------------------------------------------------------
+# Build the base image
+##------------------------------------------------------------------
+  - name: build-base-image
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
+      - name: quay-io-account
+        value: $(params.quay-io-account)
+      - name: quay-io-repository
+        value: $(params.quay-io-repository)
+      - name: quay-io-image-tag-name
+        value: $(params.quay-io-image-tag-name)
+    taskRef:
+      kind: Task
+      name: build-base-image
+    runAfter:
+    - git-clone-resources
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
+# Push the base image to storage
+##------------------------------------------------------------------
+  - name: push-base-image
+    params:
+      - name: STORAGE_DRIVER
+        value: $(params.STORAGE_DRIVER)
+      - name: quay-io-account
+        value: $(params.quay-io-account)
+      - name: quay-io-repository
+        value: $(params.quay-io-repository)
+      - name: quay-io-image-tag-name
+        value: $(params.quay-io-image-tag-name)
+    taskRef:
+      kind: Task
+      name: push-base-image
+    runAfter:
+    - build-base-image
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
+# Perform image build check - after the rebuild process
+##------------------------------------------------------------------
+  - name: image-build-check-validation
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - push-base-image
+##------------------------------------------------------------------
+# Workspace definitions
+##------------------------------------------------------------------
+  workspaces:
+  - name: files

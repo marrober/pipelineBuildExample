@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: base-image-check-and-rebuild
+spec:
+  schedule: "0 */12 * * *"            # Run the task every 12 hours
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            parent: "cronjob-base-image-rebuild"
+        spec:
+          containers:
+          - name: oc-tekton
+            image: quay.io/marrober/devex-terminal-4:minimal-terminal-1.3
+            command:
+            - curl
+            - -k
+            - -s
+            - -d
+            - "{}"
+            - http://base-image-github-ci-listener-myapp-ci.apps.skylake.demolab.local
+          restartPolicy: OnFailure

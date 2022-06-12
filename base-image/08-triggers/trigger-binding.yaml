@@ -1,0 +1,22 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: base-image-ci-pipeline-binding
+spec:
+  params:
+  - name: gitrepository.url
+    value: https://github.com/marrober/myApp-ci.git
+  - name: gitrevision
+    value: main
+  - name: quay-io-account
+    value: "marrober"
+  - name: quay-io-repository
+    value: "openliberty"
+  - name: quay-io-image-tag-name
+    value: "latest"
+  - name: acs_central_endpoint
+    value: acs-secret
+  - name: acs_api_token
+    value: acs-secret
+  - name: roxctl-output-format
+    value: "table"

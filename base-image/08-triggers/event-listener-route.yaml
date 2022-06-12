@@ -1,0 +1,12 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    eventlistener:  myapp-github-ci-listener
+  name: base-image-github-ci-listener
+spec:
+  port:
+    targetPort: http-listener
+  to:
+    kind: Service
+    name: el-base-image-github-ci-listener
