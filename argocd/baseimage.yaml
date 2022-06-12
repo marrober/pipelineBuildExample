@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: base-image
+  name: base-image-liberty
   namespace: openshift-gitops
 spec:
   project: liberty-rest
   destination:
-    namespace: myapp-ci
+    namespace: liberty-rest
     server: https://kubernetes.default.svc
   ignoreDifferences:
   - group: argoproj.io

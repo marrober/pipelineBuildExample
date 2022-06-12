@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: base-image-check-and-rebuild
 spec:
-  schedule: "0 */12 * * *"            # Run the task every 12 hours
+  schedule: "0 4,16 * * *"            # Run the task every 12 hours at 04:00 and 16:00
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
@@ -23,5 +23,5 @@ spec:
             - -s
             - -d
             - "{}"
-            - http://base-image-github-ci-listener-myapp-ci.apps.skylake.demolab.local
+            - http://base-image-github-ci-listener-liberty-rest.apps.skylake.demolab.local
           restartPolicy: OnFailure
