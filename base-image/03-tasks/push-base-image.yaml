@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: build-push-base-image
+  name: push-base-image
 spec:
   params:
     - name: quay-io-account
@@ -24,23 +24,6 @@ spec:
       description: The Buildah storage STORAGE_DRIVER
       type: string
   steps :
-    - name: build-base-image
-      command:
-        - buildah
-        - bud
-        - '--tls-verify=$(params.TLSVERIFY)'
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - '--root'
-        - '/files/buildah-containers'        
-        - '--layers'
-        - '-f'
-        - /files/resources/build/dockerfile/fix-open-liberty-image
-        - '-t'
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
-        - .        
-      image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
-      workingDir: /files/source      
-      resources: {}
     - name: push-image-to-quay
       command:
         - buildah
@@ -49,7 +32,7 @@ spec:
         - '--authfile'
         - /etc/secret-volume/.dockerconfigjson
         - '--root'
-        - '/files/buildah-containers'        
+        - '/files/buildah-containers'
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       volumeMounts:
@@ -59,7 +42,7 @@ spec:
   volumes:
     - name: quay-auth-secret
       secret:
-        secretName: quay-auth-secret               
+        secretName: quay-auth-secret
   workspaces:
   - name: files
     mountPath: /files

@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: build-base-image
+spec:
+  params:
+    - name: quay-io-account
+      description: The quay.io account that matches the credentials stored in the mounted secret.
+      type: string
+      default: ""
+    - name: quay-io-repository
+      description: The quay.io repository in which to store the image.
+      type: string
+      default: ""
+    - name: quay-io-image-tag-name
+      description: The tag to use to identify the image.
+      type: string
+      default: "latest"
+    - name: TLSVERIFY
+      description: Verify the TLS on the registry endpoint
+      type: string
+      default: 'false'
+    - name: STORAGE_DRIVER
+      description: The Buildah storage STORAGE_DRIVER
+      type: string
+  steps :
+    - name: build-base-image
+      command:
+        - buildah
+        - bud
+        - '--tls-verify=$(params.TLSVERIFY)'
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
+        - '--layers'
+        - '-f'
+        - base-image/04-dockerfile/fix-open-liberty-image
+        - '-t'
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
+        - .
+      image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
+      workingDir: /files/resources
+      resources:
+        limits:
+          cpu: '4'
+          memory: 4000Mi
+        requests:
+          cpu: '1'
+          memory: 1000Mi
+  volumes:
+    - name: quay-auth-secret
+      secret:
+        secretName: quay-auth-secret
+  workspaces:
+  - name: files
+    mountPath: /files

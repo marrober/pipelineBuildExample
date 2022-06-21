@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pipeline-test-pr-
+spec:
+  params:
+  - name: git-url
+    value: http://gogs.apps.skylake.demolab.local/mroberts/pipeline-test-gogs.git
+  - name: git-revision
+    value: master
+  pipelineRef:
+    name: pipeline-test
+  workspaces:
+  - name: resources
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi

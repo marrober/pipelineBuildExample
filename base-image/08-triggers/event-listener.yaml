@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: base-image-github-ci-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - name: github-listener
+      bindings:
+        - ref: base-image-ci-pipeline-binding
+      template:
+        ref: base-image-ci-trigger-pipeline-template

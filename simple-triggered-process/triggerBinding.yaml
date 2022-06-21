@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: pipeline-test-binding
+spec:
+  params:
+  - name: gitrepository.url
+    value: $(body.repository.html_url)
+  - name: gitrevision
+    value: $(body.after)
+  - name: branch
+    value: $(extensions.branch)

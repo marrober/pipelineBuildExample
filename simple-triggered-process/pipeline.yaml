@@ -1,23 +1,14 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: build-base-image
+  name: pipeline-test
+  namespace: pipeline-test
 spec:
   params:
-  - name: STORAGE_DRIVER
-    type: string
-    default: vfs
   - name: git-url
     type: string
   - name: git-revision
     type: string
-  - name: quay-io-account
-    type: string
-  - name: quay-io-repository
-    type: string
-  - name: quay-io-image-tag-name
-    type: string
-    default: "latest"
   tasks:
 ##------------------------------------------------------------------
 # Git clone resources task
@@ -37,30 +28,21 @@ spec:
       name:  git-clone
     workspaces:
     - name: output
-      workspace: files
+      workspace: resources
 ##------------------------------------------------------------------
-# Build the base image
+# View resources
 ##------------------------------------------------------------------
-  - name: build-base-image
-    params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-      - name: quay-io-account
-        value: $(params.quay-io-account)
-      - name: quay-io-repository
-        value: $(params.quay-io-repository)
-      - name: quay-io-image-tag-name
-        value: $(params.quay-io-image-tag-name)
+  - name: view-resources
     taskRef:
       kind: Task
-      name: build-push-base-image
+      name:  view-resources
     runAfter:
     - git-clone-resources
     workspaces:
-    - name: files
-      workspace: files
+    - name: resources
+      workspace: resources
 ##------------------------------------------------------------------
 # Workspace definitions
 ##------------------------------------------------------------------
   workspaces:
-  - name: files
+  - name: resources

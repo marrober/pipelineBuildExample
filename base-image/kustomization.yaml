@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- 01-pipeline/build-base-image-pipeline.yaml
+- 03-tasks/build-base-image.yaml
+- 03-tasks/push-base-image.yaml
+- 08-triggers/event-listener.yaml
+- 08-triggers/event-listener-route.yaml
+- 08-triggers/trigger-binding.yaml
+- 08-triggers/trigger-template.yaml
+- 09-cronjobs/base-image-check-and-rebuild.yaml

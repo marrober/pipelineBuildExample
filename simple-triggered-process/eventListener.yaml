@@ -1,0 +1,22 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: pipeline-test-listener-interceptor
+spec:
+  serviceAccountName: pipeline
+  triggers:
+  - name: github-listener
+    interceptors:
+    - ref:
+        name: "cel"
+      params:
+      - name: "filter"
+        value: 'body["ref"].contains("master") && body["repository"]["name"] == "pipeline-test-gogs" && header.match("X-Gogs-Event", "push")'
+      - name: "overlays"
+        value:
+        - key: branch
+          expression: "body.ref.split('/')[2]"
+    bindings:
+    - ref: pipeline-test-binding
+    template:
+      ref: pipeline-test-trigger-template

@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: liberty-rest
+  namespace: openshift-gitops
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: Project for basic pipeline example
+  # Allow manifests to deploy from specific Git repos
+  sourceRepos:
+  - https://github.com/marrober/pipelineBuildExample.git
+  # Limit the namespaces to which the project can deploy
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: '*'
+  - server: https://api.celeron.demolab.local:6443
+    namespace: '*'
+  # Deny all cluster-scoped resources from being created, except for named items
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRole
+  - group: 'rbac.authorization.k8s.io'
+    kind: ClusterRoleBinding
+  # Enables namespace orphaned resource monitoring.
+  orphanedResources:
+    warn: false

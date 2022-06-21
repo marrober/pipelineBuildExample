@@ -1,22 +1,28 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  generateName: build-base-image-pr-
+  generateName: build-base-image-
 spec:
   pipelineRef:
     name: build-base-image
   params:
     - name: git-url
-      value: https://github.com/marrober/pipelineBuildExample.git
+      value: https://github.com/marrober/myApp-ci.git
     - name: git-revision
-      value: acs      
+      value: main
     - name: quay-io-account
       value: "marrober"
     - name: quay-io-repository
       value: "openliberty"
     - name: quay-io-image-tag-name
       value: "latest"
-  workspaces:      
+    - name: acs_central_endpoint
+      value: acs-secret
+    - name: acs_api_token
+      value: acs-secret
+    - name: roxctl-output-format
+      value: "table"
+  workspaces:
   - name: files
     volumeClaimTemplate:
       spec:
@@ -24,4 +30,4 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 20Gi      
+            storage: 20Gi

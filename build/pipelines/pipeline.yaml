@@ -247,8 +247,13 @@ spec:
       operator: in
       values:
       - "pass"
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     runAfter:
       - resource-deployment-check
+      - image-build-check
 ##------------------------------------------------------------------
 # Deploy the application locally from the image stream
 ##------------------------------------------------------------------
@@ -269,33 +274,33 @@ spec:
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
-  - name: push-image-to-quay
-    params:
-      - name: quay-io-account
-        value: $(params.quay-io-account)
-      - name: quay-io-repository
-        value: $(params.quay-io-repository)
-      - name: quay-io-image-tag-name
-        value: $(tasks.create-runtime-image.results.new-tag)
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    resources:
-      inputs:
-      - name: runtime-image
-        resource: runtime-image
-    taskRef:
-      kind: Task
-      name: push-image-to-quay
-    when:
-    - input: "$(tasks.image-build-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
-    runAfter:
-      - image-build-check
-    workspaces:
-    - name: files
-      workspace: files
+#  - name: push-image-to-quay
+#    params:
+#      - name: quay-io-account
+#        value: $(params.quay-io-account)
+#      - name: quay-io-repository
+#        value: $(params.quay-io-repository)
+#      - name: quay-io-image-tag-name
+#        value: $(tasks.create-runtime-image.results.new-tag)
+#      - name: STORAGE_DRIVER
+#        value: $(params.STORAGE_DRIVER)
+#    resources:
+#      inputs:
+#      - name: runtime-image
+#        resource: runtime-image
+#    taskRef:
+#      kind: Task
+#      name: push-image-to-quay
+#    when:
+#    - input: "$(tasks.image-build-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
+#    runAfter:
+#      - image-build-check
+#    workspaces:
+#    - name: files
+#      workspace: files
 ##------------------------------------------------------------------
 # Workspace definitions
 ##------------------------------------------------------------------
