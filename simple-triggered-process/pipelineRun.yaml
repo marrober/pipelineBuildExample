@@ -5,9 +5,9 @@ metadata:
 spec:
   params:
   - name: git-url
-    value: http://gogs.apps.skylake.demolab.local/mroberts/pipeline-test-gogs.git
+    value: https://github.com/marrober/pipelineBuildExample.git
   - name: git-revision
-    value: master
+    value: main
   pipelineRef:
     name: pipeline-test
   workspaces:
