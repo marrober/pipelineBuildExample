@@ -1,18 +1,17 @@
 FROM quay.io/marrober/maven-build:latest
 
-USER 1001 
+USER 1001
 
 WORKDIR /home/maven
 
-RUN mkdir /home/maven/target /home/maven/src
+# RUN mkdir /home/maven/target /home/maven/src
 
 COPY src/server.xml /home/maven/target
 COPY pom.xml .
 COPY /src /home/maven/src
 
-RUN ls 
+RUN ls
 
 RUN mvn --batch-mode package
 
 RUN ls /home/maven/target
-
