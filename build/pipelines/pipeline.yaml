@@ -262,11 +262,11 @@ spec:
     taskRef:
       kind: Task
       name: oc-deploy-application
-    when:
-    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
+#    when:
+#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
     runAfter:
       - clear-resources
     workspaces:
