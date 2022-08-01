@@ -177,60 +177,60 @@ spec:
 ##------------------------------------------------------------------
 # Configure the deployment assets to get the new image
 ##------------------------------------------------------------------
-  - name: configure-deployment-assets-and-set-image
-    params:
-      - name: public-url
-        value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
-    taskRef:
-      kind: Task
-      name: configure-deployment-assets-and-set-image
-    runAfter:
-    - create-runtime-image
-    - git-clone-resources
-    workspaces:
-    - name: files
-      workspace: resources
+#  - name: configure-deployment-assets-and-set-image
+#    params:
+#      - name: public-url
+#        value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
+#    taskRef:
+#      kind: Task
+#      name: configure-deployment-assets-and-set-image
+#    runAfter:
+#    - create-runtime-image
+#    - git-clone-resources
+#    workspaces:
+#    - name: files
+#      workspace: resources
 ##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
-  - name: resource-deployment-check
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: source_location
-      value: $(params.file-location-in-git-repo)
-    - name: recursive-search
-      value: $(params.recursive-search)
-    - name: roxctl-output-format
-      value: $(params.roxctl-output-format)
-    taskRef:
-      kind: Task
-      name: acs-deployment-check
-    workspaces:
-    - name: files
-      workspace: resources
-    runAfter:
-    - configure-deployment-assets-and-set-image
+#  - name: resource-deployment-check
+#    params:
+#    - name: acs_central_endpoint
+#      value: $(params.acs_central_endpoint)
+#    - name: acs_api_token
+#      value: $(params.acs_api_token)
+#    - name: source_location
+#      value: $(params.file-location-in-git-repo)
+#    - name: recursive-search
+#      value: $(params.recursive-search)
+#    - name: roxctl-output-format
+#      value: $(params.roxctl-output-format)
+#    taskRef:
+#      kind: Task
+#      name: acs-deployment-check
+#    workspaces:
+#    - name: files
+#      workspace: resources
+#    runAfter:
+#    - configure-deployment-assets-and-set-image
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
-  - name: image-build-check
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: public-url
-      value: $(tasks.create-runtime-image.results.new-image-repo-location)
-    - name: roxctl-output-format
-      value: $(params.roxctl-output-format)
-    taskRef:
-      kind: Task
-      name: acs-image-build-check
-    runAfter:
-    - create-runtime-image
+#  - name: image-build-check
+#    params:
+#    - name: acs_central_endpoint
+#      value: $(params.acs_central_endpoint)
+#    - name: acs_api_token
+#      value: $(params.acs_api_token)
+#    - name: public-url
+#      value: $(tasks.create-runtime-image.results.new-image-repo-location)
+#    - name: roxctl-output-format
+#      value: $(params.roxctl-output-format)
+#    taskRef:
+#      kind: Task
+#      name: acs-image-build-check
+#    runAfter:
+#    - create-runtime-image
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
@@ -242,18 +242,19 @@ spec:
     taskRef:
       kind: Task
       name: clear-resources
-    when:
-    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
-    - input: "$(tasks.image-build-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
+#    when:
+#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
+#    - input: "$(tasks.image-build-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
     runAfter:
-      - resource-deployment-check
-      - image-build-check
+#      - resource-deployment-check
+#      - image-build-check
+       - create-runtime-image
 ##------------------------------------------------------------------
 # Deploy the application locally from the image stream
 ##------------------------------------------------------------------
