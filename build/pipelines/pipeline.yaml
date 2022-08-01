@@ -254,7 +254,7 @@ spec:
     runAfter:
 #      - resource-deployment-check
 #      - image-build-check
-       - create-runtime-image
+       - configure-deployment-assets-and-set-image
 ##------------------------------------------------------------------
 # Deploy the application locally from the image stream
 ##------------------------------------------------------------------
