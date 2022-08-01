@@ -177,19 +177,19 @@ spec:
 ##------------------------------------------------------------------
 # Configure the deployment assets to get the new image
 ##------------------------------------------------------------------
-#  - name: configure-deployment-assets-and-set-image
-#    params:
-#      - name: public-url
-#        value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
-#    taskRef:
-#      kind: Task
-#      name: configure-deployment-assets-and-set-image
-#    runAfter:
-#    - create-runtime-image
-#    - git-clone-resources
-#    workspaces:
-#    - name: files
-#      workspace: resources
+  - name: configure-deployment-assets-and-set-image
+    params:
+      - name: public-url
+        value: "$(tasks.create-runtime-image.results.new-image-repo-location)"
+    taskRef:
+      kind: Task
+      name: configure-deployment-assets-and-set-image
+    runAfter:
+    - create-runtime-image
+    - git-clone-resources
+    workspaces:
+    - name: files
+      workspace: resources
 ##------------------------------------------------------------------
 # Perform resource deployment check on files of interest
 ##------------------------------------------------------------------
