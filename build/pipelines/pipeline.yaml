@@ -242,7 +242,7 @@ spec:
     taskRef:
       kind: Task
       name: clear-resources
-#    when:
+    when:
 #    - input: "$(tasks.resource-deployment-check.results.scan-result)"
 #      operator: in
 #      values:
