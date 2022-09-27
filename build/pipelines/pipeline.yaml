@@ -253,8 +253,8 @@ spec:
       - "pass"
     runAfter:
 #      - resource-deployment-check
-      - image-build-check
-      - configure-deployment-assets-and-set-image
+    - image-build-check
+    - configure-deployment-assets-and-set-image
 ##------------------------------------------------------------------
 # Deploy the application locally from the image stream
 ##------------------------------------------------------------------
