@@ -216,21 +216,21 @@ spec:
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
-#  - name: image-build-check
-#    params:
-#    - name: acs_central_endpoint
-#      value: $(params.acs_central_endpoint)
-#    - name: acs_api_token
-#      value: $(params.acs_api_token)
-#    - name: public-url
-#      value: $(tasks.create-runtime-image.results.new-image-repo-location)
-#    - name: roxctl-output-format
-#      value: $(params.roxctl-output-format)
-#    taskRef:
-#      kind: Task
-#      name: acs-image-build-check
-#    runAfter:
-#    - create-runtime-image
+  - name: image-build-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: $(tasks.create-runtime-image.results.new-image-repo-location)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - create-runtime-image
 ##------------------------------------------------------------------
 # Clear the old deployed application resources ready for a
 # redeployment
