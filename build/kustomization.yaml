@@ -1,6 +1,7 @@
 resources:
 - namespace/namespace.yaml
 - rolebindings/argocd-admin.yaml
+- rolebindings/pipeline-project-access.yaml
 - image-streams/imageStream-liberty-rest-app.yaml
 - resources/imageStreamResource-intermediate.yaml
 - resources/imageStreamResource-liberty-rest-app.yaml
