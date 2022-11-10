@@ -13,6 +13,6 @@ rules:
       - watch
       - create
     apiGroups:
-      - ''
+      - resolution.tekton.dev
     resources:
       - resolutionrequests
