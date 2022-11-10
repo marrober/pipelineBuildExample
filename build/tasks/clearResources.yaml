@@ -17,9 +17,9 @@ spec:
         - |-
           echo "------------------------------------------------------------"
           echo "echo $(params.appName)"
-          echo "oc get all -l app=$(params.appName)" > clear-cmd.sh
+          # echo "oc get all -l app=$(params.appName)" > clear-cmd.sh
           echo "oc delete all -l app=$(params.appName)" >> clear-cmd.sh
-          echo "oc get all -l app=$(params.appName)" >> clear-cmd.sh
+          # echo "oc get all -l app=$(params.appName)" >> clear-cmd.sh
           echo "Generated script to clear resources ready for new deployment"
           cat clear-cmd.sh
           echo "------------------------------------------------------------"
