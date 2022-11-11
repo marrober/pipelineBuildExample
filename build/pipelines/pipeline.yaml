@@ -243,10 +243,6 @@ spec:
       kind: Task
       name: clear-resources
     when:
-#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
     - input: "$(tasks.image-build-check.results.scan-result)"
       operator: in
       values:
@@ -262,11 +258,10 @@ spec:
     taskRef:
       kind: Task
       name: oc-deploy-application
-#    when:
-#    - input: "$(tasks.resource-deployment-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     runAfter:
       - clear-resources
     workspaces:
