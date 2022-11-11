@@ -258,6 +258,7 @@ spec:
     taskRef:
       kind: Task
       name: oc-deploy-application
+    when:
     - input: "$(tasks.image-build-check.results.scan-result)"
       operator: in
       values:
