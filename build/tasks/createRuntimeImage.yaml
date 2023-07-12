@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: create-runtime-image
@@ -29,6 +29,7 @@ spec:
       type: string
     - name: pipelineRunName
       type: string
+<<<<<<< Updated upstream
   resources:
     inputs:
       - name: intermediate-image
@@ -36,6 +37,23 @@ spec:
     outputs:
       - name: runtime-image
         type: image
+=======
+    - name: publicName
+      type: string
+    - name: appName
+      type: string
+    - name: baseImage
+      type: string
+    - name: sourceCommitTag
+      type: string
+    - name: intermediate-image
+      type: string
+    - name: runtime-image
+      type: string
+  results:
+    - name: new-image-repo-location
+    - name: new-tag
+>>>>>>> Stashed changes
   steps:
     - name: gen-binary-extraction-dockerfile
       command:
@@ -43,10 +61,17 @@ spec:
         - '-c'
       args:
         - |-
+<<<<<<< Updated upstream
           echo "FROM $(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
           echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /deployments/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /deployments/server.xml /config/server.xml" >> ext-dockerfile.gen
+=======
+          echo "FROM localhost/$(params.intermediate-image) as intermediate-image" > ext-dockerfile.gen
+          echo "FROM $(params.baseImage) as runtime-image" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /home/maven/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
+          echo "COPY --from=intermediate-image /home/maven/target/server.xml /config/server.xml" >> ext-dockerfile.gen
+>>>>>>> Stashed changes
           echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
           echo "github.repository.fullname=\"$(params.gitrepository_fullname)\" \\" >> ext-dockerfile.gen
           echo "github.commit.ref=\"$(params.commit_ref)\" \\" >> ext-dockerfile.gen
@@ -61,6 +86,9 @@ spec:
           cat ext-dockerfile.gen
           echo "------------------------------"
       image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
       volumeMounts:
         - name: envparams
           mountPath: /env-params
@@ -75,15 +103,22 @@ spec:
         - '-f'
         - /env-params/ext-dockerfile.gen
         - '-t'
-        - $(resources.outputs.runtime-image.url)
+        - $(params.runtime-image)
         - .
       image: registry.redhat.io/rhel8/buildah
+<<<<<<< Updated upstream
       resources: {}
+=======
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+>>>>>>> Stashed changes
       volumeMounts:
         - name: pipeline-cache
           mountPath: /var/lib/containers
         - name: envparams
           mountPath: /env-params
+<<<<<<< Updated upstream
       workingDir: /var/lib/containers
 #    - name: view-images
 #      command:
@@ -103,7 +138,42 @@ spec:
         - '--tls-verify=$(params.TLSVERIFY)'
         - $(resources.outputs.runtime-image.url)
         - 'docker://$(resources.outputs.runtime-image.url)'
+=======
+    - name: generate-tag-push-to-ocp
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        var1=$(params.sourceCommitTag)
+
+        echo $var1
+
+        var2=${var1:0:4}
+
+        var3=$(params.pipelineRunName)
+
+        var4=${var3:${#var3}-5:${#var3}}
+
+        tag=$var2-$var4
+
+        echo $tag
+
+        echo -n $tag >  $(results.new-tag.path)
+
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) \
+        
+        --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
+        
+        $(params.runtime-image) \
+        
+        docker://$(params.runtime-image):$tag
+
+>>>>>>> Stashed changes
       image: registry.redhat.io/rhel8/buildah
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
       resources: {}
       volumeMounts:
         - name: pipeline-cache

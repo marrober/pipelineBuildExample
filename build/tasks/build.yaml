@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: build
@@ -27,6 +27,7 @@ spec:
     - name: STORAGE_DRIVER
       description: The Buildah storage STORAGE_DRIVER
       type: string
+<<<<<<< Updated upstream
   resources:
     inputs:
       - name: source
@@ -34,6 +35,8 @@ spec:
     outputs:
       - name: intermediate-image
         type: image
+=======
+>>>>>>> Stashed changes
   steps :
     - name: gen-env-file
       command:
@@ -87,6 +90,7 @@ spec:
         - $(resources.outputs.intermediate-image.url)
         - .
       image: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
+<<<<<<< Updated upstream
       resources: {}
       volumeMounts:
         - name: pipeline-cache
@@ -105,3 +109,13 @@ spec:
     - name: pipeline-cache
       persistentVolumeClaim:
         claimName: pipeline-task-cache-pvc
+=======
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      workingDir: /files/source      
+      resources: {}
+  workspaces:
+  - name: files
+    mountPath: /files
+>>>>>>> Stashed changes

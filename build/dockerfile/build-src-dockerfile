@@ -4,7 +4,7 @@ USER 1001
 
 WORKDIR /home/maven
 
-RUN mkdir /home/maven/target /home/maven/src
+# RUN mkdir /home/maven/target /home/maven/src
 
 COPY src/server.xml /home/maven/target
 COPY pom.xml .

@@ -3,11 +3,9 @@ kind: Task
 metadata:
   name: push-image-to-quay
 spec:
-  resources:
-    inputs:
-      - name: runtime-image
-        type: image
   params:
+    - name: runtime-image
+      type: string
     - name: quay-io-account
       description: The quay.io account that matches the credentials stored in the mounted secret.
       type: string
@@ -32,6 +30,9 @@ spec:
         - $(resources.inputs.runtime-image.url)
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
       resources: {}
       volumeMounts:
         - name: pipeline-cache
@@ -45,6 +46,9 @@ spec:
         - /etc/secret-volume/.dockerconfigjson
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
@@ -55,6 +59,12 @@ spec:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
+<<<<<<< Updated upstream
     - name: pipeline-cache
       persistentVolumeClaim:
         claimName: pipeline-task-cache-pvc
+=======
+  workspaces:
+  - name: files
+    mountPath: /files
+>>>>>>> Stashed changes
