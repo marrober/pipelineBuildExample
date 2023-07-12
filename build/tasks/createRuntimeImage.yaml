@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: create-runtime-image
@@ -29,13 +29,10 @@ spec:
       type: string
     - name: pipelineRunName
       type: string      
-  resources:
-    inputs:
-      - name: intermediate-image
-        type: image
-    outputs:
-      - name: runtime-image
-        type: image
+    - name: intermediate-image
+      type: string
+    - name: runtime-image
+      type: string
   steps:
     - name: gen-binary-extraction-dockerfile
       command:
@@ -43,8 +40,9 @@ spec:
         - '-c'
       args:
         - |-
-          echo "FROM $(resources.inputs.intermediate-image.url) as intermediate-image" > ext-dockerfile.gen
+          echo "FROM $(params.intermediate-image) as intermediate-image" > ext-dockerfile.gen
           echo "FROM docker.io/openliberty/open-liberty as runtime-image" >> ext-dockerfile.gen
+          echo "RUN ls -alR /tmp" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/target/liberty-rest-app.war /config/apps/liberty-rest-app.war" >> ext-dockerfile.gen
           echo "COPY --from=intermediate-image /tmp/src/src/main/liberty/config/server.xml /config/server.xml" >> ext-dockerfile.gen
           echo "LABEL github.repository.url=\"$(params.gitrepository_url)\" \\" >> ext-dockerfile.gen
@@ -61,6 +59,9 @@ spec:
           cat ext-dockerfile.gen
           echo "------------------------------"
       image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
       volumeMounts:
         - name: envparams
           mountPath: /env-params
@@ -72,18 +73,19 @@ spec:
         - '--tls-verify=$(params.TLSVERIFY)'
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--layers'
+        - '--root'
+        - '/files/buildah-containers'
         - '-f'
         - ext-dockerfile.gen
         - '-t'
-        - $(resources.outputs.runtime-image.url)
+        - $(params.runtime-image)
         - .
       image: registry.redhat.io/rhel8/buildah
-      resources: {}
       securityContext:
-        privileged: true
+        capabilities:
+          add: ["SETFCAP"]
+      resources: {}
       volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
         - name: envparams
           mountPath: /env-params
       workingDir: /env-params
@@ -91,34 +93,34 @@ spec:
       command:
         - buildah
         - images
+        - '--root'
+        - '/files/buildah-containers'
         - '--storage-driver=$(params.STORAGE_DRIVER)'
       image: registry.redhat.io/rhel8/buildah
-      resources: {}
       securityContext:
-        privileged: true
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
+        capabilities:
+          add: ["SETFCAP"]
+      resources: {}
     - name: push-image-to-openshift
       command:
         - buildah
         - push
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--tls-verify=$(params.TLSVERIFY)'
-        - $(resources.outputs.runtime-image.url)
+        - '--root'
+        - '/files/buildah-containers'
+        - $(params.runtime-image)
         - 'docker://$(resources.outputs.runtime-image.url)'
       image: registry.redhat.io/rhel8/buildah
-      resources: {}
       securityContext:
-        privileged: true
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
+        capabilities:
+          add: ["SETFCAP"]
+      resources: {}
   volumes:
     - emptyDir: {}
       name: envparams
     - emptyDir: {}
       name: gen-source
-    - name: pipeline-cache
-      persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
+  workspaces:
+  - name: files
+    mountPath: /files

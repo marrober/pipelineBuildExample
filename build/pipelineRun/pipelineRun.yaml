@@ -5,19 +5,11 @@ metadata:
 spec:
   pipelineRef:
     name: liberty-rest-app
-  resources:
-    - name: app-source
-      resourceRef:
-        name: liberty-rest-app-source-code
-    - name: intermediate-image
-      resourceRef:
-        name: intermediate
-    - name: runtime-image
-      resourceRef:
-        name: liberty-rest-app
   params:
-    - name: templateFileName
-      value: build/template/deploy-app-template.yaml
+    - name: source-git-url
+      value: https://github.com/marrober/pipelineBuildExample.git
+    - name: source-git-revision
+      value:
     - name: appName
       value: liberty-rest
     - name: appGroup
@@ -28,3 +20,34 @@ spec:
       value: "liberty-rest"
     - name: quay-io-image-tag-name
       value: "latest"
+    - name: intermediate-image
+      value: intermediate
+    - name: runtime-image
+      value: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app
+    - name: url
+      value: ""
+    - name: gitrepository_fullname
+      value: ""
+    - name: revision
+      value: ""
+    - name: commit_prior_revision
+      value: ""
+    - name: commit_ref
+      value: ""
+    - name: commit_id
+      value: ""
+    - name: commit_date
+      value: ""
+    - name: commit_message
+      value: ""
+    - name: commit_author
+      value: ""
+  workspaces:
+  - name: files
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi

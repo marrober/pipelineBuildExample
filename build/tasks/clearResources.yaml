@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: clear-resources
@@ -26,6 +26,9 @@ spec:
           chmod u+x clear-cmd.sh
           ./clear-cmd.sh
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
       volumeMounts:
         - name: script
           mountPath: /script

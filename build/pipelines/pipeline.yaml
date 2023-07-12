@@ -9,13 +9,6 @@ metadata:
   name: liberty-rest-app
   namespace: liberty-rest
 spec:
-  resources:
-  - name: app-source
-    type: git
-  - name: intermediate-image
-    type: image
-  - name: runtime-image
-    type: image
   params:
   - name: templateFileName
     type: string
@@ -40,6 +33,10 @@ spec:
     default: 'overlay'
   - name: url
     type: string
+  - name: source-git-url
+    type: string
+  - name: source-git-revision
+    type: string
   - name: gitrepository_fullname
     type: string
   - name: revision
@@ -56,21 +53,43 @@ spec:
     type: string
   - name: commit_author
     type: string
+  - name: intermediate-image
+    type: string
+  - name: runtime-image
+    type: string
   tasks:
+##------------------------------------------------------------------
+# Git clone source code task
+##------------------------------------------------------------------
+  - name: git-clone-source
+    params:
+    - name: url
+      value: $(params.source-git-url)
+    - name: revision
+      value: $(params.source-git-revision)
+    - name: verbose
+      value: 'false'
+    - name: subdirectory
+      value: source
+    taskRef:
+      kind: ClusterTask
+      name:  git-clone
+    workspaces:
+    - name: output
+      workspace: files
+
   - name: build
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
-    resources:
-      inputs:
-      - name: source
-        resource: app-source
-      outputs:
       - name: intermediate-image
-        resource: intermediate-image
+        value: $(params.intermediate-image)
     taskRef:
       kind: Task
       name: build
+    workspaces:
+    - name: files
+      workspace: files
   - name: create-runtime-image
     params:
       - name: STORAGE_DRIVER
@@ -95,18 +114,18 @@ spec:
         value: $(context.pipelineRun.name)
       - name: pipelineName
         value: $(context.pipeline.name)   
-    resources:
-      inputs:
       - name: intermediate-image
-        resource: intermediate-image
-      outputs:
+        value: $(params.intermediate-image)
       - name: runtime-image
-        resource: runtime-image
+        value: $(params.runtime-image)
     taskRef:
       kind: Task
       name: create-runtime-image
     runAfter:
       - build
+    workspaces:
+    - name: files
+      workspace: files
   - name: clear-resources
     params:
       - name: appName
@@ -116,26 +135,19 @@ spec:
       name: clear-resources
     runAfter:
       - build
+      - create-runtime-image
+    workspaces:
+    - name: files
+      workspace: files
   - name: deploy-application
-    resources:
-      inputs:
-      - name: source
-        resource: app-source
-      - name: runtime-image
-        resource: runtime-image
-    params:
-      - name: templateFileName
-        value: $(params.templateFileName)
-      - name: appName
-        value: $(params.appName)
-      - name: appGroup
-        value: $(params.appGroup)
     taskRef:
       kind: Task
-      name: oc-process-deployment-template
+      name: oc-deploy-application
     runAfter:
-      - create-runtime-image
       - clear-resources
+    workspaces:
+    - name: files
+      workspace: files
   - name: push-image-to-quay
     params:
       - name: quay-io-account
@@ -145,16 +157,15 @@ spec:
       - name: quay-io-image-tag-name
         value: $(params.quay-io-image-tag-name)
       - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)      
-    resources:
-      inputs:
-      - name: runtime-image
-        resource: runtime-image
+        value: $(params.STORAGE_DRIVER)
     taskRef:
       kind: Task
       name: push-image-to-quay
     runAfter:
       - create-runtime-image
+    workspaces:
+    - name: files
+      workspace: files
   - name: clear-buildah-repo
     params:
       - name: STORAGE_DRIVER
@@ -164,3 +175,11 @@ spec:
       name: clear-buildah-repo
     runAfter:
       - push-image-to-quay
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
+# Workspace definition.
+##------------------------------------------------------------------
+  workspaces:
+  - name: files
