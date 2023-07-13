@@ -107,7 +107,7 @@
                 <executions>
                     <execution>
                         <id>copy-server-xml</id>
-                        <phase>generate-sources</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -125,7 +125,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>
