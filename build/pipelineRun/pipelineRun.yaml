@@ -9,7 +9,7 @@ spec:
     - name: source-git-url
       value: https://github.com/marrober/pipelineBuildExample.git
     - name: source-git-revision
-      value:
+      value: fix-for-s2i-image
     - name: appName
       value: liberty-rest
     - name: appGroup

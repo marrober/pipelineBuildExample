@@ -77,7 +77,7 @@ spec:
           mountPath: /gen-source
         - name: envparams
           mountPath: /env-params
-      workingDir: /workspace/source
+      workingDir: /files/source
     - name: build
       command:
         - buildah
@@ -103,14 +103,6 @@ spec:
         - name: gen-source
           mountPath: /gen-source
       workingDir: /gen-source
-    - name: view-built-objects
-      command:
-        - podman
-        - run
-      image: registry.redhat.io/rhel8/buildah
-      resources: {}
-      securityContext:
-        privileged: true
     - name: view-images
       command:
         - buildah

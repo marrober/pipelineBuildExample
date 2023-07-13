@@ -87,6 +87,8 @@ spec:
     taskRef:
       kind: Task
       name: build
+    runAfter:
+    - git-clone-source
     workspaces:
     - name: files
       workspace: files
