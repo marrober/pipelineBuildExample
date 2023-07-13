@@ -138,9 +138,6 @@ spec:
     runAfter:
       - build
       - create-runtime-image
-    workspaces:
-    - name: files
-      workspace: files
   - name: deploy-application
     taskRef:
       kind: Task
@@ -160,23 +157,13 @@ spec:
         value: $(params.quay-io-image-tag-name)
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
+      - name: runtime-image
+        value: $(params.runtime-image)
     taskRef:
       kind: Task
       name: push-image-to-quay
     runAfter:
       - create-runtime-image
-    workspaces:
-    - name: files
-      workspace: files
-  - name: clear-buildah-repo
-    params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    taskRef:
-      kind: Task
-      name: clear-buildah-repo
-    runAfter:
-      - push-image-to-quay
     workspaces:
     - name: files
       workspace: files

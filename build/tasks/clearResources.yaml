@@ -29,10 +29,5 @@ spec:
       securityContext:
         capabilities:
           add: ["SETFCAP"]
-      volumeMounts:
-        - name: script
-          mountPath: /script
-      workingDir: /script
-  volumes:
-    - emptyDir: {}
-      name: script
+      workingDir: /tmp
+

@@ -109,7 +109,7 @@ spec:
         - '--root'
         - '/files/buildah-containers'
         - $(params.runtime-image)
-        - 'docker://$(resources.outputs.runtime-image.url)'
+        - 'docker://$(params.runtime-image)'
       image: registry.redhat.io/rhel8/buildah
       securityContext:
         capabilities:

@@ -19,6 +19,8 @@ spec:
     - name: STORAGE_DRIVER
       description: The Buildah storage STORAGE_DRIVER
       type: string
+    - name: runtime-image
+      type: string
   steps:
     - name: buildah-tag-image
       command:
@@ -27,7 +29,7 @@ spec:
         - '--root'
         - '/files/buildah-containers'
         - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - $(resources.inputs.runtime-image.url)
+        - $(params.runtime-image)
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       securityContext:
@@ -74,7 +76,6 @@ spec:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
-    - name: pipeline-cache
   workspaces:
   - name: files
     mountPath: /files
