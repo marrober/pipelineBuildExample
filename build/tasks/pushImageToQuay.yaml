@@ -4,8 +4,6 @@ metadata:
   name: push-image-to-quay
 spec:
   params:
-    - name: runtime-image
-      type: string
     - name: quay-io-account
       description: The quay.io account that matches the credentials stored in the mounted secret.
       type: string
@@ -21,27 +19,45 @@ spec:
     - name: STORAGE_DRIVER
       description: The Buildah storage STORAGE_DRIVER
       type: string
+    - name: runtime-image
+      type: string
   steps:
     - name: buildah-tag-image
       command:
         - buildah
         - tag
+        - '--root'
+        - '/files/buildah-containers'
         - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - $(resources.inputs.runtime-image.url)
+        - $(params.runtime-image)
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
       image: registry.redhat.io/rhel8/buildah
       securityContext:
         capabilities:
           add: ["SETFCAP"]
       resources: {}
-      volumeMounts:
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
+      securityContext:
+        privileged: true
+    - name: buildah-list-images-after-tagging
+      command:
+        - buildah
+        - images
+        - '--root'
+        - '/files/buildah-containers'
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+      image: registry.redhat.io/rhel8/buildah
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      securityContext:
+        privileged: true
     - name: push-image-to-quay
       command:
         - buildah
         - push
         - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
         - '--authfile'
         - /etc/secret-volume/.dockerconfigjson
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.quay-io-image-tag-name)
@@ -49,22 +65,17 @@ spec:
       securityContext:
         capabilities:
           add: ["SETFCAP"]
+      securityContext:
+        privileged: true
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-        - name: pipeline-cache
-          mountPath: /var/lib/containers
+      workingDir: /quay
   volumes:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
-<<<<<<< Updated upstream
-    - name: pipeline-cache
-      persistentVolumeClaim:
-        claimName: pipeline-task-cache-pvc
-=======
   workspaces:
   - name: files
     mountPath: /files
->>>>>>> Stashed changes

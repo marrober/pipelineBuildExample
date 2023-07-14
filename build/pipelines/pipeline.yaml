@@ -1,6 +1,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
+  creationTimestamp: "2020-06-26T14:11:45Z"
+  generation: 1
   labels:
     app.kubernetes.io/instance: liberty-rest-app
     pipeline.openshift.io/type: kubernetes
@@ -8,20 +10,36 @@ metadata:
   namespace: liberty-rest
 spec:
   params:
-  - name: git-url
+  - name: templateFileName
     type: string
-  - name: git-revision
+    default: build/template/deploy-app-template.yaml
+  - name: appName
     type: string
-  - name: intermediate-image
+    default: liberty-rest
+  - name: appGroup
     type: string
-  - name: runtime-image
+    default: Liberty
+  - name: quay-io-account
     type: string
+    default: ""
+  - name: quay-io-repository
+    type: string
+    default: "liberty-rest"
+  - name: quay-io-image-tag-name
+    type: string
+    default: "latest"
   - name: STORAGE_DRIVER
     type: string
-    default: vfs
+    default: 'overlay'
   - name: url
     type: string
+  - name: source-git-url
+    type: string
+  - name: source-git-revision
+    type: string
   - name: gitrepository_fullname
+    type: string
+  - name: revision
     type: string
   - name: commit_prior_revision
     type: string
@@ -35,28 +53,9 @@ spec:
     type: string
   - name: commit_author
     type: string
-  - name: appName
+  - name: intermediate-image
     type: string
-    default: liberty-rest
-  - name: templateFileName
-    type: string
-    default: build/template/deploy-app-template.yaml
-  - name: appGroup
-    type: string
-    default: Liberty
-  - name: quay-io-account
-    type: string
-    default: ""
-  - name: quay-io-repository
-    type: string
-    default: "liberty-rest"
-  - name: quay-io-image-tag-name
-    type: string
-    default: "latest"
-<<<<<<< Updated upstream
-  tasks:
-=======
-  - name: publicName
+  - name: runtime-image
     type: string
   tasks:
 ##------------------------------------------------------------------
@@ -65,9 +64,9 @@ spec:
   - name: git-clone-source
     params:
     - name: url
-      value: $(params.git-url)
+      value: $(params.source-git-url)
     - name: revision
-      value: $(params.git-revision)
+      value: $(params.source-git-revision)
     - name: verbose
       value: 'false'
     - name: subdirectory
@@ -78,27 +77,21 @@ spec:
     workspaces:
     - name: output
       workspace: files
-##------------------------------------------------------------------
-# Build the jar file deliverable
-##------------------------------------------------------------------
->>>>>>> Stashed changes
+
   - name: build
     params:
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
-<<<<<<< Updated upstream
-    resources:
-      inputs:
-      - name: source
-        resource: app-source
-      outputs:
-=======
->>>>>>> Stashed changes
       - name: intermediate-image
         value: $(params.intermediate-image)
     taskRef:
       kind: Task
       name: build
+    runAfter:
+    - git-clone-source
+    workspaces:
+    - name: files
+      workspace: files
   - name: create-runtime-image
     params:
       - name: STORAGE_DRIVER
@@ -123,19 +116,6 @@ spec:
         value: $(context.pipelineRun.name)
       - name: pipelineName
         value: $(context.pipeline.name)
-<<<<<<< Updated upstream
-    resources:
-      inputs:
-=======
-      - name: publicName
-        value: $(params.publicName)
-      - name: appName
-        value: $(params.appName)
-      - name: baseImage
-        value: $(params.baseImage)
-      - name: sourceCommitTag
-        value: "$(tasks.git-clone-source.results.commit)"
->>>>>>> Stashed changes
       - name: intermediate-image
         value: $(params.intermediate-image)
       - name: runtime-image
@@ -144,18 +124,10 @@ spec:
       kind: Task
       name: create-runtime-image
     runAfter:
-<<<<<<< Updated upstream
       - build
-=======
-    - build
     workspaces:
     - name: files
       workspace: files
-##------------------------------------------------------------------
-# Clear the old deployed application resources ready for a
-# redeployment
-##------------------------------------------------------------------
->>>>>>> Stashed changes
   - name: clear-resources
     params:
       - name: appName
@@ -164,47 +136,17 @@ spec:
       kind: Task
       name: clear-resources
     runAfter:
-<<<<<<< Updated upstream
       - build
-=======
-    - create-runtime-image
-##------------------------------------------------------------------
-# Deploy the application locally from the image stream
-##------------------------------------------------------------------
->>>>>>> Stashed changes
+      - create-runtime-image
   - name: deploy-application
-    resources:
-      inputs:
-      - name: source
-        resource: app-source
-      - name: runtime-image
-        resource: runtime-image
-    params:
-      - name: templateFileName
-        value: $(params.templateFileName)
-      - name: appName
-        value: $(params.appName)
-      - name: appGroup
-        value: $(params.appGroup)
     taskRef:
       kind: Task
-<<<<<<< Updated upstream
-      name: oc-process-deployment-template
-=======
       name: oc-deploy-application
->>>>>>> Stashed changes
     runAfter:
-      - create-runtime-image
       - clear-resources
-<<<<<<< Updated upstream
-=======
     workspaces:
     - name: files
-      workspace: resources
-##------------------------------------------------------------------
-# Push the new runtime image to quay.io
-##------------------------------------------------------------------
->>>>>>> Stashed changes
+      workspace: files
   - name: push-image-to-quay
     params:
       - name: quay-io-account
@@ -212,29 +154,7 @@ spec:
       - name: quay-io-repository
         value: $(params.quay-io-repository)
       - name: quay-io-image-tag-name
-<<<<<<< Updated upstream
         value: $(params.quay-io-image-tag-name)
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    resources:
-      inputs:
-      - name: runtime-image
-        resource: runtime-image
-    taskRef:
-      kind: Task
-      name: push-image-to-quay
-    runAfter:
-      - create-runtime-image
-  finally:
-  - name: clear-buildah-repo-end
-    params:
-      - name: STORAGE_DRIVER
-        value: $(params.STORAGE_DRIVER)
-    taskRef:
-      kind: Task
-      name: clear-buildah-repo
-=======
-        value: $(tasks.create-runtime-image.results.new-tag)
       - name: STORAGE_DRIVER
         value: $(params.STORAGE_DRIVER)
       - name: runtime-image
@@ -242,16 +162,13 @@ spec:
     taskRef:
       kind: Task
       name: push-image-to-quay
-
     runAfter:
       - create-runtime-image
     workspaces:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
-# Workspace definitions
+# Workspace definition.
 ##------------------------------------------------------------------
   workspaces:
   - name: files
-  - name: resources
->>>>>>> Stashed changes

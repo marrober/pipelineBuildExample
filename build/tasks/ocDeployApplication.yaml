@@ -4,14 +4,19 @@ metadata:
   name: oc-deploy-application
 spec:
   steps:
+    - name: ls
+      command:
+        - ls
+        - -alR
+        - /files/source/build/deployment
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
     - name: oc-create-resources
       command:
         - oc
         - apply
         - '-k'
-        - /files/resources/deployment
+        - /files/source/build/deployment
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      workingDir: /files/resources/deployment/output
     - name: oc-get-resources
       command:
         - oc
@@ -20,4 +25,4 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   workspaces:
   - name: files
-    mountPath: /files      
+    mountPath: /files
