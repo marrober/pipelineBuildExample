@@ -4,9 +4,9 @@ metadata:
   name: clear-resources
 spec:
   params:
-    - default: ''
-      description: Name of the application to be removed
-      name: appName
+    - name: appName
+      default: ""
+      Description: Name of the application to be removed
       type: string
   steps:
     - name: clear-resources
@@ -26,10 +26,7 @@ spec:
           chmod u+x clear-cmd.sh
           ./clear-cmd.sh
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      volumeMounts:
-        - name: script
-          mountPath: /script
-      workingDir: /script
-  volumes:
-    - emptyDir: {}
-      name: script
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      workingDir: /tmp
