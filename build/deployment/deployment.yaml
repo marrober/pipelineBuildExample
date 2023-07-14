@@ -18,12 +18,6 @@ spec:
       containers:
       - name: liberty-rest
         image: image-registry.openshift-image-registry.svc:5000/liberty-rest/liberty-rest-app
-        env:
-        - name: ROX_API_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: acs_api_token
-              name: acs-secret
         imagePullPolicy: Always
         ports:
         - containerPort: 9080

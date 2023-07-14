@@ -115,7 +115,7 @@ spec:
       - name: pipelineRunName
         value: $(context.pipelineRun.name)
       - name: pipelineName
-        value: $(context.pipeline.name)   
+        value: $(context.pipeline.name)
       - name: intermediate-image
         value: $(params.intermediate-image)
       - name: runtime-image

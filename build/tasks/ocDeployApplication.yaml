@@ -25,4 +25,4 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
   workspaces:
   - name: files
-    mountPath: /files      
+    mountPath: /files

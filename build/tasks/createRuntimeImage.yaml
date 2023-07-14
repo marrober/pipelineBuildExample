@@ -24,11 +24,11 @@ spec:
     - name: commit_message
       type: string
     - name: commit_author
-      type: string  
+      type: string
     - name: pipelineName
       type: string
     - name: pipelineRunName
-      type: string      
+      type: string
     - name: intermediate-image
       type: string
     - name: runtime-image
